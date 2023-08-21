@@ -69,13 +69,13 @@ export default function CheckoutPage() {
 
 					<CardBody className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
 						
-					<div className="overflow-y-auto max-h-[500px]">
+					<div className="overflow-y-scroll max-h-[500px]">
 						{list.map((item, index) => (
 							
 							<Card
 							key={index}
 							isBlurred
-							className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px]"
+							className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px] mb-4"
 							shadow="sm"
 						  >
 								<CardBody>
@@ -118,7 +118,7 @@ export default function CheckoutPage() {
 				</Card>
 			</div>
 
-			<div className="w-[50%] flex-grow">
+			<div className="w-80 shrink-0">
 				<Card className="max-w-[400px]">
 
 					<CardHeader className="flex gap-3 justify-center">
