@@ -1,8 +1,66 @@
 'use client'
 
 import { Button, Card, CardBody, CardHeader, Divider, Image, Input, Radio, RadioGroup } from "@nextui-org/react";
+import { useMemo, useState } from "react";
 
 export default function CheckoutPage() {
+	const CARDS = {
+		visa: '^4',
+		amex: '^(34|37)',
+		mastercard: '^5[1-5]',
+		empty: ''
+	};
+
+	const [cardNumber, setCardNumber] = useState('');
+
+	const cardType = (cardNumber: string) => {
+        const number = cardNumber;
+        let re;
+        for (const [card, pattern] of Object.entries(CARDS)) {
+            re = new RegExp(pattern);
+            if (number.match(re) != null) {
+                return card;
+            }
+        }
+
+        return 'empty'; // default type
+    };
+
+	const useCardType = useMemo(() => {
+        return cardType(cardNumber);
+    }, [cardNumber]);
+
+	const formatCardNumber = (input: string) => {
+		// Format input as a credit card number (#### #### #### ####)
+		const formattedInput = input.replace(/\D/g, ''); // Remove non-numeric characters
+		const chunks = [];
+		
+		for (let i = 0; i < formattedInput.length; i += 4) {
+		  chunks.push(formattedInput.substr(i, 4));
+		}
+		
+		return chunks.join(' ');
+	};
+
+	const handleCardNumberChange = (e: any) => {
+		const input = e.target.value;
+		const formattedInput = formatCardNumber(input);
+		if (formattedInput.length <= 32) {
+			setCardNumber(formattedInput);
+		  }
+	};
+
+	const [cvv, setCVV] = useState('');
+
+	const handleCVVChange = (e: any) => {
+		const inputValue = e.target.value;
+		const numericValue = inputValue.replace(/\D/g, ''); // Remove non-numeric characters
+
+		if (numericValue.length <= 3) {
+		setCVV(numericValue);
+		}
+	};
+
 	const list = [
 		{
 		  title: "Orange",
@@ -158,16 +216,19 @@ export default function CheckoutPage() {
 					</div>
 
 					<Input
-						type="number"
+						type="text" // Use "text" instead of "number"
 						label="Card Number"
-						placeholder="1234 5678 9101 1121"
+						placeholder="#### #### #### ####"
 						labelPlacement="outside"
+						value={cardNumber ?? ""}
+						onChange={handleCardNumberChange}
+						maxLength={19}
 						endContent={
 							<Image
-							src="/card-type-logos/amex.png" // Replace with the actual image path
-							alt="Card Type"
-							width={40}
-							height={20} // Adjust the height as needed
+								src={`/card-type-logos/${useCardType}.png`}
+								alt={useCardType}
+								width={35}
+								height={15}
 							/>
 						}
 					/>
@@ -186,10 +247,13 @@ export default function CheckoutPage() {
 							labelPlacement="outside"
 						/>
 						<Input
-							type="number"
-							label="CVV"
-							placeholder="123"
-							labelPlacement="outside"
+						type="text"
+						label="CVV"
+						placeholder="123"
+						maxLength={3}
+						labelPlacement="outside"
+						value={cvv}
+						onInput={handleCVVChange}
 						/>
 					</div>
 
