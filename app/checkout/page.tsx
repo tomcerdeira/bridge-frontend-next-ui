@@ -132,7 +132,6 @@ export default function CheckoutPage() {
 							
 							<Card
 							key={index}
-							isBlurred
 							className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px] mb-4"
 							shadow="sm"
 						  >
@@ -237,6 +236,7 @@ export default function CheckoutPage() {
 						label="Card Holder Name"
 						placeholder="Your Name"
 						labelPlacement="outside"
+						maxLength={30}
 					/>
 
 					<div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
