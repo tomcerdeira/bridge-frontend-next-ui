@@ -4,6 +4,9 @@ import { Button, Card, CardBody, CardHeader, Divider, Image, Input, Radio, Radio
 import { useMemo, useState } from "react";
 
 export default function CheckoutPage() {
+
+	// --------------- (START OF) CARD STUFF ---------------
+
 	const CARDS = {
 		visa: '^4',
 		amex: '^(34|37)',
@@ -61,6 +64,10 @@ export default function CheckoutPage() {
 		}
 	};
 
+	// --------------- (END OF) CARD STUFF ---------------
+
+	// --------------- (START OF) ITEM LIST STUFF ---------------
+
 	const list = [
 		{
 		  title: "Orange",
@@ -111,6 +118,8 @@ export default function CheckoutPage() {
 		  description: "Large and hydrating melon with juicy, refreshing flesh."
 		},
 	  ];
+
+	  // --------------- (END OF) ITEM LIST STUFF ---------------
 	  
 	
 	return (
