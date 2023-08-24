@@ -1,5 +1,6 @@
 'use client'
 
+import { usePay } from "@/src/api/checkout";
 import { Button, Card, CardBody, CardHeader, Divider, Image, Input, Radio, RadioGroup } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 
@@ -110,7 +111,10 @@ export default function CheckoutPage() {
 		clearError('expirationDate');
 	  };
 
-	const handleSubmit = (e: any) => {
+	const [loadingRequest, setLoadingRequest] = useState(false);
+	const { doPay, error, isLoading } = usePay();
+
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 
 		const newErrors: FormErrors = {
@@ -141,13 +145,15 @@ export default function CheckoutPage() {
 		const hasErrors = Object.values(newErrors).some((errorArray) => errorArray.length > 0);
 
 		if (!hasErrors) {
-			// Perform the API call or your desired action
-			console.log('Form submitted:', {
-			cardNumber,
-			cardHolderName,
-			expirationDate,
-			cvv,
-			});
+			try {
+				setLoadingRequest(true);
+				let payment = await doPay({ cardNumber, cardHolderName, expirationDate, cvv });
+				console.log(payment);
+			} catch (err) {
+				console.error('Payment error:', err);
+			} finally {
+				setLoadingRequest(false);
+			}
 		}
 
 	  };
@@ -362,7 +368,7 @@ export default function CheckoutPage() {
 							errorMessage={errors.cvv.join(' ')}
 							/>
 						</div>
-						<Button className="mt-6 w-full" onClick={handleSubmit} color="success" variant="shadow">
+						<Button className="mt-6 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="success" variant="shadow">
 							Pay
 						</Button> 
 					</div>
