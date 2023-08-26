@@ -2,7 +2,13 @@
 
 import { usePay } from "@/src/api/checkout";
 import { Button, Card, CardBody, CardHeader, Divider, Image, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
+import { useParams } from 'next/navigation';
 import { useMemo, useState } from "react";
+
+type Props = {
+	children?: React.ReactNode
+	payment_information?: any //TODO: modelo de la info del pago
+  }
 
 interface FormErrors {
 	cardNumber: string[];
@@ -19,9 +25,11 @@ interface FormErrors {
   };
 
   // hacer la integracion con el api (ver SWAGGER)
-  // poner label de total
 
-export default function CheckoutPage() {
+export default function CheckoutForm({ children, payment_information }: Props) {
+	const { paymentReqId } = useParams()
+	console.log(payment_information);
+	
 
 	// --------------- (START OF) CARD STUFF ---------------
 
