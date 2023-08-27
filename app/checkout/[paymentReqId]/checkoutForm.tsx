@@ -1,13 +1,14 @@
 'use client'
 
 import { usePay } from "@/src/api/checkout";
+import { IPaymentRequest } from "@/src/api/types";
 import { Button, Card, CardBody, CardHeader, Divider, Image, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import { useParams } from 'next/navigation';
 import { useMemo, useState } from "react";
 
 type Props = {
+	payment_information: IPaymentRequest
 	children?: React.ReactNode
-	payment_information?: any //TODO: modelo de la info del pago
   }
 
 interface FormErrors {
@@ -28,7 +29,9 @@ interface FormErrors {
 
 export default function CheckoutForm({ children, payment_information }: Props) {
 	const { paymentReqId } = useParams()
-	console.log(payment_information);
+	
+	console.log("paymentReqId: " + paymentReqId);
+	console.log("payment_information: " + JSON.stringify(payment_information));
 	
 
 	// --------------- (START OF) CARD STUFF ---------------

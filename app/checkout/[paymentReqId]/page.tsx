@@ -1,13 +1,13 @@
+import { IPaymentRequest } from "@/src/api/types";
+import { serverFetcher } from "@/src/lib/fetcher/serverFetcher";
 import CheckoutForm from "./checkoutForm";
 
-//TODO: hacer lo del serverFetcher con un mock en principio
-function getPaymentInformation(id: string) {
-    const PATH = `/payments/${id}`
-    // return serverFetcher<Memory>(PATH)
-    return { test: PATH};
+function getPaymentInformation(paymentReqId: string) {
+    const PATH = `/payments/${paymentReqId}`
+    return serverFetcher<IPaymentRequest>(PATH)
   }
 
-export default async function CheckoutPage({ params: { paymentReqId } }) {
+export default async function CheckoutPage({ params: { paymentReqId } }: { params: { paymentReqId: string } }) {
     const payment_info = await getPaymentInformation(paymentReqId)
     return (
       <div>
