@@ -2,7 +2,7 @@
 
 import { usePay } from "@/src/api/checkout";
 import { IPaymentRequest } from "@/src/api/types";
-import { Button, Card, CardBody, CardHeader, Divider, Image, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
+import { Badge, Button, Card, CardBody, CardHeader, Divider, Image, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import { useParams } from 'next/navigation';
 import { useMemo, useState } from "react";
 
@@ -31,7 +31,6 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 	const { paymentReqId } = useParams()
 	
 	console.log("paymentReqId: " + paymentReqId);
-	console.log("payment_information: " + JSON.stringify(payment_information));
 	
 
 	// --------------- (START OF) CARD STUFF ---------------
@@ -244,7 +243,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 					<CardBody className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
 						
 					<div className="overflow-y-scroll max-h-[500px]">
-						{list.map((item, index) => (
+						{payment_information.products.map((item, index) => (
 							<Card
 							key={index}
 							className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px] mb-4"
@@ -253,27 +252,30 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 								<CardBody>
 									<div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">
 										<div className="relative col-span-6 md:col-span-4">
-										<Image
-											shadow="sm"
-											radius="lg"
-											width="100%"
-											alt={item.title}
-											className="w-full object-cover h-[140px]"
-											src={item.img}
-										/>
+										<Badge content={`x${item.quantity}`} size="lg" color="danger" shape="rectangle" disableOutline>
+											<Image
+												shadow="sm"
+												radius="lg"
+												width="100%"
+												alt={item.name}
+												className="w-full object-cover h-[140px]"
+												src={item.imgUrl}
+											/>
+										</Badge>
 									</div>
 							
 									<div className="flex flex-col col-span-6 md:col-span-8">
 										<div className="flex justify-between items-start">
 											<div className="flex flex-col gap-0">
-												<h1 className="font-semibold text-foreground/90">{item.title}</h1>
-												<p className="text-small text-foreground/80">{item.price}</p>
+												<h1 className="font-semibold text-foreground/90">{item.name}</h1>
+												<p className="text-small text-foreground/80">${item.unitPrice}</p>
 												<h3 className="text-small font-medium mt-2">{item.description}</h3>
 												</div>
 											</div>
 										</div>
 									</div>
 								</CardBody>
+								
 							</Card>
 						))}
 					</div>
@@ -285,7 +287,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 						<TableBody>
 							<TableRow key="1">
 							<TableCell>USD</TableCell>
-							<TableCell>$10</TableCell>
+							<TableCell>${payment_information.amount}</TableCell>
 							</TableRow>
 						</TableBody>
 					</Table>
@@ -331,7 +333,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 							label="Card Holder Name"
 							placeholder="Your Name"
 							labelPlacement="outside"
-							maxLength={30}
+							maxLength={20}
 							value={cardHolderName}
 							onInput={handleCardHolderNameChange}
 							isRequired

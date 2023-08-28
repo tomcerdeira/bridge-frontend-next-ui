@@ -6,7 +6,7 @@ export const siteConfig = {
 	navItems: [
 		{
 			label: "Checkout",
-			href: "/checkout",
+			href: "/checkout/1",
 		  },
 		{
 			label: "Home",
