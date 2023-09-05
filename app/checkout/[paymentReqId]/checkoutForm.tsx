@@ -5,6 +5,7 @@ import { IPaymentRequest } from "@/src/api/types";
 import { Badge, Button, Card, CardBody, CardHeader, Divider, Image, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import { useParams } from 'next/navigation';
 import { useMemo, useState } from "react";
+import * as MP from "@/app/services/mercadoPagoService";
 
 type Props = {
 	payment_information: IPaymentRequest
@@ -24,6 +25,7 @@ interface FormErrors {
 	cardHolderName: [],
 	expirationDate: [],
   };
+const mercadoPagoService: MP.MercadoPagoService = new MP.MercadoPagoService("TEST-e585dfcb-8952-4c96-9216-1700a0af4fb4");
 
   // hacer la integracion con el api (ver SWAGGER)
 
@@ -154,7 +156,10 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 			newErrors.cvv.push('CVV is invalid.');
 		}
 		setErrors(newErrors);
-		  
+		const mpToken = await mercadoPagoService.MercadoPagoCardToken(
+			cardNumber,
+			cardHolderName,
+			cvv);
 		const hasErrors = Object.values(newErrors).some((errorArray) => errorArray.length > 0);
 
 		if (!hasErrors) {
