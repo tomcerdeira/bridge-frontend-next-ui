@@ -26,6 +26,39 @@ export type CreateUserRequest = {
   password: string
 }
 
+export type IEntityBase = {
+  deletedAt: Date
+  updatedAt: Date
+  createdAt: Date
+}
+
+export type IRole = IEntityBase & {
+  name: string
+  id: number
+}
+
+export type IUser = IEntityBase & {
+  id: number
+  email: string
+  // TODO: add status
+}
+
+export type UserResponse = {
+  role: IRole;
+  email: string;
+  id: number;
+  deletedAt: Date | null;
+  updatedAt: Date;
+  createdAt: Date;
+};
+
+export type ParsedUser = {
+  id: number
+  email: string
+  role_name: string
+}
+
+
 export const MockResponse_IPaymentRequest: IPaymentRequest = {
     amount: 1800,
     customer: {

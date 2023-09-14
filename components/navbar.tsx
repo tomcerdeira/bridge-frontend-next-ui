@@ -1,35 +1,41 @@
-import {
-	Navbar as NextUINavbar,
-	NavbarContent,
-	NavbarMenu,
-	NavbarMenuToggle,
-	NavbarBrand,
-	NavbarItem,
-	NavbarMenuItem,
-} from "@nextui-org/navbar";
+'use client'
+
 import { Button } from "@nextui-org/button";
+import { Input } from "@nextui-org/input";
 import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
-import { Input } from "@nextui-org/input";
+import {
+	NavbarBrand,
+	NavbarContent,
+	NavbarItem,
+	NavbarMenu,
+	NavbarMenuItem,
+	NavbarMenuToggle,
+	Navbar as NextUINavbar,
+} from "@nextui-org/navbar";
 
 import { link as linkStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
-import NextLink from "next/link";
 import clsx from "clsx";
+import NextLink from "next/link";
 
-import { ThemeSwitch } from "@/components/theme-switch";
 import {
-	TwitterIcon,
-	GithubIcon,
 	DiscordIcon,
+	GithubIcon,
 	HeartFilledIcon,
 	SearchIcon,
+	TwitterIcon,
 } from "@/components/icons";
+import { ThemeSwitch } from "@/components/theme-switch";
 
 import { Logo } from "@/components/icons";
+import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
+	const pathname = usePathname();
+	const showHeader = pathname.startsWith('/signin') || pathname.startsWith('/signup') || pathname.startsWith('/checkout') ? false : true;
+	
 	const searchInput = (
 		<Input
 			aria-label="Search"
@@ -52,6 +58,8 @@ export const Navbar = () => {
 	);
 
 	return (
+		<>
+		{showHeader && (
 		<NextUINavbar maxWidth="xl" position="sticky">
 			<NavbarContent className="basis-1/5 sm:basis-full" justify="start">
 				<NavbarBrand as="li" className="gap-3 max-w-fit">
@@ -139,6 +147,7 @@ export const Navbar = () => {
 					))}
 				</div>
 			</NavbarMenu>
-		</NextUINavbar>
+		</NextUINavbar>)}
+		</>
 	);
 };

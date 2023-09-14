@@ -2,7 +2,7 @@
 
 import { EyeFilledIcon } from "@/components/eyeFieldIcon";
 import { EyeSlashFilledIcon } from "@/components/eyeSlashFieldIcon";
-import { useSignUp } from "@/src/api/users";
+import { useSignIn } from "@/src/api/users";
 import { Link } from "@nextui-org/link";
 import { Button, Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
 import NextLink from "next/link";
@@ -20,7 +20,7 @@ interface FormErrors {
 	password: [],
   };
 
-export default function SignUpForm() {
+export default function SignInForm() {
     const [isVisible, setIsVisible] = useState(false);
 
     const toggleVisibility = () => setIsVisible(!isVisible);
@@ -45,7 +45,7 @@ export default function SignUpForm() {
         clearError("password");
 	};
 
-    const { doSignUp, error, isLoading } = useSignUp();
+    const { doSignIn, error, isLoading } = useSignIn();
     const router = useRouter();
 
 	const handleSubmit = async (e: any) => {
@@ -63,10 +63,6 @@ export default function SignUpForm() {
 
 		if (!password) {
 			newErrors.password.push('Password is required.');
-		}else if(password.length < 8){
-			newErrors.password.push('Password length must be at least 8 characters.');
-		}else if(!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)){
-			newErrors.password.push('Password is not strong enough.');
 		}
 
 		setErrors(newErrors);
@@ -76,11 +72,8 @@ export default function SignUpForm() {
         if (!hasErrors) {
             try {
                 setLoadingRequest(true);
-                const user = await doSignUp({ email, password });
-                await new Promise((resolve) => setTimeout(resolve, 1000)); //TODO: BORRAR
-                if (!!user) router.push("/verify");
-                setEmail("")
-                setPassword("")
+                const user = await doSignIn({ email, password });
+                if (!!user) router.push("/");
             } catch (err) {} finally {
                 setLoadingRequest(false);
             }
@@ -94,7 +87,7 @@ export default function SignUpForm() {
                 <Card className="max-w-[400px]">
                     <CardHeader className="flex gap-3 justify-center">
                         <div className="flex flex-col">
-                            <p className="text-md">Sign Up</p>
+                            <p className="text-md">Sign In</p>
                         </div>
                     </CardHeader>
                     <Divider/>
@@ -130,18 +123,18 @@ export default function SignUpForm() {
                             isRequired
                             className="max-w-xs"
                         />
-                        {error && <p className="mt-4 text-right text-red-400">{error.message}</p>}
+                        {error && <p className="mt-4 text-right text-red-400 text-xs">{error.message}</p>}
                         <div className="gap-2 flex flex-col md:flex-row justify-center ">
                             <Link
                                 as={NextLink}
-                                href={'/signin'}
+                                href={'/signup'}
                             >
                                 <Button className="mt-4 w-full" color="success" variant="faded">
-                                    Sign in
+                                    Register
                                 </Button> 
                             </Link>
                             <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="success" variant="shadow">
-                                Register
+                                Sign in
                             </Button> 
                         </div>
                     </CardBody>
