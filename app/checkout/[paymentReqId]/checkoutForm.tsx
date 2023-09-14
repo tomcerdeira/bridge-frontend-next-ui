@@ -317,7 +317,6 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 							onChange={handleCardNumberChange}
 							maxLength={19}
 							isRequired
-							validationState={errors.cardNumber.length > 0 ? "invalid" : "valid"}
 							errorMessage={errors.cardNumber.join(' ')}
 							endContent={
 								<Image
@@ -338,7 +337,6 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 							value={cardHolderName}
 							onInput={handleCardHolderNameChange}
 							isRequired
-							validationState={errors.cardHolderName.length > 0 ? "invalid" : "valid"}
 							errorMessage={errors.cardHolderName.join(' ')}
 						/>
 						<div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-4 gap-4">
@@ -350,7 +348,6 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 								value={expirationDate}
 								onInput={handleExpirationDateChange}
 								isRequired
-								validationState={errors.expirationDate.length > 0 ? "invalid" : "valid"}
 								errorMessage={errors.expirationDate.join(' ')}
 							/>
 							<Input
@@ -362,7 +359,6 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 							value={cvv}
 							onInput={handleCVVChange}
 							isRequired
-							validationState={errors.cvv.length > 0 ? "invalid" : "valid"}
 							errorMessage={errors.cvv.join(' ')}
 							/>
 						</div>

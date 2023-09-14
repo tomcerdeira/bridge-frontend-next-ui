@@ -2,10 +2,21 @@
 
 import { useSignUp } from "@/src/api/users";
 import { Button, Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
+import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { EyeFilledIcon } from "./eyeFieldIcon";
 import { EyeSlashFilledIcon } from "./eyeSlashFieldIcon";
 import { MailIcon } from "./mailIcon";
+
+interface FormErrors {
+	email: string[];
+	password: string[];
+  }
+  
+  const initialErrors: FormErrors = {
+	email: [],
+	password: [],
+  };
 
 export default function SignUpForm() {
     const [isVisible, setIsVisible] = useState(false);
@@ -14,33 +25,65 @@ export default function SignUpForm() {
 
     const [loadingRequest, setLoadingRequest] = useState(false);
 
+    const [errors, setErrors] = useState(initialErrors);
+	const clearError = (fieldName: keyof FormErrors) => {
+		setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: [] }));
+	};
+
     const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
 	const handleEmailChange = (e: any) => {
-        //TODO: validations
 		setEmail(e.target.value);
+        clearError("email");
 	};
 
     const handlePasswordChange = (e: any) => {
-        //TODO: validations
 		setPassword(e.target.value);
+        clearError("password");
 	};
 
     const { doSignUp, error, isLoading } = useSignUp();
+    const router = useRouter();
 
 	const handleSubmit = async (e: any) => {
-        //TODO: validations
+        e.preventDefault();
+        const newErrors: FormErrors = {
+			email: [],
+			password: [],
+		  };
 
-        try {
-            setLoadingRequest(true);
-            let user = await doSignUp({ email, password });
-            console.log(user);
-        } catch (err) {
-            console.error('Sign Up error:', err);
-        } finally {
-            setLoadingRequest(false);
+        if (!email) {
+			newErrors.email.push('Email is required.');
+		}else if(!/\S+@\S+\.\S+/.test(email)){
+			newErrors.email.push('Please enter a valid email.');
+		}
+
+		if (!password) {
+			newErrors.password.push('Password is required.');
+		}else if(password.length < 8){
+			newErrors.password.push('Password length must be at least 8 characters.');
+		}else if(!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)){
+			newErrors.password.push('Password is not strong enough.');
+		}
+
+		setErrors(newErrors);
+		  
+		const hasErrors = Object.values(newErrors).some((errorArray) => errorArray.length > 0);
+
+        if (!hasErrors) {
+            try {
+                setLoadingRequest(true);
+                const user = await doSignUp({ email, password });
+                await new Promise((resolve) => setTimeout(resolve, 1000)); //TODO: BORRAR
+                if (!!user) router.push("/verify");
+                setEmail("")
+                setPassword("")
+            } catch (err) {} finally {
+                setLoadingRequest(false);
+            }
         }
+
 	};
     
     return (
@@ -60,6 +103,8 @@ export default function SignUpForm() {
                             placeholder="you@example.com"
                             labelPlacement="outside"
                             onChange={handleEmailChange}
+                            errorMessage={errors.email.join(' ')}
+                            isRequired
                             endContent={
                                 <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                             }
@@ -79,8 +124,11 @@ export default function SignUpForm() {
                                 </button>
                             }
                             type={isVisible ? "text" : "password"}
+                            errorMessage={errors.password.join(' ')}
+                            isRequired
                             className="max-w-xs"
                         />
+                        {error && <p className="mt-4 text-right text-red-400">{error.message}</p>}
                         <div className="gap-2 flex flex-col md:flex-row justify-center ">
                             <Button className="mt-4 w-full" onClick={handleSubmit} color="success" variant="faded">
                                 Sign in

@@ -21,6 +21,11 @@ export type IPaymentRequest = {
     products: IItem[]
 }
 
+export type CreateUserRequest = {
+  email: string
+  password: string
+}
+
 export const MockResponse_IPaymentRequest: IPaymentRequest = {
     amount: 1800,
     customer: {
@@ -34,10 +39,10 @@ export const MockResponse_IPaymentRequest: IPaymentRequest = {
     products: [
         {
             name: "Socks",
-            unitPrice: 100,
-            description: "Red socks",
+            unitPrice: 500,
+            description: "Red socks paulo",
             imgUrl: "https://nicharry.com/cdn/shop/products/Red_Product_be8df392-ae5e-4447-9835-f4d01fd9db73.jpg",
-            quantity: 4,
+            quantity: 10,
           },
           {
             name: "T-Shirt",
