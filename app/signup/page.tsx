@@ -94,7 +94,7 @@ export default function SignUpForm() {
                 <Card className="max-w-[400px]">
                     <CardHeader className="flex gap-3 justify-center">
                         <div className="flex flex-col">
-                            <p className="text-md">Sign Up</p>
+                            <p className="font-bold text-large">Sign Up</p>
                         </div>
                     </CardHeader>
                     <Divider/>

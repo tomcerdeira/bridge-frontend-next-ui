@@ -87,9 +87,16 @@ export default function SignInForm() {
                 <Card className="max-w-[400px]">
                     <CardHeader className="flex gap-3 justify-center">
                         <div className="flex flex-col">
-                            <p className="text-md">Sign In</p>
+                            <p className="font-bold text-large">Sign in to Bridge</p>
                         </div>
                     </CardHeader>
+                    <p className="text-center mb-2">New here?{' '}
+                        <span>
+                            <Link className="font-bold" size="sm" as={NextLink} href="/signup">
+                                Sign Up
+                            </Link>
+                        </span>
+                    </p>
                     <Divider/>
                     <CardBody className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
                         <Input
@@ -123,16 +130,9 @@ export default function SignInForm() {
                             isRequired
                             className="max-w-xs"
                         />
+                        <Link as={NextLink} href="/forgot-password" size="sm" className="">Forgot password?</Link>
                         {error && <p className="mt-4 text-right text-red-400 text-xs">{error.message}</p>}
                         <div className="gap-2 flex flex-col md:flex-row justify-center ">
-                            <Link
-                                as={NextLink}
-                                href={'/signup'}
-                            >
-                                <Button className="mt-4 w-full" color="success" variant="faded">
-                                    Register
-                                </Button> 
-                            </Link>
                             <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="success" variant="shadow">
                                 Sign in
                             </Button> 
