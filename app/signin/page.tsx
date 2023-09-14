@@ -2,13 +2,13 @@
 
 import { EyeFilledIcon } from "@/components/eyeFieldIcon";
 import { EyeSlashFilledIcon } from "@/components/eyeSlashFieldIcon";
+import { MailIcon } from "@/components/mailIcon";
 import { useSignIn } from "@/src/api/users";
 import { Link } from "@nextui-org/link";
 import { Button, Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
 import NextLink from "next/link";
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
-import { MailIcon } from "./mailIcon";
 
 interface FormErrors {
 	email: string[];

@@ -34,7 +34,12 @@ import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
 	const pathname = usePathname();
-	const showHeader = pathname.startsWith('/signin') || pathname.startsWith('/signup') || pathname.startsWith('/checkout') ? false : true;
+	const showHeader = 
+		pathname.startsWith('/signin') ||
+		pathname.startsWith('/signup') || 
+		pathname.startsWith('/checkout') ||
+		pathname.startsWith('/forgot-password')
+		? false : true;
 	
 	const searchInput = (
 		<Input
