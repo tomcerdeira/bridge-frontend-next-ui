@@ -117,7 +117,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 		const newErrors: FormErrors = { ...errors, expirationDate: [] };
 	
 		if (selectedDate <= currentDate) {
-		  newErrors.expirationDate.push('Expiration date should be after the current date.');
+		  newErrors.expirationDate.push('La fecha de vencimiento debe ser posterior a la fecha actual.');
 		}
 	
 		setErrors(newErrors);
@@ -138,20 +138,20 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 		  };
 
 		if (!cardNumber) {
-			newErrors.cardNumber.push('Card number is required.');
+			newErrors.cardNumber.push('Se requiere el número de tarjeta.');
 		}else if(cardNumber.length < 19){
-			newErrors.cardNumber.push('Card number is invalid.');
+			newErrors.cardNumber.push('El número de tarjeta no es válido.');
 		}
 		if (!cardHolderName) {
-			newErrors.cardHolderName.push('Card holder name is required.');
+			newErrors.cardHolderName.push('Se requiere el nombre del titular de la tarjeta.');
 		}
 		if (!expirationDate) {
-			newErrors.expirationDate.push('Expiration date is required.');
+			newErrors.expirationDate.push('Se requiere la fecha de vencimiento.');
 		}
 		if (!cvv) {
-			newErrors.cvv.push('CVV is required.');
+			newErrors.cvv.push('Se requiere el CVV.');
 		}else if(cvv.length < 3){
-			newErrors.cvv.push('CVV is invalid.');
+			newErrors.cvv.push('El CVV no es válido.');
 		}
 		setErrors(newErrors);
 		  
@@ -236,7 +236,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 				<Card className="max-w-[400px]">
 					<CardHeader className="flex gap-3 justify-center">
 						<div className="flex flex-col">
-							<p className="text-md">Item List</p>
+							<p className="text-md">Lista de productos</p>
 						</div>
 					</CardHeader>
 					<Divider/>
@@ -282,7 +282,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 					</div>
 					<Table aria-label="Example static collection table">
 						<TableHeader>
-							<TableColumn>CURRENCY</TableColumn>
+							<TableColumn>MONEDA</TableColumn>
 							<TableColumn>TOTAL</TableColumn>
 						</TableHeader>
 						<TableBody>
@@ -300,7 +300,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 				<Card className="max-w-[400px]">
 					<CardHeader className="flex gap-3 justify-center">
 						<div className="flex flex-col">
-							<p className="text-md">Payment Information</p>
+							<p className="text-md">Información del pago</p>
 						</div>
 					</CardHeader>
 					<Divider/>
@@ -310,7 +310,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 						<Input
 							className="mb-4"
 							type="text" // Use "text" instead of "number"
-							label="Card Number"
+							label="Número de la tarjeta"
 							placeholder="#### #### #### ####"
 							labelPlacement="outside"
 							value={cardNumber ?? ""}
@@ -330,8 +330,8 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 						<Input
 							className="mb-4"
 							type="text"
-							label="Card Holder Name"
-							placeholder="Your Name"
+							label="Nombre que figura en la tarjeta"
+							placeholder="Tú nombre"
 							labelPlacement="outside"
 							maxLength={20}
 							value={cardHolderName}
@@ -342,7 +342,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 						<div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-4 gap-4">
 							<Input
 								type="date"
-								label="Expiration Date"
+								label="Fecha de expiración"
 								placeholder={(new Date()).toString()}
 								labelPlacement="outside"
 								value={expirationDate}
@@ -363,7 +363,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 							/>
 						</div>
 						<Button className="mt-6 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="success" variant="shadow">
-							Pay
+							Pagar
 						</Button> 
 					</div>
 					</CardBody>

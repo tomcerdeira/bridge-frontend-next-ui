@@ -55,19 +55,19 @@ export default function SignUpForm() {
 			password: [],
 		  };
 
-        if (!email) {
-			newErrors.email.push('Email is required.');
-		}else if(!/\S+@\S+\.\S+/.test(email)){
-			newErrors.email.push('Please enter a valid email.');
-		}
-
-		if (!password) {
-			newErrors.password.push('Password is required.');
-		}else if(password.length < 8){
-			newErrors.password.push('Password length must be at least 8 characters.');
-		}else if(!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)){
-			newErrors.password.push('Password is not strong enough.');
-		}
+          if (!email) {
+            newErrors.email.push('Se requiere un correo electrónico.');
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            newErrors.email.push('Por favor, ingresa un correo electrónico válido.');
+        }
+        
+        if (!password) {
+            newErrors.password.push('Se requiere una contraseña.');
+        } else if (password.length < 8) {
+            newErrors.password.push('La contraseña debe tener al menos 8 caracteres.');
+        } else if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)) {
+            newErrors.password.push('La contraseña no es lo suficientemente segura.');
+        }        
 
 		setErrors(newErrors);
 		  
@@ -94,7 +94,7 @@ export default function SignUpForm() {
                 <Card className="max-w-[400px]">
                     <CardHeader className="flex gap-3 justify-center">
                         <div className="flex flex-col">
-                            <p className="font-bold text-large">Sign Up</p>
+                            <p className="font-bold text-large">Regístrate</p>
                         </div>
                     </CardHeader>
                     <Divider/>
@@ -102,7 +102,7 @@ export default function SignUpForm() {
                         <Input
                             type="email"
                             label="Email"
-                            placeholder="you@example.com"
+                            placeholder="tu@email.com"
                             labelPlacement="outside"
                             onChange={handleEmailChange}
                             errorMessage={errors.email.join(' ')}
@@ -112,8 +112,8 @@ export default function SignUpForm() {
                             }
                         />
                         <Input
-                            label="Password"
-                            placeholder="Enter your password"
+                            label="Contraseña"
+                            placeholder="Igresá tu contraseña"
                             labelPlacement="outside"
                             onChange={handlePasswordChange}
                             endContent={
@@ -137,11 +137,11 @@ export default function SignUpForm() {
                                 href={'/signin'}
                             >
                                 <Button className="mt-4 w-full" color="success" variant="faded">
-                                    Sign in
+                                    Iniciar sesión
                                 </Button> 
                             </Link>
                             <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="success" variant="shadow">
-                                Register
+                                    Regístrate
                             </Button> 
                         </div>
                     </CardBody>

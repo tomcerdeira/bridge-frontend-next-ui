@@ -56,13 +56,13 @@ export default function SignInForm() {
 		  };
 
         if (!email) {
-			newErrors.email.push('Email is required.');
+			newErrors.email.push('Se requiere un correo electrónico.');
 		}else if(!/\S+@\S+\.\S+/.test(email)){
-			newErrors.email.push('Please enter a valid email.');
+			newErrors.email.push('Por favor, ingresa un correo electrónico válido.');
 		}
 
 		if (!password) {
-			newErrors.password.push('Password is required.');
+			newErrors.password.push('Se requiere una contraseña.');
 		}
 
 		setErrors(newErrors);
@@ -87,13 +87,13 @@ export default function SignInForm() {
                 <Card className="max-w-[400px]">
                     <CardHeader className="flex gap-3 justify-center">
                         <div className="flex flex-col">
-                            <p className="font-bold text-large">Sign in to Bridge</p>
+                            <p className="font-bold text-large">Iniciar sesión en Bridge.</p>
                         </div>
                     </CardHeader>
-                    <p className="text-center mb-2">New here?{' '}
+                    <p className="text-center mb-2">¿Eres nuevo aquí?{' '}
                         <span>
                             <Link className="font-bold" size="sm" as={NextLink} href="/signup">
-                                Sign Up
+                                Regístrate
                             </Link>
                         </span>
                     </p>
@@ -102,7 +102,7 @@ export default function SignInForm() {
                         <Input
                             type="email"
                             label="Email"
-                            placeholder="you@example.com"
+                            placeholder="tu@email.com"
                             labelPlacement="outside"
                             onChange={handleEmailChange}
                             errorMessage={errors.email.join(' ')}
@@ -112,8 +112,8 @@ export default function SignInForm() {
                             }
                         />
                         <Input
-                            label="Password"
-                            placeholder="Enter your password"
+                            label="Contraseña"
+                            placeholder="Ingresa tu contraseña."
                             labelPlacement="outside"
                             onChange={handlePasswordChange}
                             endContent={
@@ -130,11 +130,11 @@ export default function SignInForm() {
                             isRequired
                             className="max-w-xs"
                         />
-                        <Link as={NextLink} href="/forgot-password" size="sm" className="">Forgot password?</Link>
+                        <Link as={NextLink} href="/forgot-password" size="sm" className="">¿Olvidaste tu contraseña?</Link>
                         {error && <p className="mt-4 text-right text-red-400 text-xs">{error.message}</p>}
                         <div className="gap-2 flex flex-col md:flex-row justify-center ">
                             <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="success" variant="shadow">
-                                Sign in
+                                Iniciar sesión
                             </Button> 
                         </div>
                     </CardBody>

@@ -51,7 +51,7 @@ export default function RootLayout({
 								href="https://www.itba.edu.ar/"
 								title="itba.edu.ar homepage"
 							>
-								<span className="text-default-600">Powered by</span>
+								<span className="text-default-600">Desarrollado por</span>
 								<p className="text-primary">Bridge</p>
 							</Link>
 						</footer>
