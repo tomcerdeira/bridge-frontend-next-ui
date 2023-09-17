@@ -31,7 +31,8 @@ export const Navbar = () => {
 		pathname.startsWith('/signin') ||
 		pathname.startsWith('/signup') || 
 		pathname.startsWith('/checkout') ||
-		pathname.startsWith('/forgot-password')
+		pathname.startsWith('/forgot-password') ||
+		pathname.startsWith('/reset-password')
 		? false : true;
 
 	useEffect(() => {
