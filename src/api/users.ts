@@ -4,6 +4,7 @@ import { ParsedUser, UserResponse } from './types';
 
 export const ME_PATH = `/private/users/me`
 export const SIGN_UP = `/public/users/`
+export const FORGOT_PASSWORD = `/public/users/forgot-password`
 
 const mockUser = {
     id: 1,
@@ -75,5 +76,22 @@ export function useSignUp() {
         data,
         error,
     };
+}
+
+
+export function useForgotPassword() {
+
+  const { trigger, data, isMutating, error } = useSWRMutation(
+      FORGOT_PASSWORD,
+      (url, { arg }) => fetcher<UserResponse>(url, { body: arg, method: 'POST' }),
+      {throwOnError: false}
+  );
+
+  return {
+      doForgotPassword: trigger,
+      isLoading: isMutating,
+      data,
+      error,
+  };
 }
   

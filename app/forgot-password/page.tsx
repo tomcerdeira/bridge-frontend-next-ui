@@ -1,10 +1,13 @@
 'use client'
 
 import { MailIcon } from "@/components/mailIcon";
-import { useSignUp } from "@/src/api/users";
+import { useForgotPassword } from "@/src/api/users";
 import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
-import { useState } from "react";
+import { useCallback, useState } from "react";
+// import { toast } from "react-toastify";
+import toast from "@/components/toast";
+
 
 interface FormErrors {
 	email: string[];
@@ -17,8 +20,11 @@ interface FormErrors {
   };
 
 export default function ForgotPasswordForm() {
-
+    const notify = useCallback((type, message) => {
+        toast({ type, message });
+      }, []);
     const [isVisible, setIsVisible] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
     const toggleVisibility = () => setIsVisible(!isVisible);
     const [loadingRequest, setLoadingRequest] = useState(false);
     const [errors, setErrors] = useState(initialErrors);
@@ -33,8 +39,7 @@ export default function ForgotPasswordForm() {
         clearError("email");
 	};
 
-    //TODO: cambiar a useForgotPassword cuando este implementado
-    const { doSignUp, error, isLoading } = useSignUp();
+    const { doForgotPassword, error, isLoading } = useForgotPassword();
     const router = useRouter();
 
 	const handleSubmit = async (e: any) => {
@@ -56,10 +61,14 @@ export default function ForgotPasswordForm() {
         if (!hasErrors) {
             try {
                 setLoadingRequest(true);
-                // const user = await doSignUp({ email });
-                await new Promise((resolve) => setTimeout(resolve, 1000)); //TODO: BORRAR
-                // if (!!user) router.push("/verify");
-                setEmail("")
+                const user = await doForgotPassword({ email });
+                if(user){
+                    toast({ type: 'success', message: 'Email enviado correctamente...' });
+                    setEmailSent(true);
+                }else{
+                    toast({ type: 'error', message: 'Ocurrió un error. Verifique el email introducido.' });
+                }
+                setLoadingRequest(false);
             } catch (err) {} finally {
                 setLoadingRequest(false);
             }
@@ -91,12 +100,12 @@ export default function ForgotPasswordForm() {
                                 <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                             }
                         />
-                        {error && <p className="mt-4 text-right text-red-400 text-xs">{error.message}</p>}
                         <div className="gap-2 flex flex-col md:flex-row justify-center ">
-                            <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="warning" variant="shadow">
+                            <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="warning" variant="shadow" isDisabled={emailSent}>
                                 Restablecer contraseña
                             </Button> 
                         </div>
+                        {error && <p className="text-center text-red-400 text-xs">{error.message}</p>}
                     </CardBody>
                 </Card>
             </div>
