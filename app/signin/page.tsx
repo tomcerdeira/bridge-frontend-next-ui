@@ -139,12 +139,12 @@ export default function SignInForm({ searchParams }) {
                             className="max-w-xs"
                         />
                         <Link as={NextLink} href="/forgot-password" size="sm" className="">¿Olvidaste tu contraseña?</Link>
-                        {error && <p className="mt-4 text-right text-red-400 text-xs">{error.message}</p>}
                         <div className="gap-2 flex flex-col md:flex-row justify-center ">
-                            <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="success" variant="shadow">
+                            <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color={error? "danger" : "success"} variant="shadow">
                                 Iniciar sesión
                             </Button> 
                         </div>
+                        {error && <p className="text-right text-red-400 text-xs">{error.message}</p>}
                     </CardBody>
                 </Card>
             </div>

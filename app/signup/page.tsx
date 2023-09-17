@@ -77,10 +77,8 @@ export default function SignUpForm() {
             try {
                 setLoadingRequest(true);
                 const user = await doSignUp({ email, password });
-                await new Promise((resolve) => setTimeout(resolve, 1000)); //TODO: BORRAR
+                setLoadingRequest(false);
                 if (!!user) router.push("/verify");
-                setEmail("")
-                setPassword("")
             } catch (err) {} finally {
                 setLoadingRequest(false);
             }
@@ -130,7 +128,6 @@ export default function SignUpForm() {
                             isRequired
                             className="max-w-xs"
                         />
-                        {error && <p className="mt-4 text-right text-red-400">{error.message}</p>}
                         <div className="gap-2 flex flex-col md:flex-row justify-center ">
                             <Link
                                 as={NextLink}
@@ -140,10 +137,11 @@ export default function SignUpForm() {
                                     Iniciar sesión
                                 </Button> 
                             </Link>
-                            <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="success" variant="shadow">
+                            <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color={error? "danger" : "success"} variant="shadow">
                                     Regístrate
-                            </Button> 
+                            </Button>
                         </div>
+                        {error && <p className="mt-4 text-right text-red-400">{error.message}</p>}
                     </CardBody>
                 </Card>
             </div>
