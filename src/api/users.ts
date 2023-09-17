@@ -5,6 +5,7 @@ import { ParsedUser, UserResponse } from './types';
 export const ME_PATH = `/private/users/me`
 export const SIGN_UP = `/public/users/`
 export const FORGOT_PASSWORD = `/public/users/forgot-password`
+export const RESET_PASSWORD = (token: string) => `/public/users/reset-password/${token}`
 
 const mockUser = {
     id: 1,
@@ -89,6 +90,22 @@ export function useForgotPassword() {
 
   return {
       doForgotPassword: trigger,
+      isLoading: isMutating,
+      data,
+      error,
+  };
+}
+
+export function useResetPassword({token}: {token: string}) {
+
+  const { trigger, data, isMutating, error } = useSWRMutation(
+      RESET_PASSWORD(token),
+      (url, { arg }) => fetcher<any>(url, { body: arg, method: 'PATCH' }),
+      {throwOnError: false}
+  );
+
+  return {
+      doResetPassword: trigger,
       isLoading: isMutating,
       data,
       error,

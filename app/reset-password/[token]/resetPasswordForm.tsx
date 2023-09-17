@@ -2,10 +2,16 @@
 
 import { EyeFilledIcon } from "@/components/eyeFieldIcon";
 import { EyeSlashFilledIcon } from "@/components/eyeSlashFieldIcon";
-import { useSignUp } from "@/src/api/users";
+import toast from "@/components/toast";
+import { useResetPassword } from "@/src/api/users";
 import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
+
+type Props = {
+	token: string
+	children?: React.ReactNode
+  }
 
 interface FormErrors {
 	password: string[];
@@ -17,7 +23,7 @@ interface FormErrors {
 	password_repeat: [],
   };
 
-export default function ResetPasswordForm({ searchParams }) {
+export default function ResetPasswordForm({ children, token }: Props) {
 
     const [isVisible, setIsVisible] = useState(false);
     const toggleVisibility = () => setIsVisible(!isVisible);
@@ -39,8 +45,7 @@ export default function ResetPasswordForm({ searchParams }) {
         clearError("password_repeat");
 	};
 
-    //TODO: cambiar a useResetPassword cuando este implementado
-    const { doSignUp, error, isLoading } = useSignUp();
+    const { doResetPassword, error, isLoading } = useResetPassword({token});
     const router = useRouter();
 
 	const handleSubmit = async (e: any) => {
@@ -69,11 +74,12 @@ export default function ResetPasswordForm({ searchParams }) {
         if (!hasErrors) {
             try {
                 setLoadingRequest(true);
-                // const user = await doSignUp({ email });
-                await new Promise((resolve) => setTimeout(resolve, 1000)); //TODO: BORRAR
-                // if (!!user) router.push("/verify");
-                setPassword("")
-                setPasswordRepeat("")
+                const user = await doResetPassword({ new_password: password });
+                setLoadingRequest(false);
+                if (!!user){
+                    toast({ type: 'success', message: 'Contraseña cambiada correctamente.' });
+                    router.push("/signin");
+                }
             } catch (err) {} finally {
                 setLoadingRequest(false);
             }
