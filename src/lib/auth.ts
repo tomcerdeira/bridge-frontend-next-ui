@@ -79,9 +79,9 @@ export async function getAccessToken(accessToken, refreshToken) {
   const isAccessExpired = isTokenExpired(accessToken)
   const isRefreshExpired = isTokenExpired(refreshToken)
 
-  if (isAccessExpired && isRefreshExpired) {
-    return "expired"
-  }
+  // if (isAccessExpired && isRefreshExpired) {
+  //   return "expired"
+  // }
 
   if (!accessToken || (isAccessExpired && isRefreshExpired)) {
     return null

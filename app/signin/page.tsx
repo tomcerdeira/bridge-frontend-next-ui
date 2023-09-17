@@ -73,9 +73,10 @@ export default function SignInForm({ searchParams }) {
             try {
                 setLoadingRequest(true);
                 const user = await doSignIn({ email, password });
+                setLoadingRequest(false);
                 if (!!user) router.push("/");
             } catch (err) {} finally {
-                setLoadingRequest(false);
+                // setLoadingRequest(false);
             }
         }
 
@@ -83,7 +84,6 @@ export default function SignInForm({ searchParams }) {
 
     useEffect(() => {
         const isNotAuthenticated = searchParams.isAuthenticated === "false";
-
         if (isNotAuthenticated) {
             alert("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
         }

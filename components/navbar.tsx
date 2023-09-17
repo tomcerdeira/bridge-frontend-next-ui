@@ -1,8 +1,5 @@
 'use client'
 
-import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
-import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
 import {
 	NavbarBrand,
@@ -13,27 +10,20 @@ import {
 	NavbarMenuToggle,
 	Navbar as NextUINavbar,
 } from "@nextui-org/navbar";
-
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import { link as linkStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
 import clsx from "clsx";
 import NextLink from "next/link";
 
-import {
-	DiscordIcon,
-	GithubIcon,
-	HeartFilledIcon,
-	SearchIcon,
-	TwitterIcon,
-} from "@/components/icons";
-import { ThemeSwitch } from "@/components/theme-switch";
-
-import { Logo } from "@/components/icons";
 import { useAuth } from "@/src/hooks/useAuth";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { BridgeLogo } from "./bridgeLogo";
 
 export const Navbar = () => {
+	const router = useRouter();
 	const { user, doSignOut } = useAuth();
 	
 	const pathname = usePathname();
@@ -43,42 +33,44 @@ export const Navbar = () => {
 		pathname.startsWith('/checkout') ||
 		pathname.startsWith('/forgot-password')
 		? false : true;
-	
-	const searchInput = (
-		<Input
-			aria-label="Search"
-			classNames={{
-				inputWrapper: "bg-default-100",
-				input: "text-sm",
-			}}
-			endContent={
-				<Kbd className="hidden lg:inline-block" keys={["command"]}>
-					K
-				</Kbd>
-			}
-			labelPlacement="outside"
-			placeholder="Search..."
-			startContent={
-				<SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-			}
-			type="search"
-		/>
-	);
+
+	useEffect(() => {
+		// TODO: rev, capaz esta el token pero es invalido!
+		const isAuthenticated = !!user;
+		if (!isAuthenticated && showHeader) {
+			// router.push("/signin");
+		}
+	}, [user, router]);
 
 	return (
 		<>
 		{showHeader && (
-		<NextUINavbar maxWidth="xl" position="sticky">
+		<NextUINavbar maxWidth="xl" position="sticky" classNames={{
+			item: [
+			  "flex",
+			  "relative",
+			  "h-full",
+			  "items-center",
+			  "data-[active=true]:after:content-['']",
+			  "data-[active=true]:after:absolute",
+			  "data-[active=true]:after:bottom-0",
+			  "data-[active=true]:after:left-0",
+			  "data-[active=true]:after:right-0",
+			  "data-[active=true]:after:h-[2px]",
+			  "data-[active=true]:after:rounded-[2px]",
+			  "data-[active=true]:after:bg-primary",
+			],
+		  }}>
 			<NavbarContent className="basis-1/5 sm:basis-full" justify="start">
 				<NavbarBrand as="li" className="gap-3 max-w-fit">
 					<NextLink className="flex justify-start items-center gap-1" href="/">
-						<Logo />
-						<p className="font-bold text-inherit">ACME</p>
+						<BridgeLogo />
+						<p className="font-bold text-inherit">Bridge</p>
 					</NextLink>
 				</NavbarBrand>
 				<ul className="hidden lg:flex gap-4 justify-start ml-2">
 					{siteConfig.navItems.map((item) => (
-						<NavbarItem key={item.href}>
+						<NavbarItem key={item.href} isActive={item.href === pathname}>
 							<NextLink
 								className={clsx(
 									linkStyles({ color: "foreground" }),
@@ -99,60 +91,52 @@ export const Navbar = () => {
 				justify="end"
 			>
 				<NavbarItem className="hidden sm:flex gap-2">
-					<Link isExternal href={siteConfig.links.twitter} aria-label="Twitter">
-						<TwitterIcon className="text-default-500" />
-					</Link>
-					<Link isExternal href={siteConfig.links.discord} aria-label="Discord">
-						<DiscordIcon className="text-default-500" />
-					</Link>
-					<Link isExternal href={siteConfig.links.github} aria-label="Github">
-						<GithubIcon className="text-default-500" />
-					</Link>
-					<ThemeSwitch />
-				</NavbarItem>
-				<NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-				<NavbarItem className="hidden md:flex">
-					<Button
-            isExternal
-						as={Link}
-						className="text-sm font-normal text-default-600 bg-default-100"
-						href={siteConfig.links.sponsor}
-						startContent={<HeartFilledIcon className="text-danger" />}
-						variant="flat"
-					>
-						Sponsor
-					</Button>
+					<Dropdown>
+						<DropdownTrigger>
+							<Button 
+							color="default"
+							variant="shadow"
+							>
+							{user?.email}
+							</Button>
+						</DropdownTrigger>
+						<DropdownMenu 
+							aria-label="Dropdown Variants"
+							color="default" 
+							variant="shadow">
+							<DropdownItem key="delete" className="text-danger" color="danger" onClick={doSignOut}>
+								Cerrar sesión
+							</DropdownItem>
+						</DropdownMenu>
+					</Dropdown>
 				</NavbarItem>
 			</NavbarContent>
 
 			<NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-				<Link isExternal href={siteConfig.links.github} aria-label="Github">
-					<GithubIcon className="text-default-500" />
-				</Link>
-				<ThemeSwitch />
 				<NavbarMenuToggle />
 			</NavbarContent>
 
 			<NavbarMenu>
-				{searchInput}
 				<div className="mx-4 mt-2 flex flex-col gap-2">
-					{siteConfig.navMenuItems.map((item, index) => (
+					{siteConfig.navItems.map((item, index) => (
 						<NavbarMenuItem key={`${item}-${index}`}>
 							<Link
-								color={
-									index === 2
-										? "primary"
-										: index === siteConfig.navMenuItems.length - 1
-										? "danger"
-										: "foreground"
-								}
-								href="#"
+								color={item.href === pathname? "primary" : "foreground"}
+								href={item.href}
 								size="lg"
 							>
 								{item.label}
 							</Link>
 						</NavbarMenuItem>
 					))}
+						<Link
+							color="danger"
+							size="lg"
+							onClick={doSignOut}
+							style={{ cursor: 'pointer' }}
+						>
+							Cerrar sesión
+						</Link>
 				</div>
 			</NavbarMenu>
 		</NextUINavbar>)}
