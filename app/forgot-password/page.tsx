@@ -44,11 +44,11 @@ export default function ForgotPasswordForm() {
 			password: [],
 		  };
 
-        if (!email) {
-			newErrors.email.push('Email is required.');
-		}else if(!/\S+@\S+\.\S+/.test(email)){
-			newErrors.email.push('Please enter a valid email.');
-		}
+          if (!email) {
+            newErrors.email.push('Se requiere un correo electrónico.');
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            newErrors.email.push('Por favor, ingresa un correo electrónico válido.');
+        }        
 		setErrors(newErrors);
 		  
 		const hasErrors = Object.values(newErrors).some((errorArray) => errorArray.length > 0);
@@ -72,17 +72,18 @@ export default function ForgotPasswordForm() {
             <div className="w-full flex-shrink-0 overflow-hidden">
                 <Card className="max-w-[400px]">
                     <CardHeader className="flex gap-3 justify-center">
-                        <div className="flex flex-col">
-                            <p className="text-xl font-bold text-left mb-4">Forgot Password</p>
-                            <p className="text-small text-left opacity-50">Enter the email address associated with your account, and we`ll send you a link to reset your password.</p>
-                        </div>
+                    <div className="flex flex-col">
+                        <p className="text-xl font-bold text-left mb-4">Olvidé mi contraseña</p>
+                        <p className="text-small text-left opacity-50">Ingresa la dirección de correo electrónico asociada con tu cuenta y te enviaremos un enlace para restablecer tu contraseña.</p>
+                    </div>
+
                     </CardHeader>
                     <CardBody className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
                         <Input
                             isRequired
                             type="email"
                             label="Email"
-                            placeholder="you@example.com"
+                            placeholder="tu@email.com"
                             labelPlacement="outside"
                             onChange={handleEmailChange}
                             errorMessage={errors.email.join(' ')}
@@ -93,7 +94,7 @@ export default function ForgotPasswordForm() {
                         {error && <p className="mt-4 text-right text-red-400 text-xs">{error.message}</p>}
                         <div className="gap-2 flex flex-col md:flex-row justify-center ">
                             <Button className="mt-4 w-full" onClick={handleSubmit} isLoading={loadingRequest} color="warning" variant="shadow">
-                                Reset password
+                                Restablecer contraseña
                             </Button> 
                         </div>
                     </CardBody>
