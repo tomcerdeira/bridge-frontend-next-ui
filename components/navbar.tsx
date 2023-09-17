@@ -30,9 +30,12 @@ import {
 import { ThemeSwitch } from "@/components/theme-switch";
 
 import { Logo } from "@/components/icons";
+import { useAuth } from "@/src/hooks/useAuth";
 import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
+	const { user, doSignOut } = useAuth();
+	
 	const pathname = usePathname();
 	const showHeader = 
 		pathname.startsWith('/signin') ||

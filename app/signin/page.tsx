@@ -8,7 +8,7 @@ import { Link } from "@nextui-org/link";
 import { Button, Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
 import NextLink from "next/link";
 import { useRouter } from 'next/navigation';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface FormErrors {
 	email: string[];
@@ -20,7 +20,7 @@ interface FormErrors {
 	password: [],
   };
 
-export default function SignInForm() {
+export default function SignInForm({ searchParams }) {
     const [isVisible, setIsVisible] = useState(false);
 
     const toggleVisibility = () => setIsVisible(!isVisible);
@@ -80,6 +80,14 @@ export default function SignInForm() {
         }
 
 	};
+
+    useEffect(() => {
+        const isNotAuthenticated = searchParams.isAuthenticated === "false";
+
+        if (isNotAuthenticated) {
+            alert("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+        }
+    }, []);
     
     return (
         <div className="gap-6 justify-center">
