@@ -1,5 +1,6 @@
 import React from "react";
 import { categories } from "../data/categories";
+import { onDragStart } from "../utils/util";
 const Sidebar = () => {
   return (
     <div className="text-white flex flex-col ">
@@ -13,6 +14,15 @@ const Sidebar = () => {
                   className="cursor-grab hover:bg-neutral-800 rounded-full p-4 translate-x-0 translate-y-0"
                   draggable
                   key={itemIndex}
+                  onDragStart={(event) =>
+                    onDragStart(event, {
+                      node_type: category.type
+                        .replaceAll(" ", "_")
+                        .toLowerCase(),
+                      name: item.name.toLowerCase(),
+                      parameter: item.parameter,
+                    })
+                  }
                 >
                   <item.icon className="text-2xl" />
                 </div>

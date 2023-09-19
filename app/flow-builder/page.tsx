@@ -1,21 +1,20 @@
 "use client";
 import { useCallback } from "react";
-import ReactFlow, {
-  Node,
-  addEdge,
-  Background,
+import {
+  ReactFlow,
+  Viewport,
   Edge,
   Connection,
   useNodesState,
   useEdgesState,
-  Viewport,
-} from "reactflow";
-
-import "reactflow/dist/style.css";
-import { initialNodes, initialEdges } from "./data/initial-nodes";
+  addEdge,
+  initialNodes,
+  initialEdges,
+} from "./index";
 import Sidebar from "./components/sidebar";
+import "reactflow/dist/style.css";
 
-const BasicFlow = () => {
+const FlowBuilder = () => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const defaultViewport: Viewport = { x: 250, y: 250, zoom: 1 };
@@ -41,4 +40,4 @@ const BasicFlow = () => {
   );
 };
 
-export default BasicFlow;
+export default FlowBuilder;

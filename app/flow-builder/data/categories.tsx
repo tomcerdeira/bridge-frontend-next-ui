@@ -8,7 +8,7 @@ import {
   TbAmpersand,
   LiaGripLinesVerticalSolid,
   RiBracesFill,
-} from "../icons";
+} from "../index";
 
 export const categories = [
   {
