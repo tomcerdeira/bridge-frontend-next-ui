@@ -25,9 +25,9 @@ const BasicFlow = () => {
   );
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row h-full">
       <Sidebar />
-      <div className="w-screen h-screen">
+      <div className="w-screen">
         <ReactFlow
           nodes={nodes}
           edges={edges}
