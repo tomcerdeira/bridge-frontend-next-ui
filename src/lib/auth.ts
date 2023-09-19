@@ -1,6 +1,10 @@
 import Cookies from 'js-cookie'
 
 export type Token = {
+  id: string
+  email: string
+  role: string
+  status: string
   exp: number
   iat: number
 }
@@ -78,10 +82,6 @@ export async function getNewAccessToken() {
 export async function getAccessToken(accessToken, refreshToken) {
   const isAccessExpired = isTokenExpired(accessToken)
   const isRefreshExpired = isTokenExpired(refreshToken)
-
-  // if (isAccessExpired && isRefreshExpired) {
-  //   return "expired"
-  // }
 
   if (!accessToken || (isAccessExpired && isRefreshExpired)) {
     return null

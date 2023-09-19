@@ -43,10 +43,16 @@ export type IUser = IEntityBase & {
   // TODO: add status
 }
 
+export type IUserStatus =
+  | 'VERIFY'
+  | 'FORGOT_PASSWORD'
+  | 'OK'
+
 export type UserResponse = {
   role: IRole;
   email: string;
   id: number;
+  status: IUserStatus;
   deletedAt: Date | null;
   updatedAt: Date;
   createdAt: Date;
