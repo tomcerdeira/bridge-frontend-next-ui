@@ -5,9 +5,7 @@ import "reactflow/dist/style.css";
 
 const FlowBuilder = () => {
   const [nodes, , onNodesChange] = bridge.useNodesState(bridge.initialNodes);
-  const [edges, setEdges, onEdgesChange] = bridge.useEdgesState(
-    bridge.initialEdges
-  );
+  const [edges, setEdges, onEdgesChange] = bridge.useEdgesState([]);
   const defaultViewport: bridge.Viewport = { x: 250, y: 250, zoom: 1 };
   const onConnect = useCallback(
     (params: bridge.Edge | bridge.Connection) =>

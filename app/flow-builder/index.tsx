@@ -10,7 +10,7 @@ export { TbAmpersand } from "react-icons/tb";
 export { LiaGripLinesVerticalSolid } from "react-icons/lia";
 export type { Edge, Connection, Viewport } from "reactflow";
 export { ReactFlow } from "reactflow";
-export { initialNodes, initialEdges } from "./data/initialState";
+export { initialNodes } from "./data/initialState";
 export { addEdge, useNodesState, useEdgesState } from "reactflow";
 export { default as Sidebar } from "./components/sidebar";
 
