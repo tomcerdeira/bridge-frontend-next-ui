@@ -8,7 +8,7 @@ export { FaCcStripe, FaFlagCheckered, FaTelegram } from "react-icons/fa";
 export { SiMercadopago, SiBinance } from "react-icons/si";
 export { TbAmpersand } from "react-icons/tb";
 export { LiaGripLinesVerticalSolid } from "react-icons/lia";
-export type { Edge, Connection, Viewport } from "reactflow";
+export type { Edge, Connection, Viewport, ReactFlowInstance } from "reactflow";
 export { ReactFlow } from "reactflow";
 export { initialNodes } from "./data/initialState";
 export { addEdge, useNodesState, useEdgesState } from "reactflow";

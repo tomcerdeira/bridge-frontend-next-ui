@@ -16,7 +16,7 @@ export const onDragStart = (event: any, nodeType: any) => {
   event.dataTransfer.effectAllowed = "move";
 };
 
-const getIconComponent = (icon: String) => {
+export const getIconComponent = (icon: String) => {
   switch (icon.toLowerCase()) {
     case "slack":
       return RiSlackFill;
@@ -40,3 +40,6 @@ const getIconComponent = (icon: String) => {
       return SiBinance;
   }
 };
+
+let id = 1;
+export const getId = () => `bridge_${id++}`;

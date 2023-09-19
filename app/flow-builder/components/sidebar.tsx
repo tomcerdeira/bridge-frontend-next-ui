@@ -11,14 +11,12 @@ const Sidebar = () => {
             <div className="flex flex-row justify-around">
               {category.items.map((item, itemIndex) => (
                 <div
-                  className="cursor-grab hover:bg-neutral-800 rounded-full p-4 translate-x-0 translate-y-0"
+                  className="cursor-grab hover:bg-neutral-800 rounded-full p-4 translate-x-0 translate-y-0 "
                   draggable
                   key={itemIndex}
                   onDragStart={(event) =>
                     onDragStart(event, {
-                      node_type: category.type
-                        .replaceAll(" ", "_")
-                        .toLowerCase(),
+                      node_type: category.type.split(" ")[0].toLowerCase(),
                       name: item.name.toLowerCase(),
                       parameter: item.parameter,
                     })

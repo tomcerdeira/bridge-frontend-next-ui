@@ -14,7 +14,7 @@ const NotificationNode = ({
         position={targetPosition}
         isConnectable={isConnectable}
       />
-      start
+      notification
       <Handle
         type="source"
         position={sourcePosition}

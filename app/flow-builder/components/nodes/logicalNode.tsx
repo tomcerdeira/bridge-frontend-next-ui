@@ -14,7 +14,7 @@ const LogicalNode = ({
         position={targetPosition}
         isConnectable={isConnectable}
       />
-      start
+      logical
       <Handle
         type="source"
         position={sourcePosition}

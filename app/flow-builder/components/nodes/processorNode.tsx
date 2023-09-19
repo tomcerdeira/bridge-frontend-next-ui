@@ -14,7 +14,7 @@ const ProcessorNode = ({
         position={targetPosition}
         isConnectable={isConnectable}
       />
-      start
+      processor
       <Handle
         type="source"
         position={sourcePosition}

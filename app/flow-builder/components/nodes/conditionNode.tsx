@@ -14,7 +14,7 @@ const ConditionNode = ({
         position={targetPosition}
         isConnectable={isConnectable}
       />
-      start
+      condition
       <Handle
         type="source"
         position={sourcePosition}
