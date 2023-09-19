@@ -1,25 +1,11 @@
 import { memo } from "react";
-import { Handle, NodeProps, Position } from "reactflow";
+import BaseNode from "./baseNode";
+import { NodeProps } from "reactflow";
 
-const LogicalNode = ({
-  data,
-  isConnectable,
-  targetPosition = Position.Top,
-  sourcePosition = Position.Bottom,
-}: NodeProps) => {
+const LogicalNode = ({ data }: NodeProps) => {
   return (
     <>
-      <Handle
-        type="target"
-        position={targetPosition}
-        isConnectable={isConnectable}
-      />
-      logical
-      <Handle
-        type="source"
-        position={sourcePosition}
-        isConnectable={isConnectable}
-      />
+      <BaseNode data={data} hasSource={true} hasTarget={true} />
     </>
   );
 };

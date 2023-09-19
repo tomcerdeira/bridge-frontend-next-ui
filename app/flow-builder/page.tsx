@@ -50,7 +50,10 @@ const FlowBuilder = () => {
         id: util.getId(),
         type: data.node_type,
         position,
-        data: {},
+        data: {
+          icon: util.getIconComponent(data.name),
+          parameter: data.parameter,
+        },
       };
 
       setNodes((nds) => nds.concat(newNode));
