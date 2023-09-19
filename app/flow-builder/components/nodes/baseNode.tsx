@@ -2,7 +2,7 @@ import { Handle, Position } from "reactflow";
 import { ExtendedNodeProps } from "./index";
 
 const Node = ({ data, hasSource, hasTarget }: ExtendedNodeProps) => {
-  const Icon = data.icon;
+  const Icon = data;
   return (
     <>
       <div className="bg-neutral-800 rounded-full p-4 shadow-md">

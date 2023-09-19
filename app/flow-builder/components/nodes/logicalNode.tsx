@@ -5,7 +5,7 @@ import { NodeProps } from "reactflow";
 const LogicalNode = ({ data }: NodeProps) => {
   return (
     <>
-      <BaseNode data={data} hasSource={true} hasTarget={true} />
+      <BaseNode data={data.icon} hasSource={true} hasTarget={true} />
     </>
   );
 };

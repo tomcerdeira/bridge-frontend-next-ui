@@ -5,7 +5,7 @@ import { NodeProps } from "reactflow";
 const NotificationNode = ({ data }: NodeProps) => {
   return (
     <>
-      <BaseNode data={data} hasSource={true} hasTarget={false} />
+      <BaseNode data={data.icon} hasSource={true} hasTarget={false} />
     </>
   );
 };
