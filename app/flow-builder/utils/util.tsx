@@ -41,5 +41,12 @@ export const getIconComponent = (icon: String) => {
   }
 };
 
+export const fieldIntoReadable = (field: string) => {
+  return field
+    .replace(/_/g, " ")
+    .toLowerCase()
+    .replace(/\b[a-z]/g, (letter) => letter.toUpperCase());
+};
+
 let id = 1;
 export const getId = () => `bridge_${id++}`;

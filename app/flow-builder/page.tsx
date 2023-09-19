@@ -53,6 +53,7 @@ const FlowBuilder = () => {
         data: {
           icon: util.getIconComponent(data.name),
           parameter: data.parameter,
+          name: data.name,
         },
       };
 
