@@ -1,39 +1,32 @@
 "use client";
 import { useCallback } from "react";
-import {
-  ReactFlow,
-  Viewport,
-  Edge,
-  Connection,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  initialNodes,
-  initialEdges,
-} from "./index";
-import Sidebar from "./components/sidebar";
+import * as bridge from "./index";
 import "reactflow/dist/style.css";
 
 const FlowBuilder = () => {
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const defaultViewport: Viewport = { x: 250, y: 250, zoom: 1 };
+  const [nodes, , onNodesChange] = bridge.useNodesState(bridge.initialNodes);
+  const [edges, setEdges, onEdgesChange] = bridge.useEdgesState(
+    bridge.initialEdges
+  );
+  const defaultViewport: bridge.Viewport = { x: 250, y: 250, zoom: 1 };
   const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((els) => addEdge(params, els)),
+    (params: bridge.Edge | bridge.Connection) =>
+      setEdges((els) => bridge.addEdge(params, els)),
     [setEdges]
   );
 
   return (
     <div className="flex flex-row h-full">
-      <Sidebar />
+      <bridge.Sidebar />
       <div className="w-screen">
-        <ReactFlow
+        <bridge.ReactFlow
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           defaultViewport={defaultViewport}
+          nodeTypes={bridge.nodeTypes}
         />
       </div>
     </div>

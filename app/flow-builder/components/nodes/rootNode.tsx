@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
-const CustomNode = ({
+const RootNode = ({
   data,
   isConnectable,
   targetPosition = Position.Top,
@@ -14,7 +14,7 @@ const CustomNode = ({
         position={targetPosition}
         isConnectable={isConnectable}
       />
-      {data?.label}
+      root
       <Handle
         type="source"
         position={sourcePosition}
@@ -24,6 +24,4 @@ const CustomNode = ({
   );
 };
 
-CustomNode.displayName = "CustomNode";
-
-export default memo(CustomNode);
+export default memo(RootNode);
