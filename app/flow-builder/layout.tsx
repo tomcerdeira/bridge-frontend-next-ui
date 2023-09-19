@@ -5,7 +5,7 @@ export default function BuildFlowLayout({
 }) {
   return (
     <section className="min-h-full h-full overflow-y-hidden flex ">
-      <div className="inline-block max-w-lg text-center justify-center ">
+      <div className="inline-block w-full text-center justify-center ">
         {children}
       </div>
     </section>
