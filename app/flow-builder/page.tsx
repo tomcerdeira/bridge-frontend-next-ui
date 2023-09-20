@@ -16,7 +16,7 @@ const FlowBuilder = () => {
 
   const onConnect = useCallback(
     (params: bridge.Edge | bridge.Connection) =>
-      setEdges((els) => bridge.addEdge(params, els)),
+      setEdges((els) => bridge.addEdge({ ...params, animated: true }, els)),
     [setEdges]
   );
 
