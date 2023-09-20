@@ -1,11 +1,15 @@
 import { memo } from "react";
 import BaseNode from "./baseNode";
-import { NodeProps } from "reactflow";
+import { NodeProps, Handle, Position } from "reactflow";
 
 const LogicalNode = ({ data }: NodeProps) => {
   return (
     <>
-      <BaseNode data={data.icon} hasSource={true} hasTarget={true} />
+      <div className="bg-neutral-800 rounded-xl p-4 shadow-md">
+        <span className="text-lg font-fira">{data.name.toUpperCase()}</span>
+      </div>
+      <Handle type="target" position={Position.Left} className="!bg-white" />
+      <Handle type="source" position={Position.Right} className="!bg-white" />
     </>
   );
 };
