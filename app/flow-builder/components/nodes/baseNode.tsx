@@ -11,14 +11,14 @@ const Node = ({ data, hasSource, hasTarget }: ExtendedNodeProps) => {
             <Icon className="text-3xl" />
             {hasSource && (
               <Handle
-                type="source"
+                type="target"
                 position={Position.Left}
                 className="!bg-white"
               />
             )}
             {hasTarget && (
               <Handle
-                type="target"
+                type="source"
                 position={Position.Right}
                 className="!bg-white"
               />
