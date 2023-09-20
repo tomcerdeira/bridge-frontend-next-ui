@@ -50,9 +50,6 @@ export async function baseFetcher<T>(
     const baseURL = process.env.NEXT_PUBLIC_BASE_URL
     const domain = baseURL?.split('://')[1]
     const url = `http://${domain}${path}`
-  
-    console.log("REQUEST URL: " + url);
-    
     const { headers: headerParams, body: bodyParams, ...opts } = options || {}
   
     const token = await getAccessToken(accessToken, refreshToken)
@@ -70,7 +67,7 @@ export async function baseFetcher<T>(
     const data: T | ErrorResponse = text ? JSON.parse(text) : undefined
   
     if (!response.ok) {
-      handleRequestFailed(response, path, data as ErrorResponse)
+      handleRequestFailed(response, path, data as ErrorResponse)    
     } else if(response.ok && response.status === 204){
         return { status: 204 } as T;
     }

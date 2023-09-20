@@ -6,6 +6,7 @@ export const ME_PATH = `/private/users/me`
 export const SIGN_UP = `/public/users/`
 export const FORGOT_PASSWORD = `/public/users/forgot-password`
 export const RESET_PASSWORD = (token: string) => `/public/users/reset-password/${token}`
+export const VERIFY = (token: string) => `/public/users/verify/${token}`
 
 const mockUser = {
     id: 1,
@@ -106,6 +107,22 @@ export function useResetPassword({token}: {token: string}) {
 
   return {
       doResetPassword: trigger,
+      isLoading: isMutating,
+      data,
+      error,
+  };
+}
+
+export function useVerify({token}: {token: string}) {
+
+  const { trigger, data, isMutating, error } = useSWRMutation(
+    VERIFY(token),
+      (url) => fetcher<any>(url, { method: 'POST' }),
+      {throwOnError: false}
+  );
+
+  return {
+      doVerify: trigger,
       isLoading: isMutating,
       data,
       error,

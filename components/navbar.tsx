@@ -19,7 +19,6 @@ import NextLink from "next/link";
 
 import { useAuth } from "@/src/hooks/useAuth";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { BridgeLogo } from "./bridgeLogo";
 
 export const Navbar = () => {
@@ -32,16 +31,9 @@ export const Navbar = () => {
 		pathname.startsWith('/signup') || 
 		pathname.startsWith('/checkout') ||
 		pathname.startsWith('/forgot-password') ||
-		pathname.startsWith('/reset-password')
+		pathname.startsWith('/reset-password') ||
+		pathname.startsWith('/verify')
 		? false : true;
-
-	useEffect(() => {
-		// TODO: rev, capaz esta el token pero es invalido!
-		const isAuthenticated = !!user;
-		if (!isAuthenticated && showHeader) {
-			// router.push("/signin");
-		}
-	}, [user, router]);
 
 	return (
 		<>
