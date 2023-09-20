@@ -4,11 +4,11 @@ import { Position, NodeProps, Handle } from "reactflow";
 const ConditionNode = ({ data }: NodeProps) => {
   return (
     <>
-      <div className="bg-neutral-800 rounded-xl p-4 shadow-md gap-1 flex">
-        Probando
+      <div className="bg-neutral-800 rounded-xl p-4 shadow-md gap-3 flex w-52 flex-col">
+        <span className="font-fira">CURRENCY IS USD</span>
       </div>
-      <Handle type="source" position={Position.Left} className="!bg-white" />
-      <Handle type="target" position={Position.Right} className="!bg-white" />
+      <Handle type="target" position={Position.Left} className="!bg-white" />
+      <Handle type="source" position={Position.Right} className="!bg-white" />
     </>
   );
 };
