@@ -1,15 +1,17 @@
-import { memo } from "react";
-import { Position, NodeProps, Handle } from "reactflow";
+import { memo, useState } from "react";
+import { NodeProps } from "reactflow";
+import BaseCardNode from "./baseCardNode";
 
 const ConditionNode = ({ data }: NodeProps) => {
+  const [parameters, setParameters] = useState(data.parameter);
   return (
-    <>
-      <div className="bg-neutral-800 rounded-xl p-4 shadow-md gap-3 flex w-52 flex-col">
-        <span className="font-fira">CURRENCY IS USD</span>
-      </div>
-      <Handle type="target" position={Position.Left} className="!bg-white" />
-      <Handle type="source" position={Position.Right} className="!bg-white" />
-    </>
+    <BaseCardNode
+      data={data}
+      parameters={parameters}
+      setParameters={setParameters}
+      hasSource={true}
+      hasTarget={true}
+    />
   );
 };
 

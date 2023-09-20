@@ -25,7 +25,7 @@ export const categories = [
       {
         icon: RiPaypalFill,
         name: "Paypal",
-        parameter: { ACCESS_TOKEN: "", PUBLIC_KEY: "" },
+        parameter: { ACCESS_TOKEN: "" },
       },
       {
         icon: FaCcStripe,
@@ -35,7 +35,7 @@ export const categories = [
       {
         icon: SiMercadopago,
         name: "Mercadopago",
-        parameter: { ACCESS_TOKEN: "", PUBLIC_KEY: "" },
+        parameter: { PUBLIC_KEY: "" },
       },
     ],
   },

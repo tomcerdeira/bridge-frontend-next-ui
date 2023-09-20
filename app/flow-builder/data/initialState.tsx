@@ -1,11 +1,11 @@
 import { Node } from "reactflow";
-import { FaFlagCheckered } from "react-icons/fa";
+import { CiPlay1 } from "react-icons/ci";
 
 export const initialNodes: Node[] = [
   {
     id: "bridge_0",
     type: "root",
-    data: { label: "root", icon: FaFlagCheckered },
+    data: { name: "Empezar", icon: CiPlay1 },
     position: { x: -200, y: -75 },
   },
 ];
