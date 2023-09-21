@@ -13,7 +13,10 @@ const Sidebar = ({ onSidebarClick }: any) => {
                 <div
                   className="cursor-pointer hover:bg-neutral-800 rounded-full p-4"
                   onClick={() =>
-                    onSidebarClick({ ...item, node_type: category.type })
+                    onSidebarClick({
+                      ...item,
+                      node_type: category.type.toLowerCase().split(" ")[0],
+                    })
                   }
                   key={itemIndex}
                 >

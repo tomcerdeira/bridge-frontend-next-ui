@@ -24,13 +24,13 @@ const FlowBuilder = () => {
     const position = { x: 0, y: 0 };
     const newNode = {
       id: util.getId(),
-      type: data.node_type.toLowerCase(),
+      type: data.node_type,
       position,
       data: {
         icon: util.getIconComponent(data.name),
         parameter: data.parameter,
         name: data.name,
-        ...(data.node_type.toLowerCase() === "condition" && {
+        ...(data.node_type === "condition" && {
           condition: {
             field: conditions[0].field,
             operator: conditions[0].operators[0],
@@ -44,13 +44,13 @@ const FlowBuilder = () => {
   };
 
   const buildConditions: any = (rule: any, node: any) => {
-    if (node.type !== "condition" && node.type !== "logical_operator") {
+    if (node.type !== "condition" && node.type !== "logical") {
       return node;
     }
 
     if (node.type === "condition") {
       rule["conditions"].push(node.data.condition);
-    } else if (node.type === "logical_operator") {
+    } else if (node.type === "logical") {
       rule["conditionOperators"].push(node.data.name);
     }
 
