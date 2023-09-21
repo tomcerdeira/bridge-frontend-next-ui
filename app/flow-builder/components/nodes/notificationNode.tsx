@@ -4,6 +4,7 @@ import BaseCardNode from "./baseCardNode";
 
 const NotificationNode = ({ data }: NodeProps) => {
   const [parameters, setParameters] = useState(data.parameter);
+
   return (
     <BaseCardNode
       data={data}
