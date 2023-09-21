@@ -34,8 +34,12 @@ export async function middleware(request: NextRequest) {
       }
   
       if (!userData) {
-        const url = new URL('/signin', request.url)
-        return NextResponse.redirect(url);
+        let response = NextResponse.redirect(new URL('/signin', request.url));
+        response.cookies.set('Authorization', "");
+        response.cookies.set('Refresh-Token', "");
+        response.cookies.delete('Authorization');
+        response.cookies.delete('Refresh-Token');
+        return response;
       }
 
       if(userData.status === 'VERIFY' && !request.nextUrl.pathname.includes('/verify')){
