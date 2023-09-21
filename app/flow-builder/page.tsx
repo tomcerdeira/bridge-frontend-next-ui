@@ -25,50 +25,28 @@ const FlowBuilder = () => {
     event.dataTransfer.dropEffect = "move";
   }, []);
 
-  const onDrop = useCallback(
-    (event: any) => {
-      event.preventDefault();
-      if (!reactFlowInstance || !reactFlowWrapper.current) return;
+  const onSidebarClick = (data: any) => {
+    const position = { x: 0, y: 0 };
+    const newNode = {
+      id: util.getId(),
+      type: data.node_type.toLowerCase(),
+      position,
+      data: {
+        icon: util.getIconComponent(data.name),
+        parameter: data.parameter,
+        name: data.name,
+      },
+    };
 
-      const reactFlowBounds = (
-        reactFlowWrapper.current as Element
-      ).getBoundingClientRect();
-      const data = JSON.parse(
-        event.dataTransfer.getData("application/reactflow")
-      );
-
-      if (typeof data === "undefined" || !data) {
-        return;
-      }
-
-      const position = (reactFlowInstance as bridge.ReactFlowInstance).project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
-      });
-
-      const newNode = {
-        id: util.getId(),
-        type: data.node_type,
-        position,
-        data: {
-          icon: util.getIconComponent(data.name),
-          parameter: data.parameter,
-          name: data.name,
-        },
-      };
-
-      setNodes((nds) => nds.concat(newNode));
-    },
-    [reactFlowInstance]
-  );
+    setNodes((nds) => nds.concat(newNode));
+  };
 
   return (
     <div className="flex flex-row h-full">
-      <bridge.Sidebar />
+      <bridge.Sidebar onSidebarClick={onSidebarClick} />
       <div className="w-screen" ref={reactFlowWrapper}>
         <bridge.ReactFlow
           nodes={nodes}
-          onDrop={onDrop}
           onDragOver={onDragOver}
           onInit={setReactFlowInstance}
           edges={edges}
