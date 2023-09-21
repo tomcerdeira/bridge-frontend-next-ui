@@ -13,6 +13,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@nextui-org/react";
+import { Input } from "@nextui-org/input";
 
 const ConditionNode = ({ data }: NodeProps) => {
   const [fieldKeys, setFieldKeys] = useState<Selection>(
@@ -42,6 +43,8 @@ const ConditionNode = ({ data }: NodeProps) => {
     [valueKeys]
   );
 
+  const [amountValue, setAmountValue] = useState<string>("");
+
   const onFieldSelectionChange = (keys: Selection) => {
     setFieldKeys(keys);
     const currentField = keys.currentKey;
@@ -60,7 +63,7 @@ const ConditionNode = ({ data }: NodeProps) => {
 
   return (
     <>
-      <Card className="w-[350px] rounded-lg">
+      <Card className="w-[350px] rounded-2xl bg-content1">
         {/* <CardHeader className="flex gap-3 justify-center">
           <data.icon size={24} />
           <div className="flex flex-col">
@@ -73,7 +76,7 @@ const ConditionNode = ({ data }: NodeProps) => {
           <Dropdown>
             <DropdownTrigger>
               <Button
-                className="uppercase font-fira text-md text-cyan-300"
+                className="uppercase font-fira text-md text-[#ff9900]"
                 variant="light"
               >
                 {selectedField}
@@ -127,35 +130,52 @@ const ConditionNode = ({ data }: NodeProps) => {
               </DropdownMenu>
             </Dropdown>
           )}
-          {currentCondition !== undefined && (
-            <Dropdown>
-              <DropdownTrigger>
-                <Button
-                  className="uppercase font-fira text-md text-cyan-300"
-                  variant="light"
-                >
-                  {selectedValue}
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Value selection"
-                variant="light"
-                disallowEmptySelection
-                selectionMode="single"
-                selectedKeys={valueKeys}
-                onSelectionChange={setValueKeys}
-              >
-                {currentCondition.values.map((value) => (
-                  <DropdownItem
-                    key={value}
-                    className="uppercase font-fira text-md "
+          {currentCondition !== undefined &&
+            currentCondition !== conditions[1] && (
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button
+                    className="uppercase font-fira text-md"
+                    variant="light"
                   >
-                    {value}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-          )}
+                    {selectedValue}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Value selection"
+                  variant="light"
+                  disallowEmptySelection
+                  selectionMode="single"
+                  selectedKeys={valueKeys}
+                  onSelectionChange={setValueKeys}
+                >
+                  {currentCondition.values.map((value) => (
+                    <DropdownItem
+                      key={value}
+                      className="uppercase font-fira text-md "
+                    >
+                      {value}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            )}
+          {currentCondition !== undefined &&
+            currentCondition === conditions[1] && (
+              <Input
+                type="number"
+                placeholder="0.00"
+                variant="underlined"
+                value={amountValue}
+                onValueChange={setAmountValue}
+                className="w-24"
+                endContent={
+                  <div className="pointer-events-none flex items-center">
+                    <span className="text-default-400 text-small">$</span>
+                  </div>
+                }
+              />
+            )}
         </CardBody>
       </Card>
       <Handle type="source" position={Position.Right} className="!bg-white" />
