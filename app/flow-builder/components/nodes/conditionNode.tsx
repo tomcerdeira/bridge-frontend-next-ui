@@ -15,32 +15,68 @@ import {
 } from "@nextui-org/react";
 
 const ConditionNode = ({ data }: NodeProps) => {
-  const [fieldKeys, setFieldKeys] = useState<Selection>(new Set(["text"]));
+  const [fieldKeys, setFieldKeys] = useState<Selection>(
+    new Set([conditions[0].field])
+  );
 
-  const selectedValue = useMemo(
+  const selectedField = useMemo(
     () => Array.from(fieldKeys).join(", ").replaceAll("_", " "),
     [fieldKeys]
   );
 
+  const [operatorKeys, setOperatorKeys] = useState<Selection>(
+    new Set([conditions[0].operators[0]])
+  );
+
+  const selectedOperator = useMemo(
+    () => Array.from(operatorKeys).join(", ").replaceAll("_", " "),
+    [operatorKeys]
+  );
+
+  const [valueKeys, setValueKeys] = useState<Selection>(
+    new Set([conditions[0].values[0]])
+  );
+
+  const selectedValue = useMemo(
+    () => Array.from(valueKeys).join(", ").replaceAll("_", " "),
+    [valueKeys]
+  );
+
+  const onFieldSelectionChange = (keys: Selection) => {
+    setFieldKeys(keys);
+    const currentField = keys.currentKey;
+    const currentCondition = conditions.find(
+      (condition) => condition.field === currentField
+    );
+    if (currentCondition !== undefined) {
+      setOperatorKeys(new Set([currentCondition.operators[0]]));
+      setValueKeys(new Set([currentCondition.values[0]]));
+    }
+  };
+
+  const currentCondition = conditions.find(
+    (condition) => condition.field === selectedField
+  );
+
   return (
     <>
-      <Card className="w-[250px]">
-        <CardHeader className="flex gap-3 justify-center">
+      <Card className="w-[350px] rounded-lg">
+        {/* <CardHeader className="flex gap-3 justify-center">
           <data.icon size={24} />
           <div className="flex flex-col">
             <p className="text-md font-fira capitalize">{data.name}</p>
           </div>
         </CardHeader>
-        <Divider />
-        <CardBody className="flex flex-row align-middle">
+        <Divider /> */}
+        <CardBody className="flex flex-row">
           <span className="font-fira uppercase self-center pr-1">if</span>
           <Dropdown>
             <DropdownTrigger>
               <Button
-                className="uppercase font-fira text-md w-20"
+                className="uppercase font-fira text-md text-cyan-300"
                 variant="light"
               >
-                {selectedValue}
+                {selectedField}
               </Button>
             </DropdownTrigger>
             <DropdownMenu
@@ -49,7 +85,7 @@ const ConditionNode = ({ data }: NodeProps) => {
               disallowEmptySelection
               selectionMode="single"
               selectedKeys={fieldKeys}
-              onSelectionChange={setFieldKeys}
+              onSelectionChange={onFieldSelectionChange}
             >
               {conditions.map((condition) => (
                 <DropdownItem
@@ -61,6 +97,65 @@ const ConditionNode = ({ data }: NodeProps) => {
               ))}
             </DropdownMenu>
           </Dropdown>
+
+          {currentCondition !== undefined && (
+            <Dropdown>
+              <DropdownTrigger>
+                <Button
+                  className="uppercase font-fira text-md w-14"
+                  variant="light"
+                >
+                  {selectedOperator}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Operator selection"
+                variant="light"
+                disallowEmptySelection
+                selectionMode="single"
+                selectedKeys={operatorKeys}
+                onSelectionChange={setOperatorKeys}
+              >
+                {currentCondition.operators.map((operator) => (
+                  <DropdownItem
+                    key={operator}
+                    className="uppercase font-fira text-md"
+                  >
+                    {operator}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          )}
+          {currentCondition !== undefined && (
+            <Dropdown>
+              <DropdownTrigger>
+                <Button
+                  className="uppercase font-fira text-md text-cyan-300"
+                  variant="light"
+                >
+                  {selectedValue}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Value selection"
+                variant="light"
+                disallowEmptySelection
+                selectionMode="single"
+                selectedKeys={valueKeys}
+                onSelectionChange={setValueKeys}
+              >
+                {currentCondition.values.map((value) => (
+                  <DropdownItem
+                    key={value}
+                    className="uppercase font-fira text-md "
+                  >
+                    {value}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          )}
         </CardBody>
       </Card>
       <Handle type="source" position={Position.Right} className="!bg-white" />
