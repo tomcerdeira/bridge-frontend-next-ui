@@ -1,4 +1,3 @@
-import { useDisclosure } from "@nextui-org/react";
 import { Card, CardHeader, CardBody, Divider, Input } from "@nextui-org/react";
 import { PiKeyFill } from "react-icons/pi";
 import * as util from "../utils/util";
@@ -32,7 +31,7 @@ const TaskCard = ({ data, parameters, setParameters }: TaskProps) => {
                 label={util.fieldIntoReadable(key)}
                 key={key}
                 type="password"
-                placeholder={"Ingresar " + util.fieldIntoReadable(key)}
+                placeholder={"Enter " + util.fieldIntoReadable(key)}
                 value={value as string}
                 onChange={(e) => {
                   setParameters({ ...parameters, [key]: e.target.value });

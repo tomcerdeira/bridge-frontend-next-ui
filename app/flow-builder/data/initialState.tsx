@@ -5,7 +5,7 @@ export const initialNodes: Node[] = [
   {
     id: "bridge_0",
     type: "root",
-    data: { name: "Empezar", icon: CiPlay1 },
+    data: { name: "Start", icon: CiPlay1 },
     position: { x: -200, y: -75 },
   },
 ];
