@@ -10,7 +10,7 @@ import {
 	NavbarMenuToggle,
 	Navbar as NextUINavbar,
 } from "@nextui-org/navbar";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import { link as linkStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
@@ -82,6 +82,8 @@ export const Navbar = () => {
 	};
 
 	const { user, doSignOut } = useAuth();
+	const showCreateShopButton = !!user && user.role_name !== 'SHOP_ADMIN';
+	
 	
 	const pathname = usePathname();
 	const showHeader = 
@@ -142,57 +144,75 @@ export const Navbar = () => {
 				justify="end"
 			>
 				<NavbarItem className="hidden sm:flex gap-2">
-					{/* TODO: check si ya tiene company */}
-					<>
-						<Button onPress={onOpen} color="primary" variant="shadow">Crear comercio 🚀</Button>
-						<Modal 
-							backdrop="blur"
-							isOpen={isOpen} 
-							onOpenChange={onOpenChange}
-							placement="top-center"
-						>
-							<ModalContent>
-							{(onClose) => (
-								<>
-								<ModalHeader className="flex flex-col gap-1">Crea tu comercio</ModalHeader>
-								<ModalBody>
-									<p>Para comenzar a definir flujos de pagos, debes primero crear tu comercio dentro de Bridge.</p>
-									<Input
-									onChange={handleShopName}
-									errorMessage={errors.shopName.join(' ')}
-                            		isRequired
-									autoFocus
-									placeholder="Nombre del comercio"
-									/>
-									{error && <p className="text-right text-red-400 text-xs justify-start">{error.message}</p>}
-								</ModalBody>
-								<ModalFooter>
-									<Button color="danger" variant="light" onPress={onClose}>
-										Cerrar
-									</Button>
-									<Button color="primary" onPress={handleCreateShop} isLoading={loadingRequest}>
-										Crear
-									</Button>
-								</ModalFooter>
-								</>
-							)}
-							</ModalContent>
-						</Modal>
+					{ showCreateShopButton ? 
+						(
+						<>
+							<Button onPress={onOpen} color="primary" variant="shadow">Crear comercio 🚀</Button>
+							<Modal 
+								backdrop="blur"
+								isOpen={isOpen} 
+								onOpenChange={onOpenChange}
+								placement="top-center"
+							>
+								<ModalContent>
+								{(onClose) => (
+									<>
+									<ModalHeader className="flex flex-col gap-1">Crea tu comercio</ModalHeader>
+									<ModalBody>
+										<p>Para comenzar a definir flujos de pagos, debes primero crear tu comercio dentro de Bridge.</p>
+										<Input
+										onChange={handleShopName}
+										errorMessage={errors.shopName.join(' ')}
+										isRequired
+										autoFocus
+										placeholder="Nombre del comercio"
+										/>
+										{error && <p className="text-right text-red-400 text-xs justify-start">{error.message}</p>}
+									</ModalBody>
+									<ModalFooter>
+										<Button color="danger" variant="light" onPress={onClose}>
+											Cerrar
+										</Button>
+										<Button color="primary" onPress={handleCreateShop} isLoading={loadingRequest}>
+											Crear
+										</Button>
+									</ModalFooter>
+									</>
+								)}
+								</ModalContent>
+							</Modal>
 						</>
+						) 
+							: 
+						(
+							<Link
+							size="lg"
+							href='/shop'
+							className="mr-2"
+						>
+								<Button color="primary" variant="shadow">
+									Ir a comercio
+								</Button> 
+							</Link>
+						)
+						// TODO: si ya esta en /shop , ver que mostramos
+						}
 					<Dropdown>
 						<DropdownTrigger>
-							<Button 
-							color="default"
-							variant="shadow"
-							>
-							{user?.email}
-							</Button>
+							<div className="cursor-pointer">
+								<Avatar />
+							</div>
 						</DropdownTrigger>
 						<DropdownMenu 
 							aria-label="Dropdown Variants"
 							color="default" 
-							variant="shadow">
-							<DropdownItem key="delete" className="text-danger" color="danger" onClick={doSignOut}>
+							variant="shadow"
+							disabledKeys={["user-email"]}
+							>
+							<DropdownItem key="user-email">
+								{user?.email}
+							</DropdownItem>
+							<DropdownItem key="sign-out" className="text-danger" color="danger" onClick={doSignOut}>
 								Cerrar sesión
 							</DropdownItem>
 						</DropdownMenu>
