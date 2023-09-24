@@ -21,7 +21,7 @@ export default function Verify({ children, token }: Props) {
             const user = await doVerify();
             if (!!user){
                 toast({ type: 'success', message: 'Cuenta verificada correctamente.' });
-                router.push("/");
+                router.push("/init-shop");
             }
         } catch (err) {}
 	};

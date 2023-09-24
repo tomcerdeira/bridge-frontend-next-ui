@@ -10,80 +10,23 @@ import {
 	NavbarMenuToggle,
 	Navbar as NextUINavbar,
 } from "@nextui-org/navbar";
-import { Avatar, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import { link as linkStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
 import clsx from "clsx";
 import NextLink from "next/link";
 
-import { useCreateShop } from "@/src/api/shops";
 import { useAuth } from "@/src/hooks/useAuth";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { BridgeLogo } from "./bridgeLogo";
-import toast from "./toast";
-
-interface FormErrors {
-	shopName: string[];
-  }
-  
-  const initialErrors: FormErrors = {
-	shopName: [],
-  };
-
 
 export const Navbar = () => {
 	const router = useRouter();
-
-	const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 	const [visible, setVisible] = useState(false);
 	const [loadingRequest, setLoadingRequest] = useState(false);
-	const [shopName, setShopName] = useState('');
-	const [errors, setErrors] = useState(initialErrors);
-	const clearError = (fieldName: keyof FormErrors) => {
-		setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: [] }));
-	};
-
-	const handleShopName = (e: any) => {
-		setShopName(e.target.value);
-        clearError("shopName"); //TODO: ver por que no se borran estos errores
-	};
-
-	const { doCreateShop, error, isLoading } = useCreateShop();
-
-	const handleCreateShop = async (e: any) => {
-        const newErrors: FormErrors = {
-			shopName: [],
-		  };
-
-        if (!shopName) {
-			newErrors.shopName.push('Se requiere un nombre para el comercio.');
-		}else if(!/^[a-zA-Z\s-]+$/.test(shopName)){
-			newErrors.shopName.push('Por favor, ingresa un nombre de comercio que SOLO cuente con letras.');
-		}
-
-		setErrors(newErrors);
-		const hasErrors = Object.values(newErrors).some((errorArray) => errorArray.length > 0);
-        if (!hasErrors) {
-            try {
-                setLoadingRequest(true);
-                const shop = await doCreateShop({ shop_name: shopName });
-                setLoadingRequest(false);
-				//TODO: ver que hacemos cuando se cree el shop
-                if (!!shop){
-					toast({ type: 'success', message: 'Comercio creado correctamente.' });
-					onClose();
-					// router.push("/");
-				}
-            } catch (err) {}
-        }
-
-	};
-
 	const { user, doSignOut } = useAuth();
-	const showCreateShopButton = !!user && user.role_name !== 'SHOP_ADMIN';
-	
 	
 	const pathname = usePathname();
 	const showHeader = 
@@ -92,7 +35,8 @@ export const Navbar = () => {
 		pathname.startsWith('/checkout') ||
 		pathname.startsWith('/forgot-password') ||
 		pathname.startsWith('/reset-password') ||
-		pathname.startsWith('/verify')
+		pathname.startsWith('/verify') ||
+		pathname.startsWith('/init-shop')
 		? false : true;
 
 	return (
@@ -144,59 +88,6 @@ export const Navbar = () => {
 				justify="end"
 			>
 				<NavbarItem className="hidden sm:flex gap-2">
-					{ showCreateShopButton ? 
-						(
-						<>
-							<Button onPress={onOpen} color="primary" variant="shadow">Crear comercio 🚀</Button>
-							<Modal 
-								backdrop="blur"
-								isOpen={isOpen} 
-								onOpenChange={onOpenChange}
-								placement="top-center"
-							>
-								<ModalContent>
-								{(onClose) => (
-									<>
-									<ModalHeader className="flex flex-col gap-1">Crea tu comercio</ModalHeader>
-									<ModalBody>
-										<p>Para comenzar a definir flujos de pagos, debes primero crear tu comercio dentro de Bridge.</p>
-										<Input
-										onChange={handleShopName}
-										errorMessage={errors.shopName.join(' ')}
-										isRequired
-										autoFocus
-										placeholder="Nombre del comercio"
-										/>
-										{error && <p className="text-right text-red-400 text-xs justify-start">{error.message}</p>}
-									</ModalBody>
-									<ModalFooter>
-										<Button color="danger" variant="light" onPress={onClose}>
-											Cerrar
-										</Button>
-										<Button color="primary" onPress={handleCreateShop} isLoading={loadingRequest}>
-											Crear
-										</Button>
-									</ModalFooter>
-									</>
-								)}
-								</ModalContent>
-							</Modal>
-						</>
-						) 
-							: 
-						(
-							<Link
-							size="lg"
-							href='/shop'
-							className="mr-2"
-						>
-								<Button color="primary" variant="shadow">
-									Ir a comercio
-								</Button> 
-							</Link>
-						)
-						// TODO: si ya esta en /shop , ver que mostramos
-						}
 					<Dropdown>
 						<DropdownTrigger>
 							<div className="cursor-pointer">
