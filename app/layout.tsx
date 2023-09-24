@@ -1,9 +1,7 @@
-import { Navbar } from "@/components/navbar";
+import { LayoutComponent } from "@/components/layout/layout";
 import { fontSans } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
-import ToastProvider from "@/src/providers/toast.provider";
 import "@/styles/globals.css";
-import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 import { Metadata } from "next";
 import { Providers } from "./providers";
@@ -40,25 +38,11 @@ export default function RootLayout({
 				)}
 			>
 				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-					<ToastProvider>
 						<div className="relative flex flex-col h-screen">
-							<Navbar />
-							<main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+							<LayoutComponent>
 								{children}
-							</main>
-							<footer className="w-full flex items-center justify-center py-3 mb-2">
-								<Link
-									isExternal
-									className="flex items-center gap-1 text-current"
-									href="https://www.itba.edu.ar/"
-									title="itba.edu.ar homepage"
-								>
-									<span className="text-default-600">Desarrollado por</span>
-									<p className="text-primary">Bridge</p>
-								</Link>
-							</footer>
+							</LayoutComponent>
 						</div>
-					</ToastProvider>
 				</Providers>
 			</body>
 		</html>

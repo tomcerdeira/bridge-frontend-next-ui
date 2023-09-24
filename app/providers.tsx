@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthProvider } from "@/src/context/AuthContext";
+import ToastProvider from "@/src/providers/toast.provider";
 import { NextUIProvider } from "@nextui-org/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
@@ -15,9 +16,11 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 	return (
 		<NextUIProvider>
 			<NextThemesProvider {...themeProps}>
-				<AuthProvider>
-					{children}
-				</AuthProvider>
+				<ToastProvider>
+					<AuthProvider>
+						{children}
+					</AuthProvider>
+				</ToastProvider>
 			</NextThemesProvider>
 		</NextUIProvider>
 	);

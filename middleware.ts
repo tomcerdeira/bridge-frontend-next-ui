@@ -29,9 +29,6 @@ export async function middleware(request: NextRequest) {
     }
 
     if (isAuthenticated) {
-
-      console.log("0");
-      
       const userData = await getUserData(accessToken, refreshToken, environment);
       if (!userData) {
           const response = NextResponse.redirect('/signin');

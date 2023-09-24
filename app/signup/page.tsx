@@ -78,7 +78,7 @@ export default function SignUpForm() {
                 setLoadingRequest(true);
                 const user = await doSignUp({ email, password });
                 setLoadingRequest(false);
-                if (!!user) router.push("/");
+                if (!!user) router.push("/verify");
             } catch (err) {} finally {
                 setLoadingRequest(false);
             }
