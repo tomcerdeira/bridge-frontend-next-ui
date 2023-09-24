@@ -133,7 +133,7 @@ export default function SignUpForm() {
                                 as={NextLink}
                                 href={'/signin'}
                             >
-                                <Button className="mt-4 w-full" color="success" variant="faded">
+                                <Button className="mt-4 w-full" color="success" variant="light">
                                     Iniciar sesión
                                 </Button> 
                             </Link>
