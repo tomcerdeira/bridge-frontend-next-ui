@@ -7,6 +7,7 @@ export const SIGN_UP = `/public/users/`
 export const FORGOT_PASSWORD = `/public/users/forgot-password`
 export const RESET_PASSWORD = (token: string) => `/public/users/reset-password/${token}`
 export const VERIFY = (token: string) => `/public/users/verify/${token}`
+export const RESEND_VERIFY_EMAIL = `/private/users/resend-verify`
 
 const mockUser = {
     id: 1,
@@ -123,6 +124,22 @@ export function useVerify({token}: {token: string}) {
 
   return {
       doVerify: trigger,
+      isLoading: isMutating,
+      data,
+      error,
+  };
+}
+
+export function useResendVerifyEmail() {
+
+  const { trigger, data, isMutating, error } = useSWRMutation(
+    RESEND_VERIFY_EMAIL,
+      (url) => fetcher<UserResponse>(url, { method: 'POST' }),
+      {throwOnError: false}
+  );
+
+  return {
+      doResendVerifyEmail: trigger,
       isLoading: isMutating,
       data,
       error,
