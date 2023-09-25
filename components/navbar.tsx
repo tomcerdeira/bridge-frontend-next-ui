@@ -10,7 +10,7 @@ import {
 	NavbarMenuToggle,
 	Navbar as NextUINavbar,
 } from "@nextui-org/navbar";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import { link as linkStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
@@ -19,10 +19,13 @@ import NextLink from "next/link";
 
 import { useAuth } from "@/src/hooks/useAuth";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { BridgeLogo } from "./bridgeLogo";
 
 export const Navbar = () => {
 	const router = useRouter();
+	const [visible, setVisible] = useState(false);
+	const [loadingRequest, setLoadingRequest] = useState(false);
 	const { user, doSignOut } = useAuth();
 	
 	const pathname = usePathname();
@@ -32,7 +35,8 @@ export const Navbar = () => {
 		pathname.startsWith('/checkout') ||
 		pathname.startsWith('/forgot-password') ||
 		pathname.startsWith('/reset-password') ||
-		pathname.startsWith('/verify')
+		pathname.startsWith('/verify') ||
+		pathname.startsWith('/init-shop')
 		? false : true;
 
 	return (
@@ -86,18 +90,20 @@ export const Navbar = () => {
 				<NavbarItem className="hidden sm:flex gap-2">
 					<Dropdown>
 						<DropdownTrigger>
-							<Button 
-							color="default"
-							variant="shadow"
-							>
-							{user?.email}
-							</Button>
+							<div className="cursor-pointer">
+								<Avatar />
+							</div>
 						</DropdownTrigger>
 						<DropdownMenu 
 							aria-label="Dropdown Variants"
 							color="default" 
-							variant="shadow">
-							<DropdownItem key="delete" className="text-danger" color="danger" onClick={doSignOut}>
+							variant="shadow"
+							disabledKeys={["user-email"]}
+							>
+							<DropdownItem key="user-email">
+								{user?.email}
+							</DropdownItem>
+							<DropdownItem key="sign-out" className="text-danger" color="danger" onClick={doSignOut}>
 								Cerrar sesión
 							</DropdownItem>
 						</DropdownMenu>

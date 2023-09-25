@@ -5,7 +5,16 @@ import { getAccessToken } from "./src/lib/auth";
 import { Env } from "./src/lib/fetcher/clientFetcher";
 import { baseFetcher } from "./src/lib/fetcher/fetcherUtils";
 
-const UNAUTHENTICATED_PATHS = ['/signup', '/signin', '/forgot-password', '/verify', '/reset-password']
+const UNAUTHENTICATED_PATHS = ['/signup', '/signin', '/forgot-password', '/reset-password'];
+
+async function getUserData(accessToken: string | undefined, refreshToken: string | undefined, environment: Env): Promise<UserResponse | null> {
+  try {
+      return (await baseFetcher(ME_PATH, accessToken, refreshToken, environment)) as UserResponse;
+  } catch (error) {
+      console.error(error);
+      return null;
+  }
+}
 
 export async function middleware(request: NextRequest) {
     const environment = request.cookies.get('Environment')?.value as Env
@@ -20,34 +29,37 @@ export async function middleware(request: NextRequest) {
     }
 
     if (isAuthenticated) {
+
+      console.log("0");
       
-      let userData = null as UserResponse | null
-      try {
-        userData = (await baseFetcher(
-          ME_PATH,
-          accessToken,
-          refreshToken,
-          environment
-        )) as UserResponse
-      } catch (error) {
-        console.log(error)
-      }
-  
+      const userData = await getUserData(accessToken, refreshToken, environment);
       if (!userData) {
-        let response = NextResponse.redirect(new URL('/signin', request.url));
-        response.cookies.set('Authorization', "");
-        response.cookies.set('Refresh-Token', "");
-        response.cookies.delete('Authorization');
-        response.cookies.delete('Refresh-Token');
-        return response;
+          const response = NextResponse.redirect('/signin');
+          response.cookies.set('Authorization', "");
+          response.cookies.set('Refresh-Token', "");
+          response.cookies.delete('Authorization');
+          response.cookies.delete('Refresh-Token');
+          return response;
       }
 
-      if(userData.status === 'VERIFY' && !request.nextUrl.pathname.includes('/verify')){
+      const { role, status } = userData;
+
+      if(role.name === 'USER' && status === 'OK' && !request.nextUrl.pathname.includes('/init-shop')){
+        const url = new URL('/init-shop', request.url)
+        return NextResponse.redirect(url)
+      }
+
+      if(role.name === 'SHOP_ADMIN' && request.nextUrl.pathname.includes('/init-shop')){
+        const url = new URL('/', request.url)
+        return NextResponse.redirect(url)
+      }
+
+      if(status === 'VERIFY' && !request.nextUrl.pathname.includes('/verify')){
         const url = new URL('/verify', request.url)
         return NextResponse.redirect(url)
       }
 
-      if(userData.status !== 'VERIFY' && request.nextUrl.pathname.includes('/verify')){
+      if(status !== 'VERIFY' && request.nextUrl.pathname.includes('/verify')){
         const url = new URL('/', request.url)
         return NextResponse.redirect(url)
       }
@@ -68,7 +80,8 @@ export const config = {
       '/signup',
       '/signin',
       '/forgot-password',
+      '/reset-password',
       '/verify',
-      '/reset-password'
+      '/init-shop'
     ],
   }

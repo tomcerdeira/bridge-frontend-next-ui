@@ -53,7 +53,7 @@ export function saveTokensFromResponse(response: Response) {
 }
 
 export async function getNewAccessToken() {
-  const url = process.env.NEXT_PUBLIC_BASE_URL + '/auth/refresh-token'
+  const url = process.env.NEXT_PUBLIC_BASE_URL + '/public/auth/refresh-token'
   const accessToken = Cookies.get('Authorization')
   const refreshToken = Cookies.get('Refresh-Token')
   const token = accessToken?.split('Bearer ')[1]

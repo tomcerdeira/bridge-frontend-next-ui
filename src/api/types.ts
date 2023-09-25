@@ -27,18 +27,17 @@ export type CreateUserRequest = {
 }
 
 export type IEntityBase = {
-  deletedAt: Date
+  id: number
+  deletedAt: Date | null
   updatedAt: Date
   createdAt: Date
 }
 
 export type IRole = IEntityBase & {
   name: string
-  id: number
 }
 
 export type IUser = IEntityBase & {
-  id: number
   email: string
   // TODO: add status
 }
@@ -48,20 +47,20 @@ export type IUserStatus =
   | 'FORGOT_PASSWORD'
   | 'OK'
 
-export type UserResponse = {
+export type UserResponse = IEntityBase & {
   role: IRole;
   email: string;
-  id: number;
   status: IUserStatus;
-  deletedAt: Date | null;
-  updatedAt: Date;
-  createdAt: Date;
 };
 
 export type ParsedUser = {
   id: number
   email: string
   role_name: string
+}
+
+export type ShopResponse = IEntityBase & {
+  name: string
 }
 
 
