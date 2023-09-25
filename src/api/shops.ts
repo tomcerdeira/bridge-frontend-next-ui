@@ -1,3 +1,4 @@
+import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { fetcher } from '../lib/fetcher/clientFetcher';
 import { ShopResponse } from './types';
@@ -22,18 +23,7 @@ export function useCreateShop() {
     };
 }
 
-export function useObtainMyShop() {
-
-    const { trigger, data, isMutating, error } = useSWRMutation(
-        MY_SHOP,
-        (url, { arg }) => fetcher<ShopResponse>(url, { body: arg, method: 'GET' }),
-        {throwOnError: false}
-    );
-
-    return {
-        doCObtainMyShop: trigger,
-        isLoading: isMutating,
-        data,
-        error,
-    };
+export function useGetShop() {
+    const { data, error, isLoading, mutate } = useSWR<ShopResponse>(MY_SHOP, fetcher);
+    return { shop: data, error, isLoading, getShop: mutate }
 }

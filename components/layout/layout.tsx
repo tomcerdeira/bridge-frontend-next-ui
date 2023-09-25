@@ -30,6 +30,7 @@ export const LayoutComponent = ({ children }: Props) => {
         <section className="flex flex-grow">
           <SidebarWrapper />
           <NavbarWrapper>{children}</NavbarWrapper>
+          {/* TODO: FIX SCROLLABLE WHEN LOGGED IN */}
         </section>
         <Divider />
         <footer className="w-full flex items-center justify-center py-3 mb-2">

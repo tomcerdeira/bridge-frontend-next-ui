@@ -1,4 +1,5 @@
-import { Navbar, NavbarContent } from "@nextui-org/react";
+import { useGetShop } from "@/src/api/shops";
+import { Chip, Navbar, NavbarContent } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { BurguerButton } from "./burguer-button";
@@ -21,6 +22,9 @@ export const NavbarWrapper = ({ children }: Props) => {
     pathname.startsWith('/init-shop')
     ? false : true;
 
+  const { shop, error, getShop, isLoading } = useGetShop();
+  if (error) return <div>Failed to load</div>
+
   return (
     <>
       {showNavbar? (
@@ -34,6 +38,31 @@ export const NavbarWrapper = ({ children }: Props) => {
             >
               <NavbarContent className="md:hidden">
                 <BurguerButton />
+              </NavbarContent>
+
+              <NavbarContent
+                justify="start"
+                >
+                {isLoading ? (
+                  <div className="flex">
+                      <Chip
+                        variant="faded"
+                        size="md"
+                      >
+                        Cargando...
+                      </Chip>
+                  </div>
+                  ) : (
+                  <div className="flex">
+                    <Chip
+                      size="md"
+                      >
+                        {shop?.name}
+                        {/* TODO: ver por que se esta cacheando la anterior */}
+                    </Chip>
+                  </div>
+                  )
+                }
               </NavbarContent>
       
               <NavbarContent
