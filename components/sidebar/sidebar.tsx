@@ -5,6 +5,7 @@ import { AccountsIcon } from "../icons/sidebar/accounts-icon";
 import { BalanceIcon } from "../icons/sidebar/balance-icon";
 import { CustomersIcon } from "../icons/sidebar/customers-icon";
 import { DevIcon } from "../icons/sidebar/dev-icon";
+import { FlowIcon } from "../icons/sidebar/flow-icon";
 import { HomeIcon } from "../icons/sidebar/home-icon";
 import { PaymentsIcon } from "../icons/sidebar/payments-icon";
 import { ProductsIcon } from "../icons/sidebar/products-icon";
@@ -46,6 +47,12 @@ export const SidebarWrapper = () => {
                 href="/"
               />
               <SidebarMenu title="Menú">
+                <SidebarItem
+                  isActive={pathname === "/flows"}
+                  title="Flujos"
+                  icon={<FlowIcon />}
+                  href="flows"
+                />
                 <SidebarItem
                   isActive={pathname === "/accounts"}
                   title="Cuentas"

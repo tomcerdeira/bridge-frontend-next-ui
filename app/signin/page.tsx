@@ -73,11 +73,10 @@ export default function SignInForm({ searchParams }) {
             try {
                 setLoadingRequest(true);
                 const user = await doSignIn({ email, password });
-                setLoadingRequest(false);
+                await new Promise((resolve) => setTimeout(resolve, 2000));
                 if (!!user) router.push("/");
-            } catch (err) {} finally {
-                // setLoadingRequest(false);
-            }
+            } catch (err) {}
+            setLoadingRequest(false);
         }
 
 	};
