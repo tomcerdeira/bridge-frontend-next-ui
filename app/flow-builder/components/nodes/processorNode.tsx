@@ -14,7 +14,7 @@ const ProcessorNode = ({ id, data }: NodeProps) => {
             ...node,
             data: {
               ...node.data,
-              parameter: e,
+              parameter: parameters,
             },
           };
         }

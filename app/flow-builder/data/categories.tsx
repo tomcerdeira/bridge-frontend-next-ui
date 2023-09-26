@@ -15,7 +15,11 @@ export const categories = [
     type: "Notification",
     items: [
       { icon: RiWhatsappLine, name: "Whatsapp", parameter: {} },
-      { icon: RiSlackFill, name: "Slack", parameter: {} },
+      {
+        icon: RiSlackFill,
+        name: "Slack",
+        parameter: { SLACK_HOOK: "", CONTENT: "" },
+      },
       { icon: FaTelegram, name: "Telegram", parameter: {} },
     ],
   },
@@ -25,7 +29,7 @@ export const categories = [
       {
         icon: RiPaypalFill,
         name: "Paypal",
-        parameter: { ACCESS_TOKEN: "" },
+        parameter: { ACCESS_TOKEN: "", PUBLIC_KEY: "" },
       },
       {
         icon: FaCcStripe,
@@ -35,7 +39,7 @@ export const categories = [
       {
         icon: SiMercadopago,
         name: "Mercadopago",
-        parameter: { PUBLIC_KEY: "" },
+        parameter: { ACCESS_TOKEN: "", PUBLIC_KEY: "" },
       },
     ],
   },

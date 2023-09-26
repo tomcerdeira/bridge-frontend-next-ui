@@ -1,12 +1,17 @@
 "use client";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
+import { useFlowBuilder } from "@/src/api/flow";
 import * as bridge from "./index";
 import { conditions } from "./data/conditions";
 import * as util from "./utils/util";
 import "reactflow/dist/style.css";
 import { Button } from "@nextui-org/react";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 
 const FlowBuilder = () => {
+  const queryClient = new QueryClient();
+  const { buildFlow, error, isLoading } = useFlowBuilder();
+  const [isRequestLoading, setRequestLoading] = useState(false);
   const [nodes, setNodes, onNodesChange] = bridge.useNodesState(
     bridge.initialNodes
   );
@@ -30,6 +35,9 @@ const FlowBuilder = () => {
         icon: util.getIconComponent(data.name),
         parameter: data.parameter,
         name: data.name,
+        isAsync: data.isAsync,
+        description: data.description,
+        type: data.type,
         ...(data.node_type === "condition" && {
           condition: {
             field: conditions[0].field,
@@ -98,8 +106,12 @@ const FlowBuilder = () => {
       return rule;
     }
     rule["task"] = {
-      type: "task_" + taskNode.data.name.toLowerCase(),
-      parameters: taskNode.data.parameter,
+      type: taskNode.data.type,
+      name: taskNode.data.name,
+      description: taskNode.data.description,
+      isAsync: taskNode.data.isAsync,
+      taskParams: { parameters: taskNode.data.parameter },
+      category: taskNode.node_type,
     };
     const nextRuleNode = getNextConnectedNode(taskNode);
     if (typeof nextRuleNode === "undefined") {
@@ -122,23 +134,34 @@ const FlowBuilder = () => {
     connectedNodes.forEach((node: any) => {
       payload["rootRule"]["nextRules"].push(buildNextRule(node));
     });
-    console.log(payload);
     return payload;
   };
 
-  const onSaveClick = () => {
+  const onSaveClick = async () => {
     const rootNode = nodes.find((node) => node.id === "bridge_0");
     if (typeof rootNode === "undefined") return;
     const connectedNodes = edges
       .filter((edge) => edge.source === rootNode.id)
       .map((edge) => nodes.find((node) => node.id === edge.target));
     const json = buildJson(connectedNodes);
-    // Ready to be sent to the backend
+    console.log(JSON.stringify(json));
+    try {
+      setRequestLoading(true);
+      let flow = await buildFlow(json);
+      console.log("Flow sent successfully, response is: ");
+      console.log(flow);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setRequestLoading(false);
+    }
   };
 
   return (
     <div className="flex flex-row h-full">
-      <bridge.Sidebar onSidebarClick={onSidebarClick} />
+      <QueryClientProvider client={queryClient}>
+        <bridge.Sidebar onSidebarClick={onSidebarClick} />
+      </QueryClientProvider>
       <div className="w-screen align-center" ref={reactFlowWrapper}>
         <bridge.ReactFlow
           nodes={nodes}
@@ -151,7 +174,11 @@ const FlowBuilder = () => {
         />
       </div>
       <div className="align-bottom">
-        <Button variant="ghost" onClick={onSaveClick}>
+        <Button
+          variant="ghost"
+          onClick={onSaveClick}
+          isLoading={isRequestLoading}
+        >
           wohoo
         </Button>
       </div>

@@ -11,6 +11,8 @@ import {
   SiBinance,
 } from "../index";
 
+import { HiOutlineMail } from "react-icons/hi";
+
 export const onDragStart = (event: any, nodeType: any) => {
   event.dataTransfer.setData("application/reactflow", JSON.stringify(nodeType));
   event.dataTransfer.effectAllowed = "move";
@@ -38,6 +40,8 @@ export const getIconComponent = (icon: String) => {
       return LiaGripLinesVerticalSolid;
     case "binance":
       return SiBinance;
+    case "email":
+      return HiOutlineMail;
   }
 };
 

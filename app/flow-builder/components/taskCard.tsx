@@ -1,6 +1,5 @@
 import { Card, CardHeader, CardBody, Divider, Input } from "@nextui-org/react";
 import { PiKeyFill } from "react-icons/pi";
-import * as util from "../utils/util";
 
 export interface TaskProps {
   data: any;
@@ -18,11 +17,11 @@ const TaskCard = ({ data, parameters, setParameters }: TaskProps) => {
         </div>
       </CardHeader>
 
-      {parameters && Object.entries(parameters).length !== 0 && (
+      {parameters && parameters.length !== 0 && (
         <>
           <Divider />
           <CardBody>
-            {Object.entries(parameters).map(([key, value]) => (
+            {/* {parameters.map((key, value)) => (
               <Input
                 endContent={
                   <PiKeyFill className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
@@ -35,6 +34,25 @@ const TaskCard = ({ data, parameters, setParameters }: TaskProps) => {
                 value={value as string}
                 onChange={(e) => {
                   setParameters({ ...parameters, [key]: e.target.value });
+                }}
+              />
+            ))} */}
+            {parameters.map((parameter: any, parameterIndex: any) => (
+              <Input
+                endContent={
+                  <PiKeyFill className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                }
+                className="mb-2 font-fira"
+                label={parameter.field}
+                key={parameterIndex}
+                type="password"
+                placeholder={"Enter " + parameter.field}
+                value={parameter.value as string}
+                onChange={(e) => {
+                  setParameters((parameters: any) => {
+                    parameters[parameterIndex].value = e.target.value;
+                    return parameters;
+                  });
                 }}
               />
             ))}
