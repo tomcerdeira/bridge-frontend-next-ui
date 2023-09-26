@@ -2,12 +2,13 @@ import useSWRMutation from 'swr/mutation';
 import { fetcher } from '../lib/fetcher/clientFetcher';
 import { ParsedUser, UserResponse } from './types';
 
-export const ME_PATH = `/private/users/me`
-export const SIGN_UP = `/public/users/`
-export const FORGOT_PASSWORD = `/public/users/forgot-password`
-export const RESET_PASSWORD = (token: string) => `/public/users/reset-password/${token}`
-export const VERIFY = (token: string) => `/public/users/verify/${token}`
-export const RESEND_VERIFY_EMAIL = `/private/users/resend-verify`
+// TODO: agregar el /app/... cuando usemos el gateway
+export const ME_PATH = `/app/private/users/me`
+export const SIGN_UP = `/app/public/users/`
+export const FORGOT_PASSWORD = `/app/public/users/forgot-password`
+export const RESET_PASSWORD = (token: string) => `/app/public/users/reset-password/${token}`
+export const VERIFY = (token: string) => `/app/public/users/verify/${token}`
+export const RESEND_VERIFY_EMAIL = `/app/private/users/resend-verify`
 
 const mockUser = {
     id: 1,

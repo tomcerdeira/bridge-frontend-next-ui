@@ -26,7 +26,7 @@ export function getHeaders(headerParams, accessToken: string | null) {
 export function handleRequestFailed(response: Response, path: string, data: ErrorResponse) {
     let message
     switch (true) {
-      case response.status === 403 && path === '/private/users/me': {
+      case response.status === 403 && path === '/app/private/users/me': {
         message = 'Invalid email and password combination'
         break
       }

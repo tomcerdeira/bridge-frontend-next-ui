@@ -3,9 +3,9 @@ import useSWRMutation from 'swr/mutation';
 import { fetcher } from '../lib/fetcher/clientFetcher';
 import { ShopResponse } from './types';
 
-export const CREATE_SHOP = `/private/shop`
-export const MY_SHOP = `/private/shop/users/me`
-export const SHOP_BY_USER_ID = (user_id: string) => `/private/shop/users/${user_id}`
+export const CREATE_SHOP = `/app/private/shop`
+export const MY_SHOP = `/app/private/shop/users/me`
+export const SHOP_BY_USER_ID = (user_id: string) => `/app/private/shop/users/${user_id}`
 
 export function useCreateShop() {
 
