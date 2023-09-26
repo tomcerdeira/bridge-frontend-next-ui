@@ -63,6 +63,17 @@ export type ShopResponse = IEntityBase & {
   name: string
 }
 
+export type FlowDetails = {
+  id: string
+  name: string
+  shopId: number
+  active: boolean
+  // TODO: cambiar a Date
+  updatedAt: string
+  // TODO: cambiar a Date
+  createdAt: string
+}
+
 
 export const MockResponse_IPaymentRequest: IPaymentRequest = {
     amount: 1800,
