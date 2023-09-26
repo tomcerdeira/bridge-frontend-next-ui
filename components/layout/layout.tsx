@@ -2,6 +2,7 @@
 
 import { useLockedBody } from "@/src/hooks/useBodyLock";
 import { Divider, Link } from "@nextui-org/react";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { NavbarWrapper } from "../navbar/navbar";
 import { SidebarWrapper } from "../sidebar/sidebar";
@@ -19,6 +20,18 @@ export const LayoutComponent = ({ children }: Props) => {
     setLocked(!sidebarOpen);
   };
 
+  const pathname = usePathname();
+  
+  const showNavAndSideBar = 
+    pathname.startsWith('/signin') ||
+    pathname.startsWith('/signup') || 
+    pathname.startsWith('/checkout') ||
+    pathname.startsWith('/forgot-password') ||
+    pathname.startsWith('/reset-password') ||
+    pathname.startsWith('/verify') ||
+    pathname.startsWith('/init-shop')
+    ? false : true;
+
   return (
     <SidebarContext.Provider
       value={{
@@ -28,9 +41,23 @@ export const LayoutComponent = ({ children }: Props) => {
     >
       <div className="flex flex-col min-h-screen">
         <section className="flex flex-grow">
-          <SidebarWrapper />
-          <NavbarWrapper>{children}</NavbarWrapper>
-          {/* TODO: FIX SCROLLABLE WHEN LOGGED IN */}
+          {showNavAndSideBar? 
+            (
+              <>
+                <SidebarWrapper />
+                <NavbarWrapper>
+                  {children}
+                </NavbarWrapper>
+                {/* TODO: FIX SCROLLABLE WHEN LOGGED IN */}
+              </>
+            )
+            :
+            (
+              <section className="m-auto">
+                {children}
+              </section>
+            )
+          }
         </section>
         <Divider />
         <footer className="w-full flex items-center justify-center py-3 mb-2">

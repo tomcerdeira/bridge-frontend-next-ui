@@ -1,6 +1,5 @@
 import { useGetShop } from "@/src/api/shops";
 import { Chip, Navbar, NavbarContent } from "@nextui-org/react";
-import { usePathname } from "next/navigation";
 import React from "react";
 import { BurguerButton } from "./burguer-button";
 import { UserDropdown } from "./user-dropdown";
@@ -10,24 +9,12 @@ interface Props {
 }
 
 export const NavbarWrapper = ({ children }: Props) => {
-  const pathname = usePathname();
-  
-  const showNavbar = 
-    pathname.startsWith('/signin') ||
-    pathname.startsWith('/signup') || 
-    pathname.startsWith('/checkout') ||
-    pathname.startsWith('/forgot-password') ||
-    pathname.startsWith('/reset-password') ||
-    pathname.startsWith('/verify') ||
-    pathname.startsWith('/init-shop')
-    ? false : true;
-
   const { shop, error, getShop, isLoading } = useGetShop();
   if (error) return <div>Failed to load</div>
 
   return (
     <>
-      {showNavbar? (
+      {true? (
           <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             <Navbar
               isBordered
@@ -58,7 +45,6 @@ export const NavbarWrapper = ({ children }: Props) => {
                       size="md"
                       >
                         {shop?.name}
-                        {/* TODO: ver por que se esta cacheando la anterior */}
                     </Chip>
                   </div>
                   )

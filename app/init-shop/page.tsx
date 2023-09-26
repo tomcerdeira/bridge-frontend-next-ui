@@ -51,14 +51,14 @@ export default function CreateShopForm() {
             try {
                 setLoadingRequest(true);
                 const shop = await doCreateShop({ shop_name: shopName });
-                setLoadingRequest(false);
-				//TODO: ver que hacemos cuando se cree el shop
                 if (!!shop){
 					toast({ type: 'success', message: 'Comercio creado correctamente.' });
 					router.push("/");
 				}else{
                     setDisplayError(true);
+                    setShopName('');
                 }
+                setLoadingRequest(false);
             } catch (err) {}
         }
 
@@ -80,6 +80,7 @@ export default function CreateShopForm() {
                             onChange={handleShopName}
                             errorMessage={displayError ? error.message : errors.shopName.join(' ')}
                             isRequired
+                            value={shopName}
                             placeholder="Nombre del comercio"
                             />
                             <Button className="mt-4" color="success" variant="shadow" onPress={handleCreateShop} isLoading={loadingRequest}>
