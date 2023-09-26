@@ -1,13 +1,18 @@
 'use client'
 
-import { Button } from "@nextui-org/button"
-import { FlowsTable } from "./flows-table"
+import { useGetFlows } from "@/src/api/flows";
+import { useAuth } from "@/src/hooks/useAuth";
+import { Button } from "@nextui-org/button";
+import { FlowsTable } from "./flows-table";
 
 export default function FlowsPage() {
+    //TODO: ver si lo correcto es hacerlo asi
+    const { shop_id } = useAuth();
+    const { flows, error, getFlows, isLoading } = useGetFlows(shop_id? shop_id.toString() : "0");
     
     return (
         <>
-        {false? (
+        {(flows && flows.length > 0)? (
             <div className="mt-4 mx-4 flex flex-col gap-4">
                 <div className="flex justify-between flex-wrap gap-4 items-center">
                     <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
@@ -20,7 +25,7 @@ export default function FlowsPage() {
                     </div>
                 </div>
                 <div className="mr-4 w-full">
-                    <FlowsTable />
+                    <FlowsTable flows={flows} />
                 </div>  
             </div>
         )

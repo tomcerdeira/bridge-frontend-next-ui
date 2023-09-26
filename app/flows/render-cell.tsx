@@ -55,7 +55,7 @@ export const RenderCell = ({ flow, columnKey }: Props) => {
       return (
         <div className="w-fit flex mr-4 gap-2 justify-end">
           <div>
-            <Tooltip content="Editar flujo">
+            <Tooltip content="Editar">
               <button onClick={() => console.log("Editar flujo", flow.id)}>
                 <EditIcon size={20} fill="#979797" />
               </button>
@@ -63,7 +63,7 @@ export const RenderCell = ({ flow, columnKey }: Props) => {
           </div>
           <div>
             <Tooltip
-              content="Borrar flujo"
+              content="Borrar"
               color="danger"
               onClick={() => console.log("Borrar flujo", flow.id)}
             >
