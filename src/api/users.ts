@@ -1,148 +1,145 @@
-import useSWRMutation from 'swr/mutation';
-import { fetcher } from '../lib/fetcher/clientFetcher';
-import { ParsedUser, UserResponse } from './types';
+import useSWRMutation from "swr/mutation";
+import { fetcher } from "../lib/fetcher/clientFetcher";
+import { ParsedUser, UserResponse } from "./types";
 
-export const ME_PATH = `/private/users/me`
-export const SIGN_UP = `/public/users/`
-export const FORGOT_PASSWORD = `/public/users/forgot-password`
-export const RESET_PASSWORD = (token: string) => `/public/users/reset-password/${token}`
-export const VERIFY = (token: string) => `/public/users/verify/${token}`
-export const RESEND_VERIFY_EMAIL = `/private/users/resend-verify`
+export const ME_PATH = `/app/private/users/me`;
+export const SIGN_UP = `/app/public/users/`;
+export const FORGOT_PASSWORD = `/app/public/users/forgot-password`;
+export const RESET_PASSWORD = (token: string) =>
+  `/app/public/users/reset-password/${token}`;
+export const VERIFY = (token: string) => `/app/public/users/verify/${token}`;
+export const RESEND_VERIFY_EMAIL = `/app/private/users/resend-verify`;
 
 const mockUser = {
-    id: 1,
-    name: "John Doe",
-    email: "john.doe@example.com",
-  };
+  id: 1,
+  name: "John Doe",
+  email: "john.doe@example.com",
+};
 
 export function mapUserResponseToUser(user?: UserResponse): ParsedUser | null {
-    if (!user) {
-      return null
-    }
-    return {
-      email: user.email,
-      id: user.id,
-      role_name: user.role.name
-    }
+  if (!user) {
+    return null;
+  }
+  return {
+    email: user.email,
+    id: user.id,
+    role_name: user.role.name,
+  };
 }
 
 export function useSignIn() {
+  // async function mockDoSignIn(url, { arg }) {
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     return mockUser;
+  //     }
 
-    // async function mockDoSignIn(url, { arg }) {
-    //     await new Promise((resolve) => setTimeout(resolve, 1000));
-    //     return mockUser;
-    //     }
+  async function doSignIn(url, { arg }) {
+    const headers: any = {};
 
-    async function doSignIn(url, { arg }) {
-      const headers: any = {}
-  
-      // credentials are optional since we can get the user with the token
-      if (arg?.email && arg?.password) {
-        const credentials = `${arg.email}:${arg.password}`
-        const token = Buffer.from(credentials).toString('base64')
-  
-        headers['Authorization'] = `Basic ${token}`
-      }
-  
-      return fetcher<UserResponse>(url, { headers })
+    // credentials are optional since we can get the user with the token
+    if (arg?.email && arg?.password) {
+      const credentials = `${arg.email}:${arg.password}`;
+      const token = Buffer.from(credentials).toString("base64");
+
+      headers["Authorization"] = `Basic ${token}`;
     }
-  
-    const { trigger, data, isMutating, error } = useSWRMutation(ME_PATH, doSignIn, {
-      throwOnError: false,
-    })
-    const user = mapUserResponseToUser(data)
-  
-    return {
-      doSignIn: trigger,
-      isLoading: isMutating,
-      user,
-      error,
-    }
+
+    return fetcher<UserResponse>(url, { headers });
   }
 
-export function useSignUp() {
+  const { trigger, data, isMutating, error } = useSWRMutation(
+    ME_PATH,
+    doSignIn,
+    {
+      throwOnError: false,
+    }
+  );
+  const user = mapUserResponseToUser(data);
 
-    // async function mockDoRegister(url, { arg }) {
-    //     await new Promise((resolve) => setTimeout(resolve, 1000));
-    //     return mockUser;
-    //     }
-
-    const { trigger, data, isMutating, error } = useSWRMutation(
-        SIGN_UP,
-        (url, { arg }) => fetcher<UserResponse>(url, { body: arg, method: 'POST' }),
-        {throwOnError: false}
-    );
-
-    return {
-        doSignUp: trigger,
-        isLoading: isMutating,
-        data,
-        error,
-    };
+  return {
+    doSignIn: trigger,
+    isLoading: isMutating,
+    user,
+    error,
+  };
 }
 
+export function useSignUp() {
+  // async function mockDoRegister(url, { arg }) {
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     return mockUser;
+  //     }
+
+  const { trigger, data, isMutating, error } = useSWRMutation(
+    SIGN_UP,
+    (url, { arg }) => fetcher<UserResponse>(url, { body: arg, method: "POST" }),
+    { throwOnError: false }
+  );
+
+  return {
+    doSignUp: trigger,
+    isLoading: isMutating,
+    data,
+    error,
+  };
+}
 
 export function useForgotPassword() {
-
   const { trigger, data, isMutating, error } = useSWRMutation(
-      FORGOT_PASSWORD,
-      (url, { arg }) => fetcher<UserResponse>(url, { body: arg, method: 'POST' }),
-      {throwOnError: false}
+    FORGOT_PASSWORD,
+    (url, { arg }) => fetcher<UserResponse>(url, { body: arg, method: "POST" }),
+    { throwOnError: false }
   );
 
   return {
-      doForgotPassword: trigger,
-      isLoading: isMutating,
-      data,
-      error,
+    doForgotPassword: trigger,
+    isLoading: isMutating,
+    data,
+    error,
   };
 }
 
-export function useResetPassword({token}: {token: string}) {
-
+export function useResetPassword({ token }: { token: string }) {
   const { trigger, data, isMutating, error } = useSWRMutation(
-      RESET_PASSWORD(token),
-      (url, { arg }) => fetcher<any>(url, { body: arg, method: 'PATCH' }),
-      {throwOnError: false}
+    RESET_PASSWORD(token),
+    (url, { arg }) => fetcher<any>(url, { body: arg, method: "PATCH" }),
+    { throwOnError: false }
   );
 
   return {
-      doResetPassword: trigger,
-      isLoading: isMutating,
-      data,
-      error,
+    doResetPassword: trigger,
+    isLoading: isMutating,
+    data,
+    error,
   };
 }
 
-export function useVerify({token}: {token: string}) {
-
+export function useVerify({ token }: { token: string }) {
   const { trigger, data, isMutating, error } = useSWRMutation(
     VERIFY(token),
-      (url) => fetcher<any>(url, { method: 'POST' }),
-      {throwOnError: false}
+    (url) => fetcher<any>(url, { method: "POST" }),
+    { throwOnError: false }
   );
 
   return {
-      doVerify: trigger,
-      isLoading: isMutating,
-      data,
-      error,
+    doVerify: trigger,
+    isLoading: isMutating,
+    data,
+    error,
   };
 }
 
 export function useResendVerifyEmail() {
-
   const { trigger, data, isMutating, error } = useSWRMutation(
     RESEND_VERIFY_EMAIL,
-      (url) => fetcher<UserResponse>(url, { method: 'POST' }),
-      {throwOnError: false}
+    (url) => fetcher<UserResponse>(url, { method: "POST" }),
+    { throwOnError: false }
   );
 
   return {
-      doResendVerifyEmail: trigger,
-      isLoading: isMutating,
-      data,
-      error,
+    doResendVerifyEmail: trigger,
+    isLoading: isMutating,
+    data,
+    error,
   };
 }
-  

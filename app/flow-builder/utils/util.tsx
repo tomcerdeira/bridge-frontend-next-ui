@@ -1,0 +1,56 @@
+import {
+  RiSlackFill,
+  RiWhatsappLine,
+  RiPaypalFill,
+  RiBracesFill,
+  FaCcStripe,
+  FaTelegram,
+  SiMercadopago,
+  TbAmpersand,
+  LiaGripLinesVerticalSolid,
+  SiBinance,
+} from "../index";
+
+import { HiOutlineMail } from "react-icons/hi";
+
+export const onDragStart = (event: any, nodeType: any) => {
+  event.dataTransfer.setData("application/reactflow", JSON.stringify(nodeType));
+  event.dataTransfer.effectAllowed = "move";
+};
+
+export const getIconComponent = (icon: String) => {
+  switch (icon.toLowerCase()) {
+    case "slack":
+      return RiSlackFill;
+    case "whatsapp":
+      return RiWhatsappLine;
+    case "stripe":
+      return FaCcStripe;
+    case "telegram":
+      return FaTelegram;
+    case "mercadopago":
+      return SiMercadopago;
+    case "paypal":
+      return RiPaypalFill;
+    case "condition":
+      return RiBracesFill;
+    case "and":
+      return TbAmpersand;
+    case "or":
+      return LiaGripLinesVerticalSolid;
+    case "binance":
+      return SiBinance;
+    case "email":
+      return HiOutlineMail;
+  }
+};
+
+export const fieldIntoReadable = (field: string) => {
+  return field
+    .replace(/_/g, " ")
+    .toLowerCase()
+    .replace(/\b[a-z]/g, (letter) => letter.toUpperCase());
+};
+
+let id = 1;
+export const getId = () => `bridge_${id++}`;
