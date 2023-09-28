@@ -1,4 +1,4 @@
-import { useGetShop } from "@/src/api/shops";
+import { useAuth } from "@/src/hooks/useAuth";
 import { Chip, Navbar, NavbarContent } from "@nextui-org/react";
 import React from "react";
 import { BurguerButton } from "./burguer-button";
@@ -9,8 +9,7 @@ interface Props {
 }
 
 export const NavbarWrapper = ({ children }: Props) => {
-  const { shop, error, getShop, isLoading } = useGetShop();
-  if (error) return <div>Failed to load</div>
+  const { shop } = useAuth();
 
   return (
     <>
@@ -30,7 +29,7 @@ export const NavbarWrapper = ({ children }: Props) => {
               <NavbarContent
                 justify="start"
                 >
-                {isLoading ? (
+                {!shop ? (
                   <div className="flex">
                       <Chip
                         variant="faded"
@@ -44,7 +43,7 @@ export const NavbarWrapper = ({ children }: Props) => {
                     <Chip
                       size="md"
                       >
-                        {shop?.name}
+                        {shop!.name}
                     </Chip>
                   </div>
                   )
