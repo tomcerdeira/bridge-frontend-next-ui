@@ -20,3 +20,25 @@ export function useFlowBuilder() {
     error,
   };
 }
+
+export function useFlowRetrieve(flowId: string) {
+  async function getFlow(url: string) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return fetcher<any>(url, { method: "GET" });
+  }
+
+  const { data, error, isMutating, trigger } = useSWRMutation(
+    `/payment/flows/${flowId}`,
+    getFlow,
+    {
+      throwOnError: false,
+    }
+  );
+
+  return {
+    getFlow: trigger,
+    isLoading: isMutating,
+    data,
+    error,
+  };
+}

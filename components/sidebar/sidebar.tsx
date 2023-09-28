@@ -54,10 +54,10 @@ export const SidebarWrapper = () => {
                 href="flows"
               />
               <SidebarItem
-                isActive={pathname === "/flow-builder"}
+                isActive={pathname === "/builder"}
                 title="Builder"
                 icon={<AccountsIcon />}
-                href="flow-builder"
+                href="builder"
               />
               <SidebarItem
                 isActive={pathname === "/payments"}

@@ -2,10 +2,10 @@ import React, { ReactNode } from "react";
 import { useQuery } from "react-query";
 import * as util from "../utils/util";
 import { IconType } from "react-icons/lib";
-import { Tooltip } from "@nextui-org/react";
+import { Skeleton, Tooltip } from "@nextui-org/react";
 
 const fetchTasks = async () =>
-  fetch("http://localhost:8082/tasks").then((res) => res.json());
+  fetch("http://localhost:8080/payment/tasks").then((res) => res.json());
 
 const Icon = ({ name }: any) => {
   const Icon: IconType = util.getIconComponent(name)!;
@@ -15,7 +15,19 @@ const Icon = ({ name }: any) => {
 const Sidebar = ({ onSidebarClick }: any) => {
   const { isLoading, error, data } = useQuery("tasks", fetchTasks);
 
-  if (isLoading) return "Loading...";
+  if (isLoading)
+    return (
+      <div className="text-white flex flex-col ">
+        <div className="flex flex-col p-5 rounded-lg bg-content1">
+          <div className="p-4 flex flex-col gap-4">
+            <Skeleton className="rounded-lg">{<Icon name="slack" />}</Skeleton>
+            <Skeleton className="rounded-lg">{<Icon name="slack" />}</Skeleton>
+            <Skeleton className="rounded-lg">{<Icon name="slack" />}</Skeleton>
+            <Skeleton className="rounded-lg">{<Icon name="slack" />}</Skeleton>
+          </div>
+        </div>
+      </div>
+    );
 
   const tasks = data.map((task: any) => {
     return {

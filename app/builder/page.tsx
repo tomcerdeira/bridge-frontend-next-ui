@@ -8,7 +8,7 @@ import * as bridge from "./index";
 import * as util from "./utils/util";
 import "reactflow/dist/style.css";
 
-export default function FlowBuilderPage() {
+export default function FlowBuilderPage({ editNodes, editEdges }: { editNodes?: Node[], editEdges?: bridge.Edge[] }) {
   const queryClient = new QueryClient();
   const { buildFlow, error, isLoading } = useFlowBuilder();
   const [isRequestLoading, setRequestLoading] = useState(false);
