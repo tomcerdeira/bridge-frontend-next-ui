@@ -50,100 +50,13 @@ export default function FlowBuilderPage() {
     setNodes((nds) => nds.concat(newNode));
   };
 
-  const buildConditions: any = (rule: any, node: any) => {
-    if (node.type !== "condition" && node.type !== "logical") {
-      return node;
-    }
-
-    if (node.type === "condition") {
-      rule["conditions"].push(node.data.condition);
-    } else if (node.type === "logical") {
-      rule["conditionOperators"].push(node.data.name);
-    }
-
-    const nextNode = getNextConnectedNode(node);
-
-    if (typeof nextNode === "undefined") {
-      return node;
-    }
-    return buildConditions(rule, nextNode);
-  };
-
-  const getNextConnectedNode = (node: any) => {
-    if (typeof node === "undefined") {
-      return node;
-    }
-    return edges
-      .filter((edge) => edge.source === node.id)
-      .map((edge) => nodes.find((node) => node.id === edge.target))[0];
-  };
-
-  interface Rule {
-    name?: string;
-    conditions?: any[];
-    conditionOperators?: string[];
-    nextRules?: Rule[];
-    task?: any;
-  }
-
-  interface Payload {
-    name?: string;
-    shopId?: number;
-    active?: boolean;
-    rootRule?: Rule;
-  }
-
-  const buildNextRule = (node: any) => {
-    const rule: Rule = {};
-    rule["name"] = node.data.name;
-    rule["conditions"] = [];
-    rule["conditionOperators"] = [];
-    rule["nextRules"] = [];
-    rule["task"] = {};
-    const taskNode = buildConditions(rule, node);
-    if (typeof taskNode === "undefined") {
-      return rule;
-    }
-    rule["task"] = {
-      type: taskNode.data.type,
-      name: taskNode.data.name,
-      description: taskNode.data.description,
-      isAsync: taskNode.data.isAsync,
-      taskParams: { parameters: taskNode.data.parameter },
-      category: taskNode.node_type,
-    };
-    const nextRuleNode = getNextConnectedNode(taskNode);
-    if (typeof nextRuleNode === "undefined") {
-      return rule;
-    }
-    rule["nextRules"].push(buildNextRule(nextRuleNode));
-    return rule;
-  };
-
-  const buildJson = (connectedNodes: any) => {
-    const payload: Payload = {};
-    payload["name"] = flowName;
-    payload["shopId"] = 12;
-    payload["active"] = true;
-    payload["rootRule"] = {};
-    payload["rootRule"]["name"] = "root";
-    payload["rootRule"]["conditions"] = [];
-    payload["rootRule"]["conditionOperators"] = [];
-    payload["rootRule"]["nextRules"] = [];
-    connectedNodes.forEach((node: any) => {
-      payload["rootRule"]["nextRules"].push(buildNextRule(node));
-    });
-    return payload;
-  };
-
   const onSaveClick = async () => {
     const rootNode = nodes.find((node) => node.id === "bridge_0");
     if (typeof rootNode === "undefined") return;
     const connectedNodes = edges
       .filter((edge) => edge.source === rootNode.id)
       .map((edge) => nodes.find((node) => node.id === edge.target));
-    const json = buildJson(connectedNodes);
-    console.log(JSON.stringify(json));
+    const json = util.buildJson(connectedNodes, flowName, edges, nodes);
     try {
       setRequestLoading(true);
       let flow = await buildFlow(json);
@@ -162,6 +75,7 @@ export default function FlowBuilderPage() {
         <Input
           type="email"
           placeholder="Sin título"
+          autoComplete="new-password"
           variant="underlined"
           value={flowName}
           onChange={(e) => setFlowName(e.target.value)}
@@ -185,9 +99,7 @@ export default function FlowBuilderPage() {
           onConnect={onConnect}
           defaultViewport={defaultViewport}
           nodeTypes={bridge.nodeTypes}
-        >
-          {/* <bridge.Background gap={20} /> */}
-        </bridge.ReactFlow>
+        />
         <QueryClientProvider client={queryClient}>
           <bridge.Sidebar onSidebarClick={onSidebarClick} />
         </QueryClientProvider>

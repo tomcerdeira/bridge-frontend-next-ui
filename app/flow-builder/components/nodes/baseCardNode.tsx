@@ -11,14 +11,10 @@ const BaseCardNode = (props: BaseCardNodeProps) => {
     <>
       <TaskCard {...props} />
       {props.hasSource && (
-        <Handle
-          type="source"
-          position={Position.Bottom}
-          className="!bg-white"
-        />
+        <Handle type="source" position={Position.Right} className="!bg-white" />
       )}
       {props.hasTarget && (
-        <Handle type="target" position={Position.Top} className="!bg-white" />
+        <Handle type="target" position={Position.Left} className="!bg-white" />
       )}
     </>
   );

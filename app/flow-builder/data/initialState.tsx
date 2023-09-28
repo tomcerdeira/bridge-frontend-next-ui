@@ -6,6 +6,6 @@ export const initialNodes: Node[] = [
     id: "bridge_0",
     type: "root",
     data: { name: "Start", icon: CiPlay1 },
-    position: { x: 200, y: 200 },
+    position: { x: 200, y: 500 },
   },
 ];

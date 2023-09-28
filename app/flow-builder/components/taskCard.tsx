@@ -7,6 +7,7 @@ export interface TaskProps {
   setParameters?: any;
 }
 
+
 const TaskCard = ({ data, parameters, setParameters }: TaskProps) => {
   return (
     <Card className="max-w-[260px]">
@@ -27,6 +28,7 @@ const TaskCard = ({ data, parameters, setParameters }: TaskProps) => {
                   <PiKeyFill className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                 }
                 className="mb-2 font-fira"
+                autoComplete="new-password"
                 label={parameter.field}
                 key={parameterIndex}
                 type="password"
