@@ -2,6 +2,7 @@ import useSWRMutation from "swr/mutation";
 import { fetcher } from "../lib/fetcher/clientFetcher";
 import { ParsedUser, UserResponse } from "./types";
 
+// TODO: agregar el /app/... cuando usemos el gateway
 export const ME_PATH = `/app/private/users/me`;
 export const SIGN_UP = `/app/public/users/`;
 export const FORGOT_PASSWORD = `/app/public/users/forgot-password`;

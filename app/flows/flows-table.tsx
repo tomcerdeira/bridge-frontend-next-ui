@@ -16,36 +16,36 @@ import { RenderCell } from "./render-cell";
     {name: 'Acciones', uid: 'actions'},
  ];
 
- export const flows = [
-    {
-      "id": "flow1",
-      "name": "Flow Example 1",
-      "shopId": 9999,
-      "active": true,
-      "updatedAt": "2023-09-26T19:59:34.692Z",
-      "createdAt": "2023-09-26T19:59:34.692Z"
-    },
-    {
-      "id": "flow2",
-      "name": "Flow Example 2",
-      "shopId": 9999,
-      "active": true,
-      "updatedAt": "2023-09-26T19:59:34.692Z",
-      "createdAt": "2023-09-26T19:59:34.692Z"
-    },
-    {
-      "id": "flow3",
-      "name": "Flow Example 3",
-      "shopId": 9999,
-      "active": false,
-      "updatedAt": "2023-09-26T19:59:34.692Z",
-      "createdAt": "2023-09-26T19:59:34.692Z"
-    }
-  ];
+//  export const flows = [
+//     {
+//       "id": "flow1",
+//       "name": "Flow Example 1",
+//       "shopId": 9999,
+//       "active": true,
+//       "updatedAt": "2023-09-26T19:59:34.692Z",
+//       "createdAt": "2023-09-26T19:59:34.692Z"
+//     },
+//     {
+//       "id": "flow2",
+//       "name": "Flow Example 2",
+//       "shopId": 9999,
+//       "active": true,
+//       "updatedAt": "2023-09-26T19:59:34.692Z",
+//       "createdAt": "2023-09-26T19:59:34.692Z"
+//     },
+//     {
+//       "id": "flow3",
+//       "name": "Flow Example 3",
+//       "shopId": 9999,
+//       "active": false,
+//       "updatedAt": "2023-09-26T19:59:34.692Z",
+//       "createdAt": "2023-09-26T19:59:34.692Z"
+//     }
+//   ];
   
  
   
-  export const FlowsTable = () => {
+  export const FlowsTable = ({ flows }) => {
     return (
       <div className=" w-full flex flex-col gap-4">
         <Table aria-label="Example table with custom cells">
