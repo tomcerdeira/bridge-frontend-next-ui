@@ -44,8 +44,8 @@ export function AuthProvider({ children }) {
   const doSignOut = () => {
     Cookies.remove('Authorization')
     Cookies.remove('Refresh-Token')
-
     mutate(null)
+    getShop();
     router.replace('/signin' as Route)
   }
 
