@@ -4,6 +4,7 @@ import { Button, Input } from "@nextui-org/react";
 import { useFlowBuilder } from "@/src/api/flow-builder";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { conditions } from "./data/conditions";
+import toast from "@/components/toast";
 import * as bridge from "./index";
 import * as util from "./utils/util";
 import "reactflow/dist/style.css";
@@ -66,10 +67,12 @@ export default function FlowBuilderPage({
     try {
       setRequestLoading(true);
       let flow = await buildFlow(json);
-      console.log("Flow sent successfully, response is: ");
-      console.log(flow);
+      toast({ type: "success", message: "Flujo creado satisfactoriamente!" });
     } catch (err) {
-      console.log(err);
+      toast({
+        type: "error",
+        message: "Ha ocurrido un error al intentar crear el flujo",
+      });
     } finally {
       setRequestLoading(false);
     }
