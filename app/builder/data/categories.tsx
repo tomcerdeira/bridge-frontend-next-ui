@@ -1,15 +1,23 @@
-import { TbAmpersand, LiaGripLinesVerticalSolid, RiBracesFill } from "../index";
-
 export const categories = [
   {
-    type: "Logical operator",
-    items: [
-      { icon: TbAmpersand, name: "AND", parameter: {} },
-      { icon: LiaGripLinesVerticalSolid, name: "OR", parameter: {} },
-    ],
+    type: "logical",
+    category: "logical",
+    icon: "ampersand",
+    name: "And",
+    parameter: {},
   },
   {
-    type: "Condition",
-    items: [{ icon: RiBracesFill, name: "Condition", parameter: {} }],
+    type: "logical",
+    category: "logical",
+    icon: "vertical",
+    name: "Or",
+    parameter: {},
+  },
+  {
+    type: "condition",
+    category: "condition",
+    icon: "braces",
+    name: "Condition",
+    parameter: {},
   },
 ];

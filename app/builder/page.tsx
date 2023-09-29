@@ -8,7 +8,13 @@ import * as bridge from "./index";
 import * as util from "./utils/util";
 import "reactflow/dist/style.css";
 
-export default function FlowBuilderPage({ editNodes, editEdges }: { editNodes?: Node[], editEdges?: bridge.Edge[] }) {
+export default function FlowBuilderPage({
+  editNodes,
+  editEdges,
+}: {
+  editNodes?: Node[];
+  editEdges?: bridge.Edge[];
+}) {
   const queryClient = new QueryClient();
   const { buildFlow, error, isLoading } = useFlowBuilder();
   const [isRequestLoading, setRequestLoading] = useState(false);
@@ -17,7 +23,7 @@ export default function FlowBuilderPage({ editNodes, editEdges }: { editNodes?: 
     bridge.initialNodes
   );
   const [edges, setEdges, onEdgesChange] = bridge.useEdgesState([]);
-  const defaultViewport: bridge.Viewport = { x: 0, y: 0, zoom: 0.8 };
+  const defaultViewport: bridge.Viewport = { x: 0, y: 0, zoom: 0.9 };
   const onConnect = useCallback(
     (params: bridge.Edge | bridge.Connection) =>
       setEdges((els) => bridge.addEdge({ ...params, animated: true }, els)),
@@ -78,7 +84,7 @@ export default function FlowBuilderPage({ editNodes, editEdges }: { editNodes?: 
           autoComplete="new-password"
           variant="underlined"
           value={flowName}
-          onChange={(e) => setFlowName(e.target.value)}
+          onChange={(e: any) => setFlowName(e.target.value)}
           className="ml-2 mt-2 font-fira"
         />
         <Button
@@ -99,7 +105,9 @@ export default function FlowBuilderPage({ editNodes, editEdges }: { editNodes?: 
           onConnect={onConnect}
           defaultViewport={defaultViewport}
           nodeTypes={bridge.nodeTypes}
-        />
+        >
+          <bridge.Background gap={24} />
+        </bridge.ReactFlow>
         <QueryClientProvider client={queryClient}>
           <bridge.Sidebar onSidebarClick={onSidebarClick} />
         </QueryClientProvider>

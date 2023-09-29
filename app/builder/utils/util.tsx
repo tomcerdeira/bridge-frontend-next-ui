@@ -42,6 +42,12 @@ export const getIconComponent = (icon: String) => {
       return SiBinance;
     case "email":
       return HiOutlineMail;
+    case "ampersand":
+      return TbAmpersand;
+    case "vertical":
+      return LiaGripLinesVerticalSolid;
+    case "braces":
+      return RiBracesFill;
   }
 };
 

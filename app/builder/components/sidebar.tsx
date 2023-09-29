@@ -1,8 +1,9 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { useQuery } from "react-query";
-import * as util from "../utils/util";
 import { IconType } from "react-icons/lib";
 import { Skeleton, Tooltip } from "@nextui-org/react";
+import { categories } from "../data/categories";
+import * as util from "../utils/util";
 
 const fetchTasks = async () =>
   fetch("http://localhost:8080/payment/tasks").then((res) => res.json());
@@ -42,13 +43,17 @@ const Sidebar = ({ onSidebarClick }: any) => {
     };
   });
 
+  categories.forEach((category) => {
+    tasks.push(category);
+  });
+
   return (
-    <div className="text-white flex flex-col ">
-      <div className="flex flex-col p-5 rounded-lg bg-content1">
+    <div className="text-white flex flex-col">
+      <div className="flex flex-col p-5 rounded-lg items-center">
         {tasks.map((task: any, taskIndex: any) => (
           <Tooltip content={task.name} placement="left" className="capitalize">
             <div
-              className="cursor-pointer hover:bg-neutral-800 rounded-xl p-4"
+              className="cursor-pointer border-dashed border-2 mb-2 border-gray-800 hover:bg-neutral-800 rounded-xl p-4"
               onClick={() =>
                 onSidebarClick({
                   ...task,
