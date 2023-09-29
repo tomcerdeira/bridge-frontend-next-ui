@@ -6,7 +6,7 @@ export {
 } from "react-icons/ri";
 export type { Edge, Connection, Viewport, ReactFlowInstance } from "reactflow";
 export { FaCcStripe, FaFlagCheckered, FaTelegram } from "react-icons/fa";
-export { SiMercadopago, SiBinance } from "react-icons/si";
+export { SiMercadopago, SiBinance, SiMaildotru } from "react-icons/si";
 export { TbAmpersand } from "react-icons/tb";
 export { LiaGripLinesVerticalSolid } from "react-icons/lia";
 export { ReactFlow, Background } from "reactflow";

@@ -9,6 +9,7 @@ import {
   TbAmpersand,
   LiaGripLinesVerticalSolid,
   SiBinance,
+  SiMaildotru,
 } from "../index";
 
 import { HiOutlineMail } from "react-icons/hi";
@@ -41,7 +42,7 @@ export const getIconComponent = (icon: String) => {
     case "binance":
       return SiBinance;
     case "email":
-      return HiOutlineMail;
+      return SiMaildotru;
     case "ampersand":
       return TbAmpersand;
     case "vertical":
