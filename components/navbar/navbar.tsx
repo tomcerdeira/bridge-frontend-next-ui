@@ -11,69 +11,59 @@ interface Props {
 export const NavbarWrapper = ({ children }: Props) => {
   const { shop } = useAuth();
 
-  return (
-    <>
-      {true? (
-          <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            <Navbar
-              isBordered
-              className="w-full"
-              classNames={{
-                wrapper: "w-full max-w-full justify-end",
-              }}
-            >
-              <NavbarContent className="md:hidden">
-                <BurguerButton />
-              </NavbarContent>
+  // TODO: ver este true
+  return ( 
+    <> 
+        <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+          <Navbar
+            isBordered
+            className="w-full"
+            classNames={{
+              wrapper: "w-full max-w-full justify-end",
+            }}
+          >
+            <NavbarContent className="md:hidden">
+              <BurguerButton />
+            </NavbarContent>
 
-              <NavbarContent
-                justify="start"
-                >
-                {!shop ? (
-                  <div className="flex">
-                      <Chip
-                        variant="faded"
-                        size="md"
-                      >
-                        Cargando...
-                      </Chip>
-                  </div>
-                  ) : (
-                  <div className="flex">
-                    <Chip
-                      size="md"
-                      >
-                        {shop!.name}
-                    </Chip>
-                  </div>
-                  )
-                }
-              </NavbarContent>
-      
-              <NavbarContent
-                justify="end"
-                className="w-fit data-[justify=end]:flex-grow-0"
+            <NavbarContent
+              justify="start"
               >
-                {/* <NotificationsDropdown /> */}
-                <NavbarContent>
-                  <UserDropdown />
-                </NavbarContent>
-      
+              {!shop ? (
+                <div className="flex">
+                    <Chip
+                      variant="faded"
+                      size="md"
+                    >
+                      Cargando...
+                    </Chip>
+                </div>
+                ) : (
+                <div className="flex">
+                  <Chip
+                    size="md"
+                    >
+                      {shop!.name}
+                  </Chip>
+                </div>
+                )
+              }
+            </NavbarContent>
+    
+            <NavbarContent
+              justify="end"
+              className="w-fit data-[justify=end]:flex-grow-0"
+            >
+              {/* <NotificationsDropdown /> */}
+              <NavbarContent>
+                <UserDropdown />
               </NavbarContent>
-      
-            </Navbar>
-            
-            {children}
-            
-          </div>
-        ) 
-        :
-        (
-          <section className="m-auto">
-            {children}
-          </section>
-        )
-      }
+    
+            </NavbarContent>
+    
+          </Navbar>
+          {children}
+        </div>
     </>
   );
 };
