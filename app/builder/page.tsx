@@ -83,16 +83,17 @@ export default function FlowBuilderPage({
       <div className="flex flex-row justify-between gap-3">
         <Input
           type="email"
+          variant="underlined"
           placeholder="Sin título"
           autoComplete="new-password"
-          variant="underlined"
           value={flowName}
           onChange={(e: any) => setFlowName(e.target.value)}
-          className="ml-2 mt-2 font-fira"
+          className="ml-2 my-2 font-fira"
         />
         <Button
-          color="primary"
-          className="font-fira mt-2 mr-2"
+          color="white"
+          variant="bordered"
+          className="font-fira my-2 mr-2 hover:bg-gray-200 hover:text-black"
           isLoading={isRequestLoading}
           onClick={onSaveClick}
         >
