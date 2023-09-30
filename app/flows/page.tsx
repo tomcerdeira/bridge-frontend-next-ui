@@ -12,7 +12,7 @@ export default function FlowsPage() {
     const handleFlowUpdate = () => {
         getFlows();
       }
-    
+    // TODO: ver si agregamos paginacion a la lista de flows
     return (
         <>
         {isLoading? (
@@ -26,7 +26,7 @@ export default function FlowsPage() {
         (
             <>
             {(flows && flows.length > 0)? (
-                <div className="mt-4 mx-4 flex flex-col gap-4">
+                <div className="mt-4 mx-4 mb-4 flex flex-col gap-4">
                     <div className="flex justify-between flex-wrap gap-4 items-center">
                         <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
                             <h3 className="text-xl font-bold">Flujos creados</h3>
