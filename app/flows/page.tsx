@@ -6,9 +6,12 @@ import { Button } from "@nextui-org/button";
 import { FlowsTable } from "./flows-table";
 
 export default function FlowsPage() {
-    const { shop } = useAuth();
+    const { shop, user } = useAuth();
     const { flows, error, getFlows, isLoading } = useGetFlows(shop? shop.id.toString() : "0");
 
+    const handleFlowUpdate = () => {
+        getFlows();
+      }
     
     return (
         <>
@@ -35,7 +38,7 @@ export default function FlowsPage() {
                         </div>
                     </div>
                     <div className="mr-4 w-full">
-                        <FlowsTable flows={flows} />
+                        <FlowsTable flows={flows} onFlowUpdate={handleFlowUpdate} />
                     </div>  
                 </div>
             )

@@ -1,12 +1,20 @@
+import { FlowIcon } from "@/components/icons/sidebar/flow-icon";
+import { DeleteIcon } from "@/components/icons/table/delete-icon";
+import { EditIcon } from "@/components/icons/table/edit-icon";
+import { useDeleteFlow } from "@/src/api/flows";
+import { FlowDetails } from "@/src/api/types";
 import {
+    Avatar,
+    Chip,
+    Link,
     Table,
     TableBody,
     TableCell,
     TableColumn,
     TableHeader,
-    TableRow
+    TableRow,
+    Tooltip
 } from "@nextui-org/react";
-import { RenderCell } from "./render-cell";
 
   export const columns = [
     {name: 'Nombre', uid: 'name'},
@@ -16,36 +24,17 @@ import { RenderCell } from "./render-cell";
     {name: 'Acciones', uid: 'actions'},
  ];
 
-//  export const flows = [
-//     {
-//       "id": "flow1",
-//       "name": "Flow Example 1",
-//       "shopId": 9999,
-//       "active": true,
-//       "updatedAt": "2023-09-26T19:59:34.692Z",
-//       "createdAt": "2023-09-26T19:59:34.692Z"
-//     },
-//     {
-//       "id": "flow2",
-//       "name": "Flow Example 2",
-//       "shopId": 9999,
-//       "active": true,
-//       "updatedAt": "2023-09-26T19:59:34.692Z",
-//       "createdAt": "2023-09-26T19:59:34.692Z"
-//     },
-//     {
-//       "id": "flow3",
-//       "name": "Flow Example 3",
-//       "shopId": 9999,
-//       "active": false,
-//       "updatedAt": "2023-09-26T19:59:34.692Z",
-//       "createdAt": "2023-09-26T19:59:34.692Z"
-//     }
-//   ];
-  
- 
-  
-  export const FlowsTable = ({ flows }) => {
+  export const FlowsTable = ({ flows, onFlowUpdate } : { flows: FlowDetails[], onFlowUpdate: () => void}) => {
+    const { doDeleteFlow } = useDeleteFlow()
+    const handleSubmit = async (flowId: string) => {
+        const isSure = confirm("¿Estas seguro que deseas borrar este flujo?")
+        if(isSure){
+            doDeleteFlow({ flowId });
+            onFlowUpdate();
+        }
+    }
+
+    
     return (
       <div className=" w-full flex flex-col gap-4">
         <Table aria-label="Example table with custom cells">
@@ -61,13 +50,64 @@ import { RenderCell } from "./render-cell";
           </TableHeader>
           <TableBody items={flows}>
             {(item) => (
-              <TableRow>
-                {(columnKey) => (
-                  <TableCell>
-                    {RenderCell({ flow: item, columnKey: columnKey })}
-                  </TableCell>
-                )}
-              </TableRow>
+                <TableRow>
+                    <TableCell>
+                        <div className="flex content-center items-center">
+                            <Avatar
+                                isBordered
+                                icon={<FlowIcon/>}
+                            />
+                            <p className="ml-4">{item.name}</p>
+                        </div>
+                    </TableCell>
+                    <TableCell>
+                        <div>
+                            <span>{item.createdAt}</span>
+                        </div>
+                    </TableCell>
+                    <TableCell>
+                        <Chip
+                            size="sm"
+                            variant="flat"
+                            color={
+                                item.active
+                                ? "success"
+                                : "warning"}
+                        >
+                            <span className="capitalize text-xs">{item.active? "ACTIVO" : "INACTIVO"}</span>
+                        </Chip>
+                    </TableCell>
+                    <TableCell>
+                        <div>
+                            <span>{item.updatedAt}</span>
+                        </div>
+                    </TableCell>
+                    <TableCell>
+                        <div className="w-fit flex mr-4 gap-2 justify-end">
+                            <div>
+                                <Tooltip content="Editar">
+                                    <Link
+                                    // TODO: cambiar link al que corresponde
+                                        href={`/flow-editor/${item.id}`}
+                                        size="lg"
+                                        >
+                                        <EditIcon size={20} fill="#979797" />
+                                    </Link>
+                                </Tooltip>
+                            </div>
+                            <div>
+                                <Tooltip
+                                content="Borrar"
+                                color="danger"
+                                >
+                                <button onClick={() => handleSubmit(item.id)}>
+                                    <DeleteIcon size={20} fill="#FF0080" />
+                                </button>
+                                </Tooltip>
+                            </div>
+                        </div>
+                    </TableCell>
+                </TableRow>
             )}
           </TableBody>
         </Table>
