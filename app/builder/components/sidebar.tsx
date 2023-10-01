@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { IconType } from "react-icons/lib";
 import { Skeleton, Tooltip } from "@nextui-org/react";
 import { categories } from "../data/categories";
+import { conditions } from "../data/conditions";
 import * as util from "../utils/util";
 
 const fetchTasks = async () =>
@@ -43,15 +44,30 @@ const Sidebar = ({ onSidebarClick }: any) => {
     };
   });
 
+  const initialCondition = {
+    field: conditions[0].field,
+    operator: conditions[0].operators[0],
+    value: conditions[0].values[0],
+  };
+
   categories.forEach((category) => {
-    tasks.push(category);
+    const extendedCategory = {
+      ...category,
+      condition: initialCondition,
+    };
+    tasks.push(extendedCategory);
   });
 
   return (
     <div className="text-white flex flex-col">
       <div className="flex flex-col p-5 rounded-lg items-center">
         {tasks.map((task: any, taskIndex: any) => (
-          <Tooltip content={task.name} placement="left" className="capitalize">
+          <Tooltip
+            content={task.name}
+            placement="left"
+            className="capitalize font-fira"
+            key={taskIndex}
+          >
             <div
               className="cursor-pointer border-dashed border-2 mb-2 border-gray-800 hover:bg-neutral-800 rounded-xl p-4"
               onClick={() =>

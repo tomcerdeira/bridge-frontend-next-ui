@@ -3,7 +3,6 @@ import { useCallback, useState } from "react";
 import { Button, Input } from "@nextui-org/react";
 import { useFlowBuilder } from "@/src/api/flow-builder";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { conditions } from "./data/conditions";
 import toast from "@/components/toast";
 import * as bridge from "./index";
 import * as util from "./utils/util";
@@ -12,18 +11,24 @@ import "reactflow/dist/style.css";
 export default function FlowBuilderPage({
   editNodes,
   editEdges,
+  editName,
+  flowId,
 }: {
-  editNodes?: Node[];
+  editNodes?: bridge.Node[];
   editEdges?: bridge.Edge[];
+  editName?: string;
+  flowId?: string;
 }) {
   const queryClient = new QueryClient();
-  const { buildFlow, error, isLoading } = useFlowBuilder();
+  const { buildFlow, error, isLoading } = useFlowBuilder(flowId);
   const [isRequestLoading, setRequestLoading] = useState(false);
-  const [flowName, setFlowName] = useState("");
+  const [flowName, setFlowName] = useState(editName || "");
   const [nodes, setNodes, onNodesChange] = bridge.useNodesState(
-    bridge.initialNodes
+    editNodes || bridge.initialNodes
   );
-  const [edges, setEdges, onEdgesChange] = bridge.useEdgesState([]);
+  const [edges, setEdges, onEdgesChange] = bridge.useEdgesState(
+    editEdges || []
+  );
   const defaultViewport: bridge.Viewport = { x: 0, y: 0, zoom: 0.9 };
   const onConnect = useCallback(
     (params: bridge.Edge | bridge.Connection) =>
@@ -45,11 +50,7 @@ export default function FlowBuilderPage({
         description: data.description,
         type: data.type,
         ...(data.node_type === "condition" && {
-          condition: {
-            field: conditions[0].field,
-            operator: conditions[0].operators[0],
-            value: conditions[0].values[0],
-          },
+          condition: data.condition,
         }),
       },
     };
@@ -67,7 +68,7 @@ export default function FlowBuilderPage({
     try {
       setRequestLoading(true);
       let flow = await buildFlow(json);
-      toast({ type: "success", message: "Flujo creado satisfactoriamente!" });
+      toast({ type: "success", message: "Flujo guardado satisfactoriamente!" });
     } catch (err) {
       toast({
         type: "error",

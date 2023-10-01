@@ -3,14 +3,14 @@ export const categories = [
     type: "logical",
     category: "logical",
     icon: "ampersand",
-    name: "And",
+    name: "AND",
     parameter: {},
   },
   {
     type: "logical",
     category: "logical",
     icon: "vertical",
-    name: "Or",
+    name: "OR",
     parameter: {},
   },
   {

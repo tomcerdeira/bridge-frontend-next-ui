@@ -1,20 +1,42 @@
 import useSWRMutation from "swr/mutation";
 import { fetcher } from "../lib/fetcher/clientFetcher";
 
-export function useFlowBuilder() {
+export function useFlowBuilder(flowId?: string) {
   async function buildFlow(url, { arg }) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    return fetcher<any>(url, { body: arg, method: "POST" });
+    const method = flowId ? "PUT" : "POST";
+    return fetcher<any>(url, { body: arg, method: method });
   }
 
-  const { trigger, data, isMutating, error } = useSWRMutation(
-    "/payment/flows",
-    buildFlow,
-    { throwOnError: false }
-  );
+  const url = flowId ? `/payment/flows/${flowId}` : "/payment/flows";
+  const { trigger, data, isMutating, error } = useSWRMutation(url, buildFlow, {
+    throwOnError: false,
+  });
 
   return {
     buildFlow: trigger,
+    isLoading: isMutating,
+    data,
+    error,
+  };
+}
+
+export function useFlowTasks() {
+  async function getTasks(url: string) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return fetcher<any>(url, { method: "GET" });
+  }
+
+  const { data, error, isMutating, trigger } = useSWRMutation(
+    "/payment/tasks",
+    getTasks,
+    {
+      throwOnError: false,
+    }
+  );
+
+  return {
+    getTasks: trigger,
     isLoading: isMutating,
     data,
     error,

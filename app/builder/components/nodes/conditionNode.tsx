@@ -7,7 +7,7 @@ import ConditionDropdown from "../conditionDropdown";
 
 const ConditionNode = ({ id, data }: NodeProps) => {
   const [fieldKeys, setFieldKeys] = useState<Selection>(
-    new Set([conditions[0].field])
+    new Set([data.condition.field])
   );
 
   const selectedField = useMemo(
@@ -16,7 +16,7 @@ const ConditionNode = ({ id, data }: NodeProps) => {
   );
 
   const [operatorKeys, setOperatorKeys] = useState<Selection>(
-    new Set([conditions[0].operators[0]])
+    new Set([data.condition.operator])
   );
 
   const selectedOperator = useMemo(
@@ -25,7 +25,7 @@ const ConditionNode = ({ id, data }: NodeProps) => {
   );
 
   const [valueKeys, setValueKeys] = useState<Selection>(
-    new Set([conditions[0].values[0]])
+    new Set([data.condition.value])
   );
 
   const selectedValue = useMemo(
@@ -33,7 +33,7 @@ const ConditionNode = ({ id, data }: NodeProps) => {
     [valueKeys]
   );
 
-  const [amountValue, setAmountValue] = useState<string>("");
+  const [amountValue, setAmountValue] = useState<string>(data.condition.value);
 
   const { setNodes } = useReactFlow();
 
