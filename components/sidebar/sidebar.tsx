@@ -97,15 +97,16 @@ export const SidebarWrapper = () => {
                   title="View Test Data"
                   icon={<ViewIcon />}
                 /> */}
-              <SidebarItem
-                isActive={pathname === "/settings"}
-                title="Configuraciones"
-                icon={<SettingsIcon />}
-              />
-            </SidebarMenu>
+                <SidebarItem
+                  isActive={pathname === "/settings"}
+                  title="Configuraciones"
+                  icon={<SettingsIcon />}
+                  href="settings"
+                />
+              </SidebarMenu>
+            </div>
           </div>
         </div>
-      </div>
-    </aside>
+      </aside>
   );
 };

@@ -21,13 +21,24 @@ export default function Home() {
                 <div className="mt-4 mx-4 mb-4 flex flex-col gap-4">
                     <div className="flex justify-between flex-wrap gap-4 items-center">
                         <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
-                            <h3 className="text-xl font-bold">Aquí tiene un resumen de sus pagos.</h3>
+                            <h3 className="text-xl font-bold">Aquí tiene un resumen de sus pagos:</h3>
                         </div>
                     </div>
 					<div className="flex flex-wrap gap-3">
-						<AnalyticsCard card_color="bg-primary" card_title="Tasa de conversión general" card_content="0.00%" />
 						<AnalyticsCard card_color="bg-success" card_title="Pagos exitosos" card_content="0" />
 						<AnalyticsCard card_color="bg-warning" card_title="Pagos fallidos" card_content="0" />
+						<AnalyticsCard card_color="bg-primary" card_title="Pagos totales" card_content="0" />
+						<AnalyticsCard card_color="bg-primary" card_title="Total dinero procesado" card_content="$0" />
+						<AnalyticsCard card_color="bg-primary" card_title="Promedio de dinero procesado" card_content="$0" />
+					</div>
+					<div className="flex justify-between flex-wrap gap-4 items-center">
+                        <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
+                            <h3 className="text-xl font-bold">Aquí tiene un resumen de sus flujos:</h3>
+                        </div>
+                    </div>
+					<div className="flex flex-wrap gap-3">
+						<AnalyticsCard card_color="bg-success" card_title="Flujos exitosos" card_content="0" />
+						<AnalyticsCard card_color="bg-warning" card_title="Flujos fallidos" card_content="0" />
 					</div>
 					<div className="mt-8">
 						<Link

@@ -11,12 +11,10 @@ import toast from "@/components/toast";
 
 interface FormErrors {
 	email: string[];
-	password: string[];
   }
   
   const initialErrors: FormErrors = {
-	email: [],
-	password: [],
+	email: []
   };
 
 export default function ForgotPasswordForm() {
@@ -45,8 +43,7 @@ export default function ForgotPasswordForm() {
 	const handleSubmit = async (e: any) => {
         e.preventDefault();
         const newErrors: FormErrors = {
-			email: [],
-			password: [],
+			email: []
 		  };
 
           if (!email) {
