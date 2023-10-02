@@ -24,7 +24,7 @@ export default function FlowBuilderPage({
   const { shop, user } = useAuth();
   const { buildFlow, error, isLoading } = useFlowBuilder(flowId);
   const [isRequestLoading, setRequestLoading] = useState(false);
-  const [flowName, setFlowName] = useState(editName || "");
+  const [flowName, setFlowName] = useState(editName || "Sin titulo");
   const [nodes, setNodes, onNodesChange] = bridge.useNodesState(
     editNodes || bridge.initialNodes
   );

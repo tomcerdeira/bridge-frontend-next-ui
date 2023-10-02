@@ -51,13 +51,13 @@ export const SidebarWrapper = () => {
                 isActive={pathname === "/flows"}
                 title="Flujos"
                 icon={<FlowIcon />}
-                href="flows"
+                href="/flows"
               />
               <SidebarItem
                 isActive={pathname === "/builder"}
                 title="Constructor"
                 icon={<AccountsIcon />}
-                href="builder"
+                href="/builder"
               />
               <SidebarItem
                 isActive={pathname === "/payments"}
