@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { Button, Input } from "@nextui-org/react";
 import { useFlowBuilder } from "@/src/api/flow-builder";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { useAuth } from "@/src/hooks/useAuth";
 import toast from "@/components/toast";
 import * as bridge from "./index";
 import * as util from "./utils/util";
@@ -20,6 +21,7 @@ export default function FlowBuilderPage({
   flowId?: string;
 }) {
   const queryClient = new QueryClient();
+  const { shop, user } = useAuth();
   const { buildFlow, error, isLoading } = useFlowBuilder(flowId);
   const [isRequestLoading, setRequestLoading] = useState(false);
   const [flowName, setFlowName] = useState(editName || "");
@@ -64,7 +66,13 @@ export default function FlowBuilderPage({
     const connectedNodes = edges
       .filter((edge) => edge.source === rootNode.id)
       .map((edge) => nodes.find((node) => node.id === edge.target));
-    const json = util.buildJson(connectedNodes, flowName, edges, nodes);
+    const json = util.buildJson(
+      connectedNodes,
+      flowName,
+      edges,
+      nodes,
+      shop ? shop.id.toString() : "0"
+    );
     try {
       setRequestLoading(true);
       let flow = await buildFlow(json);

@@ -136,11 +136,12 @@ export const buildJson = (
   connectedNodes: any,
   flowName: any,
   edges: any,
-  nodes: any
+  nodes: any,
+  shopId: string
 ) => {
   const payload: Payload = {};
   payload["name"] = flowName;
-  payload["shopId"] = 12;
+  payload["shopId"] = shopId;
   payload["active"] = true;
   payload["rootRule"] = {};
   payload["rootRule"]["name"] = "root";
