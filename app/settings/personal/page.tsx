@@ -1,5 +1,7 @@
 'use client'
 
+import toast from "@/components/toast";
+import { useChangePassword } from "@/src/api/users";
 import { useAuth } from "@/src/hooks/useAuth";
 import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
@@ -45,6 +47,7 @@ export default function PersonalSettingsPage() {
         clearError("repeat_new_password");
 	};
 
+    const { doChangePassword, error, isLoading } = useChangePassword();
     const [loadingRequest, setLoadingRequest] = useState(false);
 
     const handleSubmit = async () => {
@@ -77,18 +80,18 @@ export default function PersonalSettingsPage() {
         if (!hasErrors) {
             try {
                 setLoadingRequest(true);
-                // const user = await doForgotPassword({ email });
-                // if(user){
-                //     toast({ type: 'success', message: 'Contraseña actualizada correctamente...' });
-                // }else{
-                //     toast({ type: 'error', message: 'Ocurrió un error al cambiar la contraseña.' });
-                // }
+                const no_content = await doChangePassword({ current_password: currentPassword, new_password: newPassword });
+                if(no_content){
+                    toast({ type: 'success', message: 'Contraseña actualizada correctamente...' });
+                    onClose();
+                    setErrors(initialErrors);
+                }else{
+                    toast({ type: 'error', message: 'Ocurrió un error al cambiar la contraseña.' });
+                }
                 setLoadingRequest(false);
             } catch (err) {} finally {
                 setLoadingRequest(false);
             }
-            onClose();
-            setErrors(initialErrors);
         }
 
 	};
@@ -179,6 +182,7 @@ export default function PersonalSettingsPage() {
                                 errorMessage={errors.repeat_new_password.join(' ')}
                                 isRequired
                             />
+                            {error && <p className="mt-4 text-right text-red-400">{error.message}</p>}
                         </ModalBody>
                         <ModalFooter>
                             <Button color="danger" variant="light" onPress={handleClose}>

@@ -51,7 +51,7 @@ export const SidebarWrapper = () => {
                   isActive={pathname === "/flows"}
                   title="Flujos"
                   icon={<FlowIcon />}
-                  href="flows"
+                  href="/flows"
                 />
                 <SidebarItem
                   isActive={pathname === "/accounts"}
@@ -101,7 +101,7 @@ export const SidebarWrapper = () => {
                   isActive={pathname === "/settings"}
                   title="Configuraciones"
                   icon={<SettingsIcon />}
-                  href="settings"
+                  href="/settings"
                 />
               </SidebarMenu>
             </div>

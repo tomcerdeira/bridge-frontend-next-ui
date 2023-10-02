@@ -9,6 +9,7 @@ export const FORGOT_PASSWORD = `/app/public/users/forgot-password`
 export const RESET_PASSWORD = (token: string) => `/app/public/users/reset-password/${token}`
 export const VERIFY = (token: string) => `/app/public/users/verify/${token}`
 export const RESEND_VERIFY_EMAIL = `/app/private/users/resend-verify`
+export const CHANGE_PASSWORD = `/app/private/users/change-password`
 
 const mockUser = {
     id: 1,
@@ -141,6 +142,22 @@ export function useResendVerifyEmail() {
 
   return {
       doResendVerifyEmail: trigger,
+      isLoading: isMutating,
+      data,
+      error,
+  };
+}
+
+export function useChangePassword() {
+
+  const { trigger, data, isMutating, error } = useSWRMutation(
+    CHANGE_PASSWORD,
+      (url, { arg }) => fetcher<any>(url, { body: arg, method: 'PATCH' }),
+      {throwOnError: false}
+  );
+
+  return {
+      doChangePassword: trigger,
       isLoading: isMutating,
       data,
       error,
