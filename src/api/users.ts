@@ -3,13 +3,13 @@ import { fetcher } from "../lib/fetcher/clientFetcher";
 import { ParsedUser, UserResponse } from "./types";
 
 // TODO: agregar el /app/... cuando usemos el gateway
-export const ME_PATH = `/app/private/users/me`;
-export const SIGN_UP = `/app/public/users/`;
-export const FORGOT_PASSWORD = `/app/public/users/forgot-password`;
-export const RESET_PASSWORD = (token: string) =>
-  `/app/public/users/reset-password/${token}`;
-export const VERIFY = (token: string) => `/app/public/users/verify/${token}`;
-export const RESEND_VERIFY_EMAIL = `/app/private/users/resend-verify`;
+export const ME_PATH = `/app/private/users/me`
+export const SIGN_UP = `/app/public/users/`
+export const FORGOT_PASSWORD = `/app/public/users/forgot-password`
+export const RESET_PASSWORD = (token: string) => `/app/public/users/reset-password/${token}`
+export const VERIFY = (token: string) => `/app/public/users/verify/${token}`
+export const RESEND_VERIFY_EMAIL = `/app/private/users/resend-verify`
+export const CHANGE_PASSWORD = `/app/private/users/change-password`
 
 const mockUser = {
   id: 1,
@@ -144,3 +144,20 @@ export function useResendVerifyEmail() {
     error,
   };
 }
+
+export function useChangePassword() {
+
+  const { trigger, data, isMutating, error } = useSWRMutation(
+    CHANGE_PASSWORD,
+      (url, { arg }) => fetcher<any>(url, { body: arg, method: 'PATCH' }),
+      {throwOnError: false}
+  );
+
+  return {
+      doChangePassword: trigger,
+      isLoading: isMutating,
+      data,
+      error,
+  };
+}
+  
