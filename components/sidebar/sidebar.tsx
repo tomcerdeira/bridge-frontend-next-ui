@@ -101,6 +101,7 @@ export const SidebarWrapper = () => {
                   isActive={pathname === "/settings"}
                   title="Configuraciones"
                   icon={<SettingsIcon />}
+                  href="settings"
                 />
               </SidebarMenu>
             </div>
