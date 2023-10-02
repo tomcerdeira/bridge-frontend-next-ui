@@ -22,77 +22,77 @@ export const SidebarWrapper = () => {
   const { collapsed, setCollapsed } = useSidebarContext();
 
   return (
-      <aside className="h-full z-[202] sticky top-0">
-        {collapsed ? (
-          <div className={Sidebar.Overlay()} onClick={setCollapsed} />
-        ) : null}
-        <div
-          className={Sidebar({
-            collapsed: collapsed,
-          })}
-        >
-          <div className={Sidebar.Header()}>
-            <NextLink className="flex justify-start items-center gap-1" href="/">
-              <BridgeLogo />
-              <p className="ml-2 font-bold text-inherit">Bridge</p>
-            </NextLink>
-            {/* <CompaniesDropdown /> */}
-          </div>
-          <div className="flex flex-col justify-between h-full">
-            <div className={Sidebar.Body()}>
+    <aside className="h-full z-[202] sticky top-0">
+      {collapsed ? (
+        <div className={Sidebar.Overlay()} onClick={setCollapsed} />
+      ) : null}
+      <div
+        className={Sidebar({
+          collapsed: collapsed,
+        })}
+      >
+        <div className={Sidebar.Header()}>
+          <NextLink className="flex justify-start items-center gap-1" href="/">
+            <BridgeLogo />
+            <p className="ml-2 font-bold text-inherit">Bridge</p>
+          </NextLink>
+          {/* <CompaniesDropdown /> */}
+        </div>
+        <div className="flex flex-col justify-between h-full">
+          <div className={Sidebar.Body()}>
+            <SidebarItem
+              title="Inicio"
+              icon={<HomeIcon />}
+              isActive={pathname === "/"}
+              href="/"
+            />
+            <SidebarMenu title="Menú">
               <SidebarItem
-                title="Inicio"
-                icon={<HomeIcon />}
-                isActive={pathname === "/"}
-                href="/"
+                isActive={pathname === "/flows"}
+                title="Flujos"
+                icon={<FlowIcon />}
+                href="/flows"
               />
-              <SidebarMenu title="Menú">
-                <SidebarItem
-                  isActive={pathname === "/flows"}
-                  title="Flujos"
-                  icon={<FlowIcon />}
-                  href="/flows"
-                />
-                <SidebarItem
-                  isActive={pathname === "/accounts"}
-                  title="Cuentas"
-                  icon={<AccountsIcon />}
-                  href="accounts"
-                />
-                <SidebarItem
-                  isActive={pathname === "/payments"}
-                  title="Pagos"
-                  icon={<PaymentsIcon />}
-                />
-                <CollapseItems
-                  icon={<BalanceIcon />}
-                  items={["Banks Accounts", "Credit Cards", "Loans"]}
-                  title="Balances"
-                />
-                <SidebarItem
-                  isActive={pathname === "/customers"}
-                  title="Clientes"
-                  icon={<CustomersIcon />}
-                />
-                <SidebarItem
-                  isActive={pathname === "/products"}
-                  title="Productos"
-                  icon={<ProductsIcon />}
-                />
-                <SidebarItem
-                  isActive={pathname === "/reports"}
-                  title="Reportes"
-                  icon={<ReportsIcon />}
-                />
-              </SidebarMenu>
-  
-              <SidebarMenu title="General">
-                <SidebarItem
-                  isActive={pathname === "/developers"}
-                  title="Desarrolladores"
-                  icon={<DevIcon />}
-                />
-                {/* <SidebarItem
+              <SidebarItem
+                isActive={pathname === "/builder"}
+                title="Constructor"
+                icon={<AccountsIcon />}
+                href="/builder"
+              />
+              <SidebarItem
+                isActive={pathname === "/payments"}
+                title="Pagos"
+                icon={<PaymentsIcon />}
+              />
+              <CollapseItems
+                icon={<BalanceIcon />}
+                items={["Banks Accounts", "Credit Cards", "Loans"]}
+                title="Balances"
+              />
+              <SidebarItem
+                isActive={pathname === "/customers"}
+                title="Clientes"
+                icon={<CustomersIcon />}
+              />
+              <SidebarItem
+                isActive={pathname === "/products"}
+                title="Productos"
+                icon={<ProductsIcon />}
+              />
+              <SidebarItem
+                isActive={pathname === "/reports"}
+                title="Reportes"
+                icon={<ReportsIcon />}
+              />
+            </SidebarMenu>
+
+            <SidebarMenu title="General">
+              <SidebarItem
+                isActive={pathname === "/developers"}
+                title="Desarrolladores"
+                icon={<DevIcon />}
+              />
+              {/* <SidebarItem
                   isActive={pathname === "/view"}
                   title="View Test Data"
                   icon={<ViewIcon />}
