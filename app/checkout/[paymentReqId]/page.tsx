@@ -3,7 +3,7 @@ import { serverFetcher } from "@/src/lib/fetcher/serverFetcher";
 import CheckoutForm from "./checkoutForm";
 
 function getPaymentInformation(paymentReqId: string) {
-    const PATH = `/payments/${paymentReqId}`
+    const PATH = `payment/private/payments/${paymentReqId}`
     return serverFetcher<IPaymentRequest>(PATH)
   }
 

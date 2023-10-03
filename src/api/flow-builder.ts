@@ -8,7 +8,7 @@ export function useFlowBuilder(flowId?: string) {
     return fetcher<any>(url, { body: arg, method: method });
   }
 
-  const url = flowId ? `/payment/flows/${flowId}` : "/payment/flows";
+  const url = flowId ? `/payment/private/flows/${flowId}` : "/payment/private/flows";
   const { trigger, data, isMutating, error } = useSWRMutation(url, buildFlow, {
     throwOnError: false,
   });
@@ -28,7 +28,7 @@ export function useFlowTasks() {
   }
 
   const { data, error, isMutating, trigger } = useSWRMutation(
-    "/payment/tasks",
+    "/payment/private/tasks",
     getTasks,
     {
       throwOnError: false,
@@ -50,7 +50,7 @@ export function useFlowRetrieve(flowId: string) {
   }
 
   const { data, error, isMutating, trigger } = useSWRMutation(
-    `/payment/flows/${flowId}`,
+    `/payment/private/flows/${flowId}`,
     getFlow,
     {
       throwOnError: false,

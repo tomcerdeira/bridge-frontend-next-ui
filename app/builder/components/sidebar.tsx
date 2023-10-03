@@ -7,7 +7,7 @@ import { conditions } from "../data/conditions";
 import * as util from "../utils/util";
 
 const fetchTasks = async () =>
-  fetch("http://localhost:8080/payment/tasks").then((res) => res.json());
+  fetch("http://localhost:8080/payment/private/tasks").then((res) => res.json());
 
 const Icon = ({ name }: any) => {
   const Icon: IconType = util.getIconComponent(name)!;
