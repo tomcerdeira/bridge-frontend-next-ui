@@ -1,7 +1,7 @@
 import useSWRMutation from "swr/mutation";
 import { fetcher } from "../lib/fetcher/clientFetcher";
 
-export function useFlowBuilder(flowId?: string) {
+export function useFlowBuilder( shopId : string, flowId?: string) {
   async function buildFlow(url, { arg }) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const method = flowId ? "PUT" : "POST";
@@ -9,8 +9,8 @@ export function useFlowBuilder(flowId?: string) {
   }
 
   const url = flowId
-    ? `/payment/private/flows/${flowId}`
-    : "/payment/private/flows";
+    ? `/payment/private/flows/${flowId}/shop/${shopId}`
+    : `/payment/private/flows/shop/${shopId}`;
   const { trigger, data, isMutating, error } = useSWRMutation(url, buildFlow, {
     throwOnError: false,
   });
