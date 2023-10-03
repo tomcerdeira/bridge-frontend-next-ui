@@ -1,13 +1,14 @@
-"use client";
-import { useCallback, useState } from "react";
-import { Button, Input } from "@nextui-org/react";
-import { useFlowBuilder } from "@/src/api/flow-builder";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { useAuth } from "@/src/hooks/useAuth";
+'use client'
+
 import toast from "@/components/toast";
+import { useFlowBuilder } from "@/src/api/flow-builder";
+import { useAuth } from "@/src/hooks/useAuth";
+import { Button, Divider, Input } from "@nextui-org/react";
+import { useCallback, useState } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import "reactflow/dist/style.css";
 import * as bridge from "./index";
 import * as util from "./utils/util";
-import "reactflow/dist/style.css";
 
 export default function FlowBuilderPage({
   editNodes,
@@ -89,26 +90,25 @@ export default function FlowBuilderPage({
 
   return (
     <div className="flex flex-col grow">
-      <div className="flex flex-row justify-between gap-3">
+      <div className="flex justify-between gap-3 items-center">
         <Input
-          type="email"
-          variant="underlined"
+          label="Nombre del flujo"
           placeholder="Sin título"
-          autoComplete="new-password"
           value={flowName}
           onChange={(e: any) => setFlowName(e.target.value)}
-          className="ml-2 my-2 font-fira"
+          className="ml-4 mt-4"
         />
         <Button
-          color="white"
-          variant="bordered"
-          className="font-fira my-2 mr-2 hover:bg-gray-200 hover:text-black"
+          color="primary"
+          size="md"
+          className="mt-4 mr-2 hover:bg-success hover:text-black"
           isLoading={isRequestLoading}
           onClick={onSaveClick}
         >
           Guardar
         </Button>
       </div>
+      <Divider className="mt-4"></Divider>
       <div className="flex grow flex-row items-center align-middle">
         <bridge.ReactFlow
           nodes={nodes}
