@@ -1,8 +1,8 @@
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { BridgeLogo } from "../bridgeLogo";
-import { AccountsIcon } from "../icons/sidebar/accounts-icon";
 import { BalanceIcon } from "../icons/sidebar/balance-icon";
+import { BuilderIcon } from "../icons/sidebar/builder-icon";
 import { CustomersIcon } from "../icons/sidebar/customers-icon";
 import { DevIcon } from "../icons/sidebar/dev-icon";
 import { FlowIcon } from "../icons/sidebar/flow-icon";
@@ -56,7 +56,7 @@ export const SidebarWrapper = () => {
               <SidebarItem
                 isActive={pathname === "/builder"}
                 title="Constructor"
-                icon={<AccountsIcon />}
+                icon={<BuilderIcon />}
                 href="/builder"
               />
               <SidebarItem
