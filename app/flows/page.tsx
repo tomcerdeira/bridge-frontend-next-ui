@@ -3,6 +3,7 @@
 import { useGetFlows } from "@/src/api/flows";
 import { useAuth } from "@/src/hooks/useAuth";
 import { Button } from "@nextui-org/button";
+import Link from "next/link";
 import { FlowsTable } from "./flows-table";
 
 export default function FlowsPage() {
@@ -32,7 +33,9 @@ export default function FlowsPage() {
                   <h3 className="text-xl font-bold">Flujos creados</h3>
                 </div>
                 <div className="flex flex-row gap-3.5 flex-wrap">
-                  <Button color="primary">+ Crear flujo</Button>
+                  <Link href={`/builder`}>  
+                    <Button color="primary">+ Crear flujo</Button>
+                  </Link>
                 </div>
               </div>
               <div className="mr-4 w-full">
@@ -47,7 +50,9 @@ export default function FlowsPage() {
                 </p>
               </div>
               <div className="flex justify-center">
-                <Button color="primary">+ Crear flujo</Button>
+                <Link href={`/builder`}>  
+                  <Button color="primary">+ Crear flujo</Button>
+                </Link>
               </div>
             </div>
           )}

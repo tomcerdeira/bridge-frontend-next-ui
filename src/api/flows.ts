@@ -9,7 +9,7 @@ export const DELETE_FLOW = (flowId: string) => `/payment/flows/${flowId}`
 export const DELETE_FLOW_BASE = `/payment/flows`
 
 export function useGetFlows(shopId: string) {
-    const { data, error, isLoading, mutate } = useSWR<FlowDetails[]>(GET_SHOP_FLOWS(shopId), fetcher);
+    const { data, error, isLoading, mutate } = useSWR<FlowDetails[]>(GET_SHOP_FLOWS(shopId), fetcher, {revalidateOnFocus: true});
     return { flows: data, error, isLoading, getFlows: mutate }
 }
 

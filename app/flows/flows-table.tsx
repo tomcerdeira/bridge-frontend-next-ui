@@ -35,7 +35,7 @@ export const FlowsTable = ({
   const handleSubmit = async (flowId: string) => {
     const isSure = confirm("¿Estas seguro que deseas borrar este flujo?");
     if (isSure) {
-      doDeleteFlow({ flowId });
+      await doDeleteFlow({ flowId });
       onFlowUpdate();
     }
   };
