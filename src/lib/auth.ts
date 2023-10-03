@@ -52,10 +52,8 @@ export function saveTokensFromResponse(response: Response) {
   setRefreshToken(refreshToken)
 }
 
-export async function getNewAccessToken() {
+export async function getNewAccessToken(accessToken, refreshToken) {
   const url = process.env.NEXT_PUBLIC_BASE_URL + '/public/auth/refresh-token'
-  const accessToken = Cookies.get('Authorization')
-  const refreshToken = Cookies.get('Refresh-Token')
   const token = accessToken?.split('Bearer ')[1]
 
   const body = JSON.stringify({ expired_access_token: token, refresh_token: refreshToken })
@@ -74,7 +72,7 @@ export async function getNewAccessToken() {
     saveTokensFromResponse(response)
     return response.headers.get('Authorization')
   } catch (error) {
-    console.log('failed to get new access token')
+    console.log('failed to get new access token', error);
     return null
   }
 }
@@ -88,7 +86,7 @@ export async function getAccessToken(accessToken, refreshToken) {
   }
 
   if (isAccessExpired && !isRefreshExpired) {
-    const newAccessToken = await getNewAccessToken()
+    const newAccessToken = await getNewAccessToken(accessToken, refreshToken)
     return newAccessToken
   }
 
