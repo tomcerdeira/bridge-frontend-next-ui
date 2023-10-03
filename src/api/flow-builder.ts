@@ -8,7 +8,9 @@ export function useFlowBuilder(flowId?: string) {
     return fetcher<any>(url, { body: arg, method: method });
   }
 
-  const url = flowId ? `/payment/private/flows/${flowId}` : "/payment/private/flows";
+  const url = flowId
+    ? `/payment/private/flows/${flowId}`
+    : "/payment/private/flows";
   const { trigger, data, isMutating, error } = useSWRMutation(url, buildFlow, {
     throwOnError: false,
   });

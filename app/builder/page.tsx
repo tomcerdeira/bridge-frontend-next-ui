@@ -1,11 +1,10 @@
-'use client'
+"use client";
 
 import toast from "@/components/toast";
 import { useFlowBuilder } from "@/src/api/flow-builder";
 import { useAuth } from "@/src/hooks/useAuth";
 import { Button, Divider, Input } from "@nextui-org/react";
 import { useCallback, useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
 import "reactflow/dist/style.css";
 import * as bridge from "./index";
 import * as util from "./utils/util";
@@ -21,7 +20,6 @@ export default function FlowBuilderPage({
   editName?: string;
   flowId?: string;
 }) {
-  const queryClient = new QueryClient();
   const { shop, user } = useAuth();
   const { buildFlow, error, isLoading } = useFlowBuilder(flowId);
   const [isRequestLoading, setRequestLoading] = useState(false);
@@ -121,9 +119,7 @@ export default function FlowBuilderPage({
         >
           <bridge.Background gap={24} />
         </bridge.ReactFlow>
-        <QueryClientProvider client={queryClient}>
-          <bridge.Sidebar onSidebarClick={onSidebarClick} />
-        </QueryClientProvider>
+        <bridge.Sidebar onSidebarClick={onSidebarClick} />
       </div>
     </div>
   );

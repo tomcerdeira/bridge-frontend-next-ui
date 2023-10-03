@@ -1,13 +1,15 @@
-import React from "react";
-import { useQuery } from "react-query";
+import React, { useState, useEffect } from "react";
 import { IconType } from "react-icons/lib";
 import { Skeleton, Tooltip } from "@nextui-org/react";
 import { categories } from "../data/categories";
 import { conditions } from "../data/conditions";
+import { useFlowTasks } from "@/src/api/flow-builder";
 import * as util from "../utils/util";
 
 const fetchTasks = async () =>
-  fetch("http://localhost:8080/payment/private/tasks").then((res) => res.json());
+  fetch("http://localhost:8080/payment/private/tasks").then((res) =>
+    res.json()
+  );
 
 const Icon = ({ name }: any) => {
   const Icon: IconType = util.getIconComponent(name)!;
@@ -15,9 +17,21 @@ const Icon = ({ name }: any) => {
 };
 
 const Sidebar = ({ onSidebarClick }: any) => {
-  const { isLoading, error, data } = useQuery("tasks", fetchTasks);
+  const { getTasks } = useFlowTasks();
+  const [isRequestLoading, setRequestLoading] = useState(true);
+  const [data, setData] = useState([]);
 
-  if (isLoading)
+  const retrieveTasks = async () => {
+    const response = await getTasks();
+    setData(response);
+    setRequestLoading(false);
+  };
+
+  useEffect(() => {
+    retrieveTasks();
+  }, []);
+
+  if (isRequestLoading)
     return (
       <div className="text-white flex flex-col ">
         <div className="flex flex-col p-5 rounded-lg bg-content1">
