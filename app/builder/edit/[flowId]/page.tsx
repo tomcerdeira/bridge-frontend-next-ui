@@ -172,6 +172,7 @@ export default function FlowBuilderEditPage({
       editName={flow.name}
       editEdges={edges}
       flowId={flowId}
+      active={flow.active}
     />
   );
 }

@@ -3,7 +3,7 @@
 import toast from "@/components/toast";
 import { useFlowBuilder } from "@/src/api/flow-builder";
 import { useAuth } from "@/src/hooks/useAuth";
-import { Button, Divider, Input } from "@nextui-org/react";
+import { Button, Divider, Input, Switch } from "@nextui-org/react";
 import { useCallback, useState } from "react";
 import "reactflow/dist/style.css";
 import * as bridge from "./index";
@@ -14,11 +14,13 @@ export default function FlowBuilderPage({
   editEdges,
   editName,
   flowId,
+  active,
 }: {
   editNodes?: bridge.Node[];
   editEdges?: bridge.Edge[];
   editName?: string;
   flowId?: string;
+  active?: boolean;
 }) {
   const { shop, user } = useAuth();
   const { buildFlow, error, isLoading } = useFlowBuilder(
@@ -26,6 +28,7 @@ export default function FlowBuilderPage({
     flowId
   );
   const [isRequestLoading, setRequestLoading] = useState(false);
+  const [isActive, setIsActive] = useState(active || true);
   const [flowName, setFlowName] = useState(editName || "Sin titulo");
   const [nodes, setNodes, onNodesChange] = bridge.useNodesState(
     editNodes || bridge.initialNodes
@@ -68,7 +71,13 @@ export default function FlowBuilderPage({
     const connectedNodes = edges
       .filter((edge) => edge.source === rootNode.id)
       .map((edge) => nodes.find((node) => node.id === edge.target));
-    const json = util.buildJson(connectedNodes, flowName, edges, nodes);
+    const json = util.buildJson(
+      connectedNodes,
+      flowName,
+      edges,
+      nodes,
+      isActive
+    );
     try {
       setRequestLoading(true);
       let flow = await buildFlow(json);
@@ -85,7 +94,7 @@ export default function FlowBuilderPage({
 
   return (
     <div className="flex flex-col grow">
-      <div className="flex justify-between gap-3 items-center">
+      <div className="flex justify-between gap-6 items-center">
         <Input
           label="Nombre del flujo"
           placeholder="Sin título"
@@ -93,6 +102,13 @@ export default function FlowBuilderPage({
           onChange={(e: any) => setFlowName(e.target.value)}
           className="ml-4 mt-4"
         />
+        <Switch
+          isSelected={isActive}
+          onValueChange={setIsActive}
+          className="mt-4"
+        >
+          Activo
+        </Switch>
         <Button
           color="primary"
           size="md"

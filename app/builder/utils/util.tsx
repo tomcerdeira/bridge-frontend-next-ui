@@ -137,10 +137,11 @@ export const buildJson = (
   flowName: any,
   edges: any,
   nodes: any,
+  isActive: boolean
 ) => {
   const payload: Payload = {};
   payload["name"] = flowName;
-  payload["active"] = true;
+  payload["active"] = isActive;
   payload["rootRule"] = {};
   payload["rootRule"]["name"] = "root";
   payload["rootRule"]["conditions"] = [];
