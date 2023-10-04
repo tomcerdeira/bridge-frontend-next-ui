@@ -1,17 +1,17 @@
 export const conditions = [
   {
-    field: "currency",
-    operators: ["is", "is not"],
-    values: ["usd", "eur", "ars"],
+    field: "CURRENCY",
+    operators: ["IS", "IS_NOT"],
+    values: ["USD", "EUR", "ARS"],
   },
   {
-    field: "amount",
-    operators: ["=", ">", "<"],
+    field: "AMOUNT",
+    operators: ["EQUALS", "GREATER_THAN", "LESS_THAN"],
     values: [],
   },
   {
-    field: "method",
-    operators: ["is", "is not"],
-    values: ["cash", "credit card", "debit card"],
+    field: "METHOD",
+    operators: ["IS", "IS_NOT"],
+    values: ["CREDIT CARD", "DEBIT CARD"],
   },
 ];

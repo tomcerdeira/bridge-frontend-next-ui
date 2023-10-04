@@ -68,13 +68,7 @@ export default function FlowBuilderPage({
     const connectedNodes = edges
       .filter((edge) => edge.source === rootNode.id)
       .map((edge) => nodes.find((node) => node.id === edge.target));
-    const json = util.buildJson(
-      connectedNodes,
-      flowName,
-      edges,
-      nodes,
-      shop ? shop.id.toString() : "0"
-    );
+    const json = util.buildJson(connectedNodes, flowName, edges, nodes);
     try {
       setRequestLoading(true);
       let flow = await buildFlow(json);
