@@ -66,7 +66,7 @@ const ConditionDropdown = ({
           <DropdownTrigger>
             <Button
               variant="light"
-              className="uppercase font-fira text-md w-14"
+              className="uppercase font-fira text-md w-28"
             >
               {selectedOperator}
             </Button>

@@ -128,7 +128,7 @@ const ConditionNode = ({ id, data }: NodeProps) => {
               ...node.data,
               condition: {
                 ...node.data.condition,
-                value: value,
+                value: parseInt(value, 10),
               },
             },
           };
@@ -145,7 +145,7 @@ const ConditionNode = ({ id, data }: NodeProps) => {
   return (
     <>
       <Card className="rounded-2xl bg-content1">
-        <CardBody className="flex flex-row gap-1">
+        <CardBody className="flex flex-row gap-2">
           <span className="font-fira uppercase self-center pr-1">if</span>
           <ConditionDropdown
             currentCondition={currentCondition}
