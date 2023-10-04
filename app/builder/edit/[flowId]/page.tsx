@@ -156,7 +156,14 @@ export default function FlowBuilderEditPage({
     retrieveFlow();
   }, []);
 
-  if (isRequestLoading) return <>Loading...</>;
+  if (isRequestLoading)
+    return (
+      <div className="flex flex-col h-full justify-center items-center gap-10">
+        <div className="gap-2 flex flex-col md:flex-row justify-center">
+          <p style={{ fontSize: "24px" }}>Cargando...</p>
+        </div>
+      </div>
+    );
 
   const getTaskNodeType = (taskType: string) => {
     const task = tasks.find((task) => task.type === taskType);
