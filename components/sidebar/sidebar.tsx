@@ -1,18 +1,11 @@
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { BridgeLogo } from "../bridgeLogo";
-import { BalanceIcon } from "../icons/sidebar/balance-icon";
 import { BuilderIcon } from "../icons/sidebar/builder-icon";
-import { CustomersIcon } from "../icons/sidebar/customers-icon";
-import { DevIcon } from "../icons/sidebar/dev-icon";
 import { FlowIcon } from "../icons/sidebar/flow-icon";
 import { HomeIcon } from "../icons/sidebar/home-icon";
-import { PaymentsIcon } from "../icons/sidebar/payments-icon";
-import { ProductsIcon } from "../icons/sidebar/products-icon";
-import { ReportsIcon } from "../icons/sidebar/reports-icon";
 import { SettingsIcon } from "../icons/sidebar/settings-icon";
 import { useSidebarContext } from "../layout/layout-context";
-import { CollapseItems } from "./collapse-items";
 import { SidebarItem } from "./sidebar-item";
 import { SidebarMenu } from "./sidebar-menu";
 import { Sidebar } from "./sidebar.styles";
@@ -48,57 +41,22 @@ export const SidebarWrapper = () => {
             />
             <SidebarMenu title="Menú">
               <SidebarItem
-                isActive={pathname === "/flows"}
+                isActive={pathname.includes("/flows")}
                 title="Flujos"
                 icon={<FlowIcon />}
                 href="/flows"
               />
               <SidebarItem
-                isActive={pathname === "/builder"}
+                isActive={pathname.includes("/builder")}
                 title="Constructor"
                 icon={<BuilderIcon />}
                 href="/builder"
               />
-              <SidebarItem
-                isActive={pathname === "/payments"}
-                title="Pagos"
-                icon={<PaymentsIcon />}
-              />
-              <CollapseItems
-                icon={<BalanceIcon />}
-                items={["Banks Accounts", "Credit Cards", "Loans"]}
-                title="Balances"
-              />
-              <SidebarItem
-                isActive={pathname === "/customers"}
-                title="Clientes"
-                icon={<CustomersIcon />}
-              />
-              <SidebarItem
-                isActive={pathname === "/products"}
-                title="Productos"
-                icon={<ProductsIcon />}
-              />
-              <SidebarItem
-                isActive={pathname === "/reports"}
-                title="Reportes"
-                icon={<ReportsIcon />}
-              />
             </SidebarMenu>
 
             <SidebarMenu title="General">
-              <SidebarItem
-                isActive={pathname === "/developers"}
-                title="Desarrolladores"
-                icon={<DevIcon />}
-              />
-              {/* <SidebarItem
-                  isActive={pathname === "/view"}
-                  title="View Test Data"
-                  icon={<ViewIcon />}
-                /> */}
                 <SidebarItem
-                  isActive={pathname === "/settings"}
+                  isActive={pathname.includes("/settings")}
                   title="Configuraciones"
                   icon={<SettingsIcon />}
                   href="/settings"
