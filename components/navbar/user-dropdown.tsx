@@ -33,6 +33,7 @@ export const UserDropdown = () => {
         </DropdownItem>
         <DropdownItem key="settings">
           <Link
+            size="sm"
             color="foreground"
             as={NextLink}
             href='/settings'
