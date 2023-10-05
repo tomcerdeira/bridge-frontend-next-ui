@@ -74,6 +74,22 @@ export type FlowDetails = {
   createdAt: string
 }
 
+export type AmountProcessed = {
+  value: number
+  currency: string
+}
+
+export type AnalyticsResponse = {
+  avgPaymentSucceeded: number
+  overAllPayments: number
+  paymentsSucceeded: number
+  paymentsFailed: number
+  flowsSucceeded: number
+  flowsFailed: number
+  totalAmountProcessed: AmountProcessed[]
+  avgPaymentAmounts: AmountProcessed[]
+}
+
 
 export const MockResponse_IPaymentRequest: IPaymentRequest = {
     amount: 1800,
