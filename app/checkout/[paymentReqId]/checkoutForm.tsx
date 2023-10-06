@@ -160,6 +160,7 @@ export default function CheckoutForm({ children, payment_information }: Props) {
 			cardNumber,
 			cardHolderName,
 			cvv);
+		console.log(mpToken);
 		const hasErrors = Object.values(newErrors).some((errorArray) => errorArray.length > 0);
 
 		if (!hasErrors) {
