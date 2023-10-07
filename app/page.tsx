@@ -8,6 +8,7 @@ import CardSection from "./cardSection";
 
 export default function Home() {
 	const { shop } = useAuth();
+    // const { shop_analytics, error, isLoading } = useGetAnalyticsByShopId(shop? shop.id.toString(): "0");
 
 	return (
 		<>

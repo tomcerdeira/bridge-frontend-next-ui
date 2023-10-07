@@ -75,18 +75,18 @@ export type FlowDetails = {
 }
 
 export type AmountProcessed = {
-  value: number
+  value: string
   currency: string
 }
 
 export type AnalyticsResponse = {
-  avgPaymentSucceeded: number
-  overAllPayments: number
-  paymentsSucceeded: number
-  paymentsFailed: number
-  flowsSucceeded: number
-  flowsFailed: number
-  totalAmountProcessed: AmountProcessed[]
+  avgPaymentSucceeded: string
+  overAllPayments: string
+  paymentsSucceeded: string
+  paymentsFailed: string
+  flowsSucceeded: string
+  flowsFailed: string
+  totalAmountsProcessed: AmountProcessed[]
   avgPaymentAmounts: AmountProcessed[]
 }
 
