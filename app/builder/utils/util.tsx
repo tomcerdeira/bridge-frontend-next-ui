@@ -12,7 +12,7 @@ import {
   SiMaildotru,
 } from "../index";
 
-import { HiOutlineMail } from "react-icons/hi";
+import { RiFileUnknowFill, RiQuestionMark} from "react-icons/ri";
 
 export const onDragStart = (event: any, nodeType: any) => {
   event.dataTransfer.setData("application/reactflow", JSON.stringify(nodeType));
@@ -31,6 +31,8 @@ export const getIconComponent = (icon: String) => {
       return FaTelegram;
     case "mercadopago":
       return SiMercadopago;
+    case "transbank":
+      return RiQuestionMark; //TODO agregar correspondiente
     case "paypal":
       return RiPaypalFill;
     case "condition":
@@ -49,6 +51,8 @@ export const getIconComponent = (icon: String) => {
       return LiaGripLinesVerticalSolid;
     case "braces":
       return RiBracesFill;
+    default:
+      return RiFileUnknowFill;
   }
 };
 
