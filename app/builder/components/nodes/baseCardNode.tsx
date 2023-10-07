@@ -4,6 +4,7 @@ import { Position, Handle } from "reactflow";
 interface BaseCardNodeProps extends TaskProps {
   hasSource: boolean;
   hasTarget: boolean;
+  isNotification?: boolean;
 }
 
 const BaseCardNode = (props: BaseCardNodeProps) => {

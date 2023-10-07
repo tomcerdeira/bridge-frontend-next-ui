@@ -22,7 +22,16 @@ const NotificationNode = ({ id, data }: NodeProps) => {
       })
     );
   };
-  return <BaseCardNode data={data} hasSource={false} hasTarget={true} />;
+  return (
+    <BaseCardNode
+      data={data}
+      hasSource={false}
+      hasTarget={true}
+      parameters={parameters}
+      setParameters={onParameterChange}
+      isNotification={true}
+    />
+  );
 };
 
 export default memo(NotificationNode);

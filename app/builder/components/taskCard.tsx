@@ -1,14 +1,20 @@
 import { Card, CardHeader, CardBody, Divider, Input } from "@nextui-org/react";
 import { PiKeyFill } from "react-icons/pi";
+import { BiWorld } from "react-icons/bi";
 
 export interface TaskProps {
   data: any;
   parameters?: any;
   setParameters?: any;
+  isNotification?: boolean;
 }
 
-
-const TaskCard = ({ data, parameters, setParameters }: TaskProps) => {
+const TaskCard = ({
+  data,
+  parameters,
+  setParameters,
+  isNotification,
+}: TaskProps) => {
   return (
     <Card className="max-w-[260px]">
       <CardHeader className="flex gap-3 justify-center">
@@ -25,13 +31,17 @@ const TaskCard = ({ data, parameters, setParameters }: TaskProps) => {
             {parameters.map((parameter: any, parameterIndex: any) => (
               <Input
                 endContent={
-                  <PiKeyFill className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                  isNotification ? (
+                    <BiWorld className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                  ) : (
+                    <PiKeyFill className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                  )
                 }
                 className="mb-2 font-fira"
                 autoComplete="new-password"
                 label={parameter.field}
                 key={parameterIndex}
-                type="password"
+                type={`${isNotification ? "email" : "password"}`}
                 placeholder={"Enter " + parameter.field}
                 value={parameter.value as string}
                 onChange={(e) => {

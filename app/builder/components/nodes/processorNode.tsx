@@ -29,6 +29,7 @@ const ProcessorNode = ({ id, data }: NodeProps) => {
       setParameters={onParameterChange}
       hasSource={true}
       hasTarget={true}
+      isNotification={false}
     />
   );
 };

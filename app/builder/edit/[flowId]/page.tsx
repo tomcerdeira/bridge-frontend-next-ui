@@ -32,14 +32,14 @@ const buildNodesAndEdges = (rootRule: any, getTaskNodeType: any) => {
     const hasConditions = () => conditions && conditions.length > 0;
 
     const getNextConditionPos = (index: number) => {
-      lastXPos += 250;
+      lastXPos += 350;
       if (index % 2 != 0) lastXPos += 250;
       return { x: lastXPos, y: yPos };
     };
 
     const getNextTaskPos = () => {
-      lastXPos += hasConditions() ? 400 : 250;
-      return { x: lastXPos, y: yPos - 68 };
+      lastXPos += hasConditions() ? 550 : 250;
+      return { x: lastXPos, y: yPos - 200 };
     };
 
     const getNextOperatorPos = () => {
