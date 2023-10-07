@@ -24,6 +24,7 @@ export default function PaymentsCards({ shop_analytics } : PaymentsCardsProps) {
             ) : (
                 <AnalyticsCard card_color="bg-primary" card_title="Total dinero procesado" card_content="0" />
             )}
+            {/* TODO: lo mismo pero con avgPaymentAmounts */}
         </>
     );
 

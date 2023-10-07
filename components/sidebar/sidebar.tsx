@@ -42,7 +42,7 @@ export const SidebarWrapper = () => {
             <SidebarMenu title="Menú">
               <SidebarItem
                 isActive={pathname.includes("/flows")}
-                title="Flujos"
+                title="Lista de flujos"
                 icon={<FlowIcon />}
                 href="/flows"
               />

@@ -4,7 +4,7 @@ import { useAuth } from "@/src/hooks/useAuth";
 import { Link } from "@nextui-org/link";
 import { button as buttonStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
-import CardSection from "./cardSection";
+import CardSection from "../components/analytics-card-section/cardSectionByShop";
 
 export default function Home() {
 	const { shop } = useAuth();
