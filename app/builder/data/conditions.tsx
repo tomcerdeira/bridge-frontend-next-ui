@@ -6,7 +6,13 @@ export const conditions = [
   },
   {
     field: "AMOUNT",
-    operators: ["EQUALS", "GREATER_THAN", "LESS_THAN"],
+    operators: [
+      "EQUALS",
+      "GREATER_THAN",
+      "LESS_THAN",
+      "GREATER_OR_EQUALS_THAN",
+      "LESS_OR_EQUALS_THAN",
+    ],
     values: [],
   },
   {

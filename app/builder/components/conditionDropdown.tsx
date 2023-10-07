@@ -66,7 +66,13 @@ const ConditionDropdown = ({
           <DropdownTrigger>
             <Button
               variant="light"
-              className="uppercase font-fira text-md w-28"
+              className={`uppercase font-fira text-md ${
+                selectedOperator.includes("OR")
+                  ? "w-48"
+                  : selectedField.includes("AMOUNT")
+                  ? "w-36"
+                  : "w-24"
+              }`}
             >
               {selectedOperator}
             </Button>
