@@ -4,29 +4,25 @@ export const siteConfig = {
 	name: "Next.js + NextUI",
 	description: "Make beautiful websites regardless of your design experience.",
 	navItems: [
-		{
-			label: "Checkout",
-			href: "/checkout/1",
-		  },
-		{
-			label: "Home",
-			href: "/",
-		},
     {
-      label: "Docs",
-      href: "/docs",
+      label: "Inicio",
+      href: "/",
     },
     {
-      label: "Pricing",
-      href: "/pricing",
+      label: "Conectores",
+      href: "/connectors",
     },
     {
-      label: "Blog",
-      href: "/blog",
+      label: "Reglas",
+      href: "/rules",
     },
     {
-      label: "About",
-      href: "/about",
+      label: "Flujos",
+      href: "/flows",
+    },
+    {
+      label: "Configuraciones",
+      href: "/settings",
     }
 	],
 	navMenuItems: [

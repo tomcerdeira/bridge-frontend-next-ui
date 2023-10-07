@@ -1,5 +1,5 @@
-import { MockResponse_IPaymentRequest } from '@/src/api/types'
 import { cookies } from 'next/headers'
+import { baseFetcher } from './fetcherUtils'
 
 export async function serverFetcher<T>(path: string, options?: RequestInit): Promise<T> {
   const accessToken = cookies().get('Authorization')?.value
@@ -10,8 +10,5 @@ export async function serverFetcher<T>(path: string, options?: RequestInit): Pro
     cache: 'no-store' as RequestCache,
   }
 
-  //TODO: return baseFetcher<T>(path, accessToken, refreshToken, env, opts)
-  return new Promise(resolve => 
-    setTimeout(() => resolve(MockResponse_IPaymentRequest as T), 2000)
-  );
+  return baseFetcher<T>(path, accessToken, refreshToken, env, opts)
 }
