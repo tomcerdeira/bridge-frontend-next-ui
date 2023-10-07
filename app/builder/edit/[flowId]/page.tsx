@@ -38,8 +38,8 @@ const buildNodesAndEdges = (rootRule: any, getTaskNodeType: any) => {
     };
 
     const getNextTaskPos = () => {
-      lastXPos += hasConditions() ? 550 : 250;
-      return { x: lastXPos, y: yPos - 200 };
+      lastXPos += hasConditions() ? 550 : 350;
+      return { x: lastXPos, y: yPos - 70 };
     };
 
     const getNextOperatorPos = () => {
