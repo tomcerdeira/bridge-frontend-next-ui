@@ -1,4 +1,6 @@
 "use client";
+import * as MP from "@/app/services/mercadoPagoService";
+import { useRunPayment } from "@/src/api/checkout";
 import {
   IPaymentRequiredDataResponse,
   IPaymentRunRequest,
@@ -20,8 +22,6 @@ import {
   TableRow,
 } from "@nextui-org/react";
 import { useMemo, useState } from "react";
-import { useRunPayment } from "@/src/api/checkout";
-import * as MP from "@/app/services/mercadoPagoService";
 
 type Props = {
   paymentReqId: string;
@@ -188,7 +188,7 @@ export default function CheckoutForm({
     );
 
     if (!hasErrors) {
-      try {
+      try {      
         setLoadingRequest(true);
         const formattedDate = `${splitDate[1]}/${splitDate[0].slice(-2)}`;
         let payload: IPaymentRunRequest = {
