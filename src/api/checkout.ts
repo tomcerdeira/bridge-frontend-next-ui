@@ -1,16 +1,28 @@
 import { fetcher } from "../lib/fetcher/clientFetcher";
-import { IPaymentRunRequest } from "./types";
+import useSWRMutation from "swr/mutation";
 export const RUN_PAYMENT_PATH = `/payment/public/payments/run/`;
 
-export async function runPayment(
-  paymentReqId: string,
-  paymentRunRequest: IPaymentRunRequest
-) {
-  console.log(JSON.stringify(paymentRunRequest));
-  const url = RUN_PAYMENT_PATH + paymentReqId;
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return fetcher<any>(url, {
-    method: "POST",
-    body: JSON.stringify(paymentRunRequest),
-  });
+export function useRunPayment(paymentReqId: string) {
+  async function runPayment(url, { arg }) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return fetcher<any>(url, {
+      method: "POST",
+      body: arg,
+    });
+  }
+
+  const { trigger, data, isMutating, error } = useSWRMutation(
+    RUN_PAYMENT_PATH + paymentReqId,
+    runPayment,
+    {
+      throwOnError: true,
+    }
+  );
+
+  return {
+    runPayment: trigger,
+    isLoading: isMutating,
+    data,
+    error,
+  };
 }

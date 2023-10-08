@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@nextui-org/react";
 import { useMemo, useState } from "react";
-import { runPayment } from "@/src/api/checkout";
+import { useRunPayment } from "@/src/api/checkout";
 import * as MP from "@/app/services/mercadoPagoService";
 
 type Props = {
@@ -48,6 +48,7 @@ export default function CheckoutForm({
   paymentInfo,
   paymentReqId,
 }: Props) {
+  const { runPayment } = useRunPayment(paymentReqId);
   const [errors, setErrors] = useState(initialErrors);
   const clearError = (fieldName: keyof FormErrors) => {
     setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: [] }));
@@ -208,8 +209,9 @@ export default function CheckoutForm({
           },
           paymentMethod: "CREDIT_CARD",
         };
-        let payment = await runPayment(paymentReqId, payload);
+        let payment = await runPayment(payload);
         console.log(payment);
+        // TODO: redirect to success page
       } catch (err) {
         console.error("Payment error:", err);
       } finally {
