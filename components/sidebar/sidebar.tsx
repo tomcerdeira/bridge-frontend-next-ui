@@ -1,6 +1,7 @@
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { BridgeLogo } from "../bridgeLogo";
+import { ActivityIcon } from "../icons/sidebar/activity-icon";
 import { BuilderIcon } from "../icons/sidebar/builder-icon";
 import { FlowIcon } from "../icons/sidebar/flow-icon";
 import { HomeIcon } from "../icons/sidebar/home-icon";
@@ -40,6 +41,12 @@ export const SidebarWrapper = () => {
               href="/"
             />
             <SidebarMenu title="Menú">
+              <SidebarItem
+                isActive={pathname.includes("/activity")}
+                title="Actividad"
+                icon={<ActivityIcon />}
+                href="/activity"
+              />
               <SidebarItem
                 isActive={pathname.includes("/flows")}
                 title="Lista de flujos"
