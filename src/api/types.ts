@@ -97,15 +97,126 @@ export type AmountProcessed = {
 };
 
 export type AnalyticsResponse = {
-  avgPaymentSucceeded: string;
-  overAllPayments: string;
-  paymentsSucceeded: string;
-  paymentsFailed: string;
-  flowsSucceeded: string;
-  flowsFailed: string;
-  totalAmountsProcessed: AmountProcessed[];
-  avgPaymentAmounts: AmountProcessed[];
-};
+  avgPaymentSucceeded: string
+  overAllPayments: string
+  paymentsSucceeded: string
+  paymentsFailed: string
+  flowsSucceeded: string
+  flowsFailed: string
+  totalAmountsProcessed: AmountProcessed[]
+  avgPaymentAmounts: AmountProcessed[]
+}
+
+export type ICardType =
+  | 'VISA'
+  | 'AMEX'
+
+export type Card = {
+  nameOnCard: string
+  last4Numbers: string
+  cardType: ICardType
+}
+
+export type ICurrency =
+  | 'ARS'
+  | 'USD'
+  | 'EUR'
+  | 'GBP'
+
+export type PaymentRequest = {
+  amount: string
+  currency: ICurrency
+  products: IItem[]
+  executed: boolean
+  id: string
+  // TODO ??
+  // requiredData ??
+  // associatedFlowId ??
+  // shopId ??
+}
+
+export type IPaymentMethod =
+  | 'CREDIT_CARD'
+  | 'DEBIT_CARD'
+
+export type PaymentSummary = {
+  card: Card
+  paymentReq: PaymentRequest
+  paymentMethod: IPaymentMethod
+  customer: ICustomer
+}
+
+export type IDisplayType =
+  | 'secret'
+  | 'plain'
+  | 'content'
+
+export type ITypeParameter = 
+  | 'string'
+  | 'object'
+  | 'any'
+  | 'number'
+  | 'boolean'
+
+export type IField =
+  | 'ACCESS_TOKEN'
+
+export type Parameters = {
+  field: IField
+  type: ITypeParameter
+  display: IDisplayType
+  value: string
+  id: string
+}
+
+export type ITypeTask = 
+  | 'MERCADO_PAGO_TASK'
+  | 'BINANCE_TASK'
+  | 'TRANSBANK_TASK'
+  | 'SLACK_TASK'
+  | 'EMAIL_TASK'
+
+  export type ICategoryTask = 
+  | 'PROCESSOR'
+  | 'NOTIFICATION'
+  | 'QUERY'
+
+export type Task = {
+  type: ITypeTask
+  category?: ICategoryTask
+  name: string
+  description: string
+  isAsync: boolean
+  taskParams: Parameters
+  fallback?: any //TODO
+}
+
+export type Rule = {
+  name: string
+  conditions: any //TODO
+  conditionOperators: any //TODO
+  task?: Task
+}
+
+export type FlowExecutionResponse = {
+  flowId: string
+  paymentSummary: PaymentSummary
+  flowSucceed: boolean
+  paymentSucceed: boolean
+  executedRules: Rule
+  tasksErrors: any //TODO
+  id: string
+}
+
+
+//TODO: borrar y usar PaymentRequest
+export type IPaymentRequest = {
+  amount: number
+  customer: ICustomer
+  shopId: number
+  associatedFlowId: string
+  products: IItem[]
+}
 
 export const MockResponse_IPaymentRequest: IPaymentRequest = {
   amount: 1800,

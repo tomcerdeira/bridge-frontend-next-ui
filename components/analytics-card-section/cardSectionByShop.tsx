@@ -2,12 +2,12 @@ import { useGetAnalyticsByShopId } from "@/src/api/analytics";
 import FlowsCards from "./flowsCards";
 import PaymentsCards from "./paymentsCards";
 
-export interface CardSectionProps {
+interface CardSectionProps {
 	children?: React.ReactNode;
 	shopId: number;
 }
 
-export default function CardSection({ shopId } : CardSectionProps) {
+export default function CardSectionByShop({ shopId } : CardSectionProps) {
     const { shop_analytics, error, isLoading } = useGetAnalyticsByShopId(shopId.toString());
     return (
 		<>

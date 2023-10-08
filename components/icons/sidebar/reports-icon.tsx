@@ -1,10 +1,16 @@
-import React from "react";
 
-export const ReportsIcon = () => {
+interface Props {
+  size?: number;
+  fill?: string;
+  width?: number;
+  height?: number;
+}
+
+export const ReportsIcon = ({fill, size, height, width, ...props}: Props) => {
   return (
     <svg
-      width="24"
-      height="24"
+    width={size || width || 24}
+    height={size || height || 24}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

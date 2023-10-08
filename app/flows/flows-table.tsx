@@ -1,4 +1,5 @@
 import { FlowIcon } from "@/components/icons/sidebar/flow-icon";
+import { ReportsIcon } from "@/components/icons/sidebar/reports-icon";
 import { DeleteIcon } from "@/components/icons/table/delete-icon";
 import { EditIcon } from "@/components/icons/table/edit-icon";
 import { useDeleteFlow } from "@/src/api/flows";
@@ -86,9 +87,18 @@ export const FlowsTable = ({
               <TableCell>
                 <div className="w-fit flex mr-4 gap-2 justify-end">
                   <div>
+                    <Tooltip content="Más información">
+                      <Link
+                        href={`/flows/${item.id}`}
+                        size="lg"
+                      >
+                        <ReportsIcon size={20} fill="#979797" />
+                      </Link>
+                    </Tooltip>
+                  </div>
+                  <div>
                     <Tooltip content="Editar">
                       <Link
-                        // TODO: cambiar link al que corresponde
                         href={`/builder/edit/${item.id}`}
                         size="lg"
                       >
