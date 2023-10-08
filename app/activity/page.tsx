@@ -3,10 +3,17 @@
 import { useAuth } from "@/src/hooks/useAuth";
 import { Link } from "@nextui-org/link";
 import { button as buttonStyles } from "@nextui-org/theme";
+import dynamic from "next/dynamic";
 import NextLink from "next/link";
-import CardSection from "../components/analytics-card-section/cardSectionByShop";
 
-export default function Home() {
+const Chart = dynamic(
+    () => import("@/components/charts/steam").then((mod) => mod.Steam),
+    {
+      ssr: false,
+    }
+  );
+  
+export default function ActivityPage() {
 	const { shop } = useAuth();
     
 	return (
@@ -22,7 +29,12 @@ export default function Home() {
         (
             <>
                 <div className="mt-4 mx-4 mb-4 flex flex-col gap-4">
-                    <CardSection shopId={shop.id}/>
+                    <div className="h-full flex flex-col gap-2">
+                        <h3 className="text-xl font-semibold">Estadísticas</h3>
+                        <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 ">
+                            <Chart />
+                        </div>
+                    </div>
 					<div className="mt-8">
 						<Link
 							as={NextLink}
