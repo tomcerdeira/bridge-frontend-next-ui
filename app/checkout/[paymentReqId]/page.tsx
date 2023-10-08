@@ -7,16 +7,19 @@ export default async function CheckoutPage({
 }: {
   params: { paymentReqId: string };
 }) {
-  const paymentInfo: IPaymentRequiredDataResponse = await getPaymentReq(
-    paymentReqId
-  );
-
-  return (
-    <div>
-      <CheckoutForm
-        paymentReqId={paymentReqId}
-        paymentInfo={paymentInfo}
-      ></CheckoutForm>
-    </div>
-  );
+  try {
+    const paymentInfo: IPaymentRequiredDataResponse = await getPaymentReq(
+      paymentReqId
+    );
+    return (
+      <div>
+        <CheckoutForm
+          paymentReqId={paymentReqId}
+          paymentInfo={paymentInfo}
+        ></CheckoutForm>
+      </div>
+    );
+  } catch (error) {
+    return <div>404 - Página no encontrada</div>;
+  }
 }
