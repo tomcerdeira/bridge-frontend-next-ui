@@ -54,10 +54,10 @@ export default function CheckoutForm({
     setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: [] }));
   };
 
-  const CARDS = {
+  const CARDS = { //TODO revisar regex
     visa: "^4",
     amex: "^(34|37)",
-    mastercard: "^5[1-5]",
+    mastercard: "^5[0-5]",
     empty: "",
   };
 
