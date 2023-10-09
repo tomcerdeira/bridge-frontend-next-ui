@@ -3,10 +3,10 @@
 import { CardInformationTable } from "@/components/cardInformationTable";
 import { PaymentRequestInformationSection } from "@/components/paymentInformationSection";
 import { useGetFlowExecutionStatusByShop } from "@/src/api/analytics";
-import { Accordion, AccordionItem, Chip, Divider } from "@nextui-org/react";
+import { Accordion, AccordionItem, Button, Chip, Divider, Link } from "@nextui-org/react";
 
 
-export default function ShopFlowExecutionsSection({ shopId } : { shopId: string }) {
+export default function ShopFlowExecutionsSection({ shopId, shopName } : { shopId: string, shopName: string }) {
     const { flow_analytics, error, isLoading } = useGetFlowExecutionStatusByShop(shopId);
     
 	return (
@@ -22,23 +22,43 @@ export default function ShopFlowExecutionsSection({ shopId } : { shopId: string 
         (
             <>
                 <div className="flex items-center gap-3 flex-wrap md:flex-nowrap mb-2">
-                    <h3 className="text-xl font-bold">Lista de ejecuciones</h3>
+                    <h3 className="text-xl font-bold">Flujos ejecutados en {shopName}</h3>
                 </div>
                 <div>
                     <Accordion variant="splitted" selectionMode="multiple">
                     {flow_analytics!.map((fa) => {
-                        // TODO: ver tema de que IDs mostramos
                         return <AccordionItem 
                                     className="mt-2"
                                     key={fa.id} 
                                     aria-label={fa.id}
                                     title={
                                         <div className="flex mr-4 justify-between items-center">
-                                            {/* TODO: make it be in the start of the div and with its contents vertically alligned */}
-                                            <div>
-                                                <p>{"ID: " + fa.id}</p>
+                                            <div className="flex flex-row gap-4 items-center">
+                                                <div className="text-center">
+                                                    <p>PaymentReqId</p>
+                                                    <Button
+                                                        href={'/flows/' + fa.flowId + '?paymentReqId=' + fa.paymentSummary.paymentReq.id}
+                                                        as={Link}
+                                                        color="default"
+                                                        showAnchorIcon
+                                                        variant="flat"
+                                                        >
+                                                        {fa.paymentSummary.paymentReq.id}
+                                                    </Button>
+                                                </div>
+                                                <div className="text-center">
+                                                    <p>FlowId</p>
+                                                    <Button
+                                                        href={'/flows/' + fa.flowId}
+                                                        as={Link}
+                                                        color="default"
+                                                        showAnchorIcon
+                                                        variant="flat"
+                                                        >
+                                                        {fa.flowId }
+                                                    </Button>
+                                                </div>
                                             </div>
-                                            {/* TODO: make it be at the end of the div */}
                                             <div className="flex gap-6 mr-2">
                                                 <div>
                                                     <p>Flujo</p>

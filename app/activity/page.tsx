@@ -1,10 +1,7 @@
 'use client'
 
 import { useAuth } from "@/src/hooks/useAuth";
-import { Link } from "@nextui-org/link";
-import { button as buttonStyles } from "@nextui-org/theme";
 import dynamic from "next/dynamic";
-import NextLink from "next/link";
 import ShopFlowExecutionsSection from "./shopFlowsExecutionsSection";
 
 const Chart = dynamic(
@@ -38,17 +35,8 @@ export default function ActivityPage() {
                     </div>
 
                     <div className="mt-4 mb-4 flex-row gap-4 items-center">
-                        <ShopFlowExecutionsSection shopId={shop!.id.toString()} />
+                        <ShopFlowExecutionsSection shopId={shop!.id.toString()} shopName={shop!.name} />
                     </div>
-					<div className="mt-8">
-						<Link
-							as={NextLink}
-							className={buttonStyles({ variant: "bordered", radius: "full" })}
-							href='/checkout/1'
-						>
-							Demo Checkout
-						</Link>
-					</div>
                 </div>
             </>
         )

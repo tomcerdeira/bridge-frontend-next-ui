@@ -6,8 +6,7 @@ import { PaymentRequestInformationSection } from "@/components/paymentInformatio
 import { useGetFlowExecutionStatus } from "@/src/api/analytics";
 import { Accordion, AccordionItem, Chip, Divider } from "@nextui-org/react";
 
-
-export default function IndividualFlowPage({ params: { flowId } }: { params: { flowId: string } }) {
+export default function IndividualFlowPage({ params: { flowId }, searchParams }: { params: { flowId: string } }) {
     const { flow_analytics, error, isLoading } = useGetFlowExecutionStatus(flowId);
     
     return (
@@ -33,11 +32,11 @@ export default function IndividualFlowPage({ params: { flowId } }: { params: { f
                                 <h3 className="text-xl font-bold">Lista de ejecuciones</h3>
                             </div>
                             <div>
-                                <Accordion variant="splitted" selectionMode="multiple">
+                                <Accordion variant="splitted" selectionMode="multiple" defaultExpandedKeys={[searchParams && searchParams.paymentReqId ? searchParams.paymentReqId : ""]}>
                                 {flow_analytics.map((fa) => {
                                     return <AccordionItem 
                                                 className="mt-2"
-                                                key={fa.id} 
+                                                key={fa.paymentSummary.paymentReq.id} 
                                                 aria-label={fa.id}
                                                 title={
                                                     <div className="flex mr-4 justify-between items-center">
