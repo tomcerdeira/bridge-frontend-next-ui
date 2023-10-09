@@ -79,6 +79,10 @@ export const config = {
       '/forgot-password',
       '/reset-password',
       '/verify',
-      '/init-shop'
+      '/init-shop',
+      '/activity',
+      '/builder/:path*',
+      '/flows/:path*',
+      '/settings/:path*'
     ],
   }
