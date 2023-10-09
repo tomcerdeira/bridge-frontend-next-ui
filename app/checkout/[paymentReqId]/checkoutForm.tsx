@@ -188,7 +188,7 @@ export default function CheckoutForm({
     );
 
     if (!hasErrors) {
-      try {      
+      try {
         setLoadingRequest(true);
         const formattedDate = `${splitDate[1]}/${splitDate[0].slice(-2)}`;
         let payload: IPaymentRunRequest = {
@@ -287,7 +287,7 @@ export default function CheckoutForm({
               </TableHeader>
               <TableBody>
                 <TableRow key="1">
-                  <TableCell>USD</TableCell>
+                  <TableCell>{paymentInfo?.currency}</TableCell>
                   <TableCell>${paymentInfo?.amount}</TableCell>
                 </TableRow>
               </TableBody>
