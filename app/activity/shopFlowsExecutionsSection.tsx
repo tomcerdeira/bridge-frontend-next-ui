@@ -11,7 +11,7 @@ export default function ShopFlowExecutionsSection({ shopId, shopName } : { shopI
     
 	return (
 		<>
-        {!flow_analytics? (
+        {isLoading? (
                 <div className="flex flex-col h-full justify-center items-center gap-10">
                 <div className="gap-2 flex flex-col md:flex-row justify-center">
                     <p style={{ fontSize: "24px" }}>Cargando...</p>
@@ -25,81 +25,90 @@ export default function ShopFlowExecutionsSection({ shopId, shopName } : { shopI
                     <h3 className="text-xl font-bold">Flujos ejecutados en {shopName}</h3>
                 </div>
                 <div>
-                    <Accordion variant="splitted" selectionMode="multiple">
-                    {flow_analytics!.map((fa) => {
-                        return <AccordionItem 
-                                    className="mt-2"
-                                    key={fa.id} 
-                                    aria-label={fa.id}
-                                    title={
-                                        <div className="flex mr-4 justify-between items-center">
-                                            <div className="flex flex-row gap-4 items-center">
-                                                <div className="text-center">
-                                                    <p>PaymentReqId</p>
-                                                    <Button
-                                                        href={'/flows/' + fa.flowId + '?paymentReqId=' + fa.paymentSummary.paymentReq.id}
-                                                        as={Link}
-                                                        color="default"
-                                                        showAnchorIcon
-                                                        variant="flat"
-                                                        >
-                                                        {fa.paymentSummary.paymentReq.id}
-                                                    </Button>
+                    {error? (
+                        <div className="gap-2 flex flex-col md:flex-row justify-center">
+                            <p className="mt-16" style={{ fontSize: "18px" }}>...No existen aún 🔍</p>
+                        </div>
+                    )
+                    :
+                    (
+                        <Accordion variant="splitted" selectionMode="multiple">
+                        {flow_analytics!.map((fa) => {
+                            return <AccordionItem 
+                                        className="mt-2"
+                                        key={fa.id} 
+                                        aria-label={fa.id}
+                                        title={
+                                            <div className="flex mr-4 justify-between items-center">
+                                                <div className="flex flex-row gap-4 items-center">
+                                                    <div className="text-center">
+                                                        <p>PaymentReqId</p>
+                                                        <Button
+                                                            href={'/flows/' + fa.flowId + '?paymentReqId=' + fa.paymentSummary.paymentReq.id}
+                                                            as={Link}
+                                                            color="default"
+                                                            showAnchorIcon
+                                                            variant="flat"
+                                                            >
+                                                            {fa.paymentSummary.paymentReq.id}
+                                                        </Button>
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <p>FlowId</p>
+                                                        <Button
+                                                            href={'/flows/' + fa.flowId}
+                                                            as={Link}
+                                                            color="default"
+                                                            showAnchorIcon
+                                                            variant="flat"
+                                                            >
+                                                            {fa.flowId }
+                                                        </Button>
+                                                    </div>
                                                 </div>
-                                                <div className="text-center">
-                                                    <p>FlowId</p>
-                                                    <Button
-                                                        href={'/flows/' + fa.flowId}
-                                                        as={Link}
-                                                        color="default"
-                                                        showAnchorIcon
-                                                        variant="flat"
+                                                <div className="flex gap-6 mr-2">
+                                                    <div>
+                                                        <p>Flujo</p>
+                                                        <Chip
+                                                            size="sm"
+                                                            variant="flat"
+                                                            color={fa.flowSucceed ? "success" : "danger"}
                                                         >
-                                                        {fa.flowId }
-                                                    </Button>
+                                                            <span className="capitalize text-xs">
+                                                            {fa.flowSucceed ? "OK" : "ERROR"}
+                                                            </span>
+                                                        </Chip>
+                                                    </div>
+                                                    <div>
+                                                        <p>Pago</p>
+                                                        <Chip
+                                                            size="sm"
+                                                            variant="flat"
+                                                            color={fa.paymentSucceed ? "success" : "danger"}
+                                                        >
+                                                            <span className="capitalize text-xs">
+                                                            {fa.paymentSucceed ? "OK" : "ERROR"}
+                                                            </span>
+                                                        </Chip>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="flex gap-6 mr-2">
-                                                <div>
-                                                    <p>Flujo</p>
-                                                    <Chip
-                                                        size="sm"
-                                                        variant="flat"
-                                                        color={fa.flowSucceed ? "success" : "danger"}
-                                                    >
-                                                        <span className="capitalize text-xs">
-                                                        {fa.flowSucceed ? "OK" : "ERROR"}
-                                                        </span>
-                                                    </Chip>
-                                                </div>
-                                                <div>
-                                                    <p>Pago</p>
-                                                    <Chip
-                                                        size="sm"
-                                                        variant="flat"
-                                                        color={fa.paymentSucceed ? "success" : "danger"}
-                                                    >
-                                                        <span className="capitalize text-xs">
-                                                        {fa.paymentSucceed ? "OK" : "ERROR"}
-                                                        </span>
-                                                    </Chip>
-                                                </div>
-                                            </div>
+                                        }
+                                    >
+                                        <Divider/>
+                                        <div className="mt-4 flex flex-col justify-center items-center">
+                                            <p>Resumen del pago</p>
+                                            <PaymentRequestInformationSection paymentRequest={fa.paymentSummary.paymentReq} paymentMethod={fa.paymentSummary.paymentMethod} />
+                                            <p>Datos de la tarjeta</p>
+                                            <CardInformationTable card={fa.paymentSummary.card}/>
+                                            {/* Mostramos info del customer ?? */}
                                         </div>
-                                    }
-                                >
-                                    <Divider/>
-                                    <div className="mt-4 flex flex-col justify-center items-center">
-                                        <p>Resumen del pago</p>
-                                        <PaymentRequestInformationSection paymentRequest={fa.paymentSummary.paymentReq} paymentMethod={fa.paymentSummary.paymentMethod} />
-                                        <p>Datos de la tarjeta</p>
-                                        <CardInformationTable card={fa.paymentSummary.card}/>
-                                        {/* Mostramos info del customer ?? */}
-                                    </div>
-                                    {/* Add more nested attributes as needed */}
-                            </AccordionItem>
-                    })}
-                    </Accordion>
+                                        {/* Add more nested attributes as needed */}
+                                </AccordionItem>
+                        })}
+                        </Accordion>
+                    )
+                }
                 </div>
             </>
         )
