@@ -9,7 +9,7 @@ type Props = {
   }
 
 export default function AnalyticsCard({ card_color, card_title, card_content, icon }: Props) {
-    const cardClassName = `${card_color} rounded-xl shadow-md w-fit w-[300px] hover:bg-gradient-to-tr from-blue-800 to-${card_color.includes("success")? 'green' : 'red'}-500 hover:-translate-y-1 shadow-xl after:content-[''] after:absolute after:inset-0 after:z-[-1] after:transition after:!duration-500 hover:after:scale-150 hover:after:opacity-0`;
+    const cardClassName = `${card_color} rounded-xl shadow-md w-fit w-[300px] hover:bg-gradient-to-tr from-gray-800 to-bg-transparent hover:-translate-y-1 shadow-xl after:content-[''] after:absolute after:inset-0 after:z-[-1] after:transition after:!duration-500 hover:after:scale-150 hover:after:opacity-0`;
   return (
     <Card className={cardClassName} shadow="sm" isPressable>
       {icon? (
