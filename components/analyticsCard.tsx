@@ -2,16 +2,16 @@ import { Card, CardBody, CardHeader } from "@nextui-org/react";
 import { ReactNode } from "react";
 
 type Props = {
-    card_color: string
+  card_color: string
 	card_title: string
 	card_content: string
   icon?: ReactNode
   }
 
 export default function AnalyticsCard({ card_color, card_title, card_content, icon }: Props) {
-    const cardClassName = `${card_color} rounded-xl shadow-md w-fit w-[300px]`;
+    const cardClassName = `${card_color} rounded-xl shadow-md w-fit w-[300px] hover:bg-gradient-to-tr from-blue-800 to-${card_color.includes("success")? 'green' : 'red'}-500 hover:-translate-y-1 shadow-xl after:content-[''] after:absolute after:inset-0 after:z-[-1] after:transition after:!duration-500 hover:after:scale-150 hover:after:opacity-0`;
   return (
-    <Card className={cardClassName}>
+    <Card className={cardClassName} shadow="sm" isPressable>
       {icon? (
         <CardBody>
           <div className="flex justify-between">

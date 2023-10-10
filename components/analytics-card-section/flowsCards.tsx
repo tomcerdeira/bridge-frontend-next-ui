@@ -12,7 +12,8 @@ export interface FlowsCardsProps {
 export default function FlowsCards({ shop_analytics }: FlowsCardsProps) {
   return (
     <>
-      <Link href="/activity?flowSucceed=true">
+    {/* TODO: el link tiene que ser variable, ver como hacer */}
+      <Link href={`/activity?flowSucceed=true`}>
           <AnalyticsCard
             card_color="bg-success"
             card_title="Flujos exitosos"
@@ -20,7 +21,7 @@ export default function FlowsCards({ shop_analytics }: FlowsCardsProps) {
             icon={<SuccessIcon />}
           />
       </Link>
-      <Link href="/activity?flowSucceed=false">
+      <Link href={`/activity?flowSucceed=false`}>
           <AnalyticsCard
             card_color="bg-danger"
             card_title="Flujos fallidos"
