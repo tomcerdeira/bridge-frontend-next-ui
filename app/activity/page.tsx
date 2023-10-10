@@ -11,7 +11,7 @@ const Chart = dynamic(
     }
   );
   
-export default function ActivityPage() {
+export default function ActivityPage({searchParams}) {
 	const { shop } = useAuth();
 
 	return (
@@ -35,7 +35,7 @@ export default function ActivityPage() {
                     </div>
 
                     <div className="mt-4 mb-4 flex-row gap-4 items-center">
-                        <ShopFlowExecutionsSection shopId={shop!.id.toString()} shopName={shop!.name} />
+                        <ShopFlowExecutionsSection shopId={shop!.id.toString()} shopName={shop!.name} query={searchParams} />
                     </div>
                 </div>
             </>

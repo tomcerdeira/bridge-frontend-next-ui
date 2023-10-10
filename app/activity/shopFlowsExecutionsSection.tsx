@@ -6,8 +6,10 @@ import { useGetFlowExecutionStatusByShop } from "@/src/api/analytics";
 import { Accordion, AccordionItem, Button, Chip, Divider, Link } from "@nextui-org/react";
 
 
-export default function ShopFlowExecutionsSection({ shopId, shopName } : { shopId: string, shopName: string }) {
-    const { flow_analytics, error, isLoading } = useGetFlowExecutionStatusByShop(shopId);
+export default function ShopFlowExecutionsSection({ shopId, shopName, query } : { shopId: string, shopName: string, query: { [key: string]: string | string[] | undefined } }) {
+    console.log(query);
+    
+    const { flow_analytics, error, isLoading } = useGetFlowExecutionStatusByShop(shopId, query);
     
 	return (
 		<>
