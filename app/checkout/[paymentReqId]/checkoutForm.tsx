@@ -21,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
+import { usePathname, useRouter } from 'next/navigation';
 import { useMemo, useState } from "react";
 
 type Props = {
@@ -48,6 +49,8 @@ export default function CheckoutForm({
   paymentInfo,
   paymentReqId,
 }: Props) {
+  const { push } = useRouter();
+  const pathname = usePathname();
   const { runPayment } = useRunPayment(paymentReqId);
   const [errors, setErrors] = useState(initialErrors);
   const clearError = (fieldName: keyof FormErrors) => {
@@ -212,8 +215,11 @@ export default function CheckoutForm({
         let payment = await runPayment(payload);
         console.log(payment);
         // TODO: redirect to success page
+        push(`${pathname}/success`)
       } catch (err) {
         console.error("Payment error:", err);
+        push(`${pathname}/error`)
+        return;
       } finally {
         setLoadingRequest(false);
       }
