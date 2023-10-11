@@ -24,8 +24,7 @@ export function useGetAnalyticsByFlowId(flow_id: string) {
     return { flow_analytics: data, error, isLoading, getAnalyticsByFlowId: mutate };
 }
 
-export function useGetFlowExecutionStatusByShop(shop_id: string, searchQuery: { [key: string]: string | string[] | undefined }) {
-    
+function getQueryParamsAsString(searchQuery: { [key: string]: string | string[] | undefined }) {
     const params = new URLSearchParams();
     for (const key in searchQuery) {
         const value = searchQuery[key];
@@ -37,8 +36,11 @@ export function useGetFlowExecutionStatusByShop(shop_id: string, searchQuery: { 
             }
         }
     }
+    return params.toString();
+}
 
-    const path = `${GET_FLOW_EXECUTION_STATUS_BY_SHOP(shop_id)}?${params.toString()}`;
+export function useGetFlowExecutionStatusByShop(shop_id: string, searchQuery: { [key: string]: string | string[] | undefined }) {
+    const path = `${GET_FLOW_EXECUTION_STATUS_BY_SHOP(shop_id)}?${getQueryParamsAsString(searchQuery)}`;
     const { data, error, isLoading, mutate } = useSWR<FlowExecutionResponse[]>(
         path,
         fetcher
@@ -46,9 +48,10 @@ export function useGetFlowExecutionStatusByShop(shop_id: string, searchQuery: { 
     return { flow_analytics: data, error, isLoading, getFlowExecutionStatusByShop: mutate };
 }
 
-export function useGetFlowExecutionStatus(flow_id: string) {
+export function useGetFlowExecutionStatus(flow_id: string, searchQuery: { [key: string]: string | string[] | undefined }) {
+    const path = `${GET_FLOW_EXECUTION_STATUS_BY_FLOW(flow_id)}?${getQueryParamsAsString(searchQuery)}`;
     const { data, error, isLoading, mutate } = useSWR<FlowExecutionResponse[]>(
-        GET_FLOW_EXECUTION_STATUS_BY_FLOW(flow_id),
+        path,
         fetcher
     );
     return { flow_analytics: data, error, isLoading, getFlowExecutionStatus: mutate };

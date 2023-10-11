@@ -7,7 +7,7 @@ import { useGetFlowExecutionStatus } from "@/src/api/analytics";
 import { Accordion, AccordionItem, Chip, Divider } from "@nextui-org/react";
 
 export default function IndividualFlowPage({ params: { flowId }, searchParams }: { params: { flowId: string } }) {
-    const { flow_analytics, error, isLoading } = useGetFlowExecutionStatus(flowId);
+    const { flow_analytics, error, isLoading } = useGetFlowExecutionStatus(flowId, searchParams);
     
     return (
 		<>
@@ -93,11 +93,19 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams }:
                     )
                     :
                     (
-                        <div className="flex flex-col h-full justify-center items-center gap-10">
-                            <div className="gap-2 flex flex-col md:flex-row justify-center">
-                                <p style={{ fontSize: "24px" }}>El flujo aún no fue ejecutado.</p>
+                        <>
+                            <div className="mt-4 mx-4 mb-4 flex flex-col gap-4">
+                                <CardSectionByFlow flowId={flowId}/>
                             </div>
-                        </div>
+                                <div className="mt-4 mb-4 ml-4 mr-4 flex-row gap-4 items-center">
+                                    <div className="flex items-center gap-3 flex-wrap md:flex-nowrap mb-2">
+                                        <h3 className="text-xl font-bold">Lista de ejecuciones</h3>
+                                    </div>
+                                    <div className="gap-2 flex flex-col md:flex-row justify-center">
+                                        <p className="mt-16" style={{ fontSize: "18px" }}>...No existen aún 🔍</p>
+                                    </div>
+                                </div>
+                        </>
                     )}
                 </>  
             )}
