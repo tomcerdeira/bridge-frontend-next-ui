@@ -8,6 +8,7 @@ const RootNode = ({ data }: NodeProps) => {
       data={data}
       hasSource={true}
       hasTarget={false}
+      hasFallback={false}
       isNotification={false}
     />
   );

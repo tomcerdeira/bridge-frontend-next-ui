@@ -28,6 +28,7 @@ const NotificationNode = ({ id, data }: NodeProps) => {
       hasSource={false}
       hasTarget={true}
       parameters={parameters}
+      hasFallback={true}
       setParameters={onParameterChange}
       isNotification={true}
     />

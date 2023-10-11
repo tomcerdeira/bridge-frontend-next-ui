@@ -4,6 +4,7 @@ import { Position, Handle } from "reactflow";
 interface BaseCardNodeProps extends TaskProps {
   hasSource: boolean;
   hasTarget: boolean;
+  hasFallback: boolean;
   isNotification?: boolean;
 }
 
@@ -16,6 +17,14 @@ const BaseCardNode = (props: BaseCardNodeProps) => {
       )}
       {props.hasTarget && (
         <Handle type="target" position={Position.Left} className="!bg-white" />
+      )}
+      {props.hasFallback && (
+        <Handle
+          type="source"
+          id="fallback"
+          position={Position.Bottom}
+          className="!bg-white"
+        />
       )}
     </>
   );
