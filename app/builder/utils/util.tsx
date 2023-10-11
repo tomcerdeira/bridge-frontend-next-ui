@@ -12,7 +12,7 @@ import {
   SiMaildotru,
 } from "../index";
 
-import { RiFileUnknowFill, RiQuestionMark} from "react-icons/ri";
+import { RiFileUnknowFill, RiQuestionMark } from "react-icons/ri";
 
 export const onDragStart = (event: any, nodeType: any) => {
   event.dataTransfer.setData("application/reactflow", JSON.stringify(nodeType));
@@ -90,7 +90,9 @@ const getNextConnectedNode = (node: any, edges: any, nodes: any) => {
     return node;
   }
   return edges
-    .filter((edge: any) => edge.source === node.id)
+    .filter(
+      (edge: any) => edge.source === node.id && edge.sourceHandle !== "fallback"
+    )
     .map((edge: any) => nodes.find((node: any) => node.id === edge.target))[0];
 };
 
@@ -109,6 +111,16 @@ interface Payload {
   rootRule?: Rule;
 }
 
+const getFallbackTask = (node: any, edges: any, nodes: any) => {
+  const fallbackEdge = edges.find(
+    (edge: any) => edge.source === node.id && edge.sourceHandle === "fallback"
+  );
+  if (typeof fallbackEdge === "undefined") {
+    return undefined;
+  }
+  return nodes.find((node: any) => node.id === fallbackEdge.target);
+};
+
 const buildNextRule = (node: any, edges: any, nodes: any) => {
   const rule: Rule = {};
   rule["name"] = node.data.name;
@@ -120,6 +132,18 @@ const buildNextRule = (node: any, edges: any, nodes: any) => {
   if (typeof taskNode === "undefined") {
     return rule;
   }
+  const fallbackTask = getFallbackTask(taskNode, edges, nodes);
+  let fallback = undefined;
+  if (typeof fallbackTask !== "undefined") {
+    fallback = {
+      type: fallbackTask.data.type,
+      name: fallbackTask.data.name,
+      description: fallbackTask.data.description,
+      isAsync: fallbackTask.data.isAsync,
+      taskParams: { parameters: fallbackTask.data.parameter },
+      category: fallbackTask.node_type,
+    };
+  }
   rule["task"] = {
     type: taskNode.data.type,
     name: taskNode.data.name,
@@ -127,6 +151,7 @@ const buildNextRule = (node: any, edges: any, nodes: any) => {
     isAsync: taskNode.data.isAsync,
     taskParams: { parameters: taskNode.data.parameter },
     category: taskNode.node_type,
+    fallback: fallback,
   };
   const nextRuleNode = getNextConnectedNode(taskNode, edges, nodes);
   if (typeof nextRuleNode === "undefined") {
