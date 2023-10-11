@@ -24,6 +24,7 @@ const NotificationNode = ({ id, data }: NodeProps) => {
   };
   return (
     <BaseCardNode
+      id={id}
       data={data}
       hasSource={false}
       hasTarget={true}

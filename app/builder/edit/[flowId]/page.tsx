@@ -172,7 +172,6 @@ export default function FlowBuilderEditPage({
 
   const rootRule = flow.rootRule;
   const { nodes, edges } = buildNodesAndEdges(rootRule, getTaskNodeType);
-
   return (
     <FlowBuilderPage
       editNodes={nodes}
