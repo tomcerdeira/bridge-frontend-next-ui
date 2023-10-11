@@ -4,14 +4,16 @@ import CardSectionByFlow from "@/components/analytics-card-section/cardSectionBy
 import { CardInformationTable } from "@/components/cardInformationTable";
 import { PaymentRequestInformationSection } from "@/components/paymentInformationSection";
 import { useGetFlowExecutionStatus } from "@/src/api/analytics";
+import { useGetFlowById } from "@/src/api/flows";
 import { Accordion, AccordionItem, Chip, Divider } from "@nextui-org/react";
 
 export default function IndividualFlowPage({ params: { flowId }, searchParams }: { params: { flowId: string } }) {
+    const { flow_details, error: error_get_flow, isLoading: isLoading_flow_details } = useGetFlowById(flowId);
     const { flow_analytics, error, isLoading } = useGetFlowExecutionStatus(flowId, searchParams);
-    
+
     return (
 		<>
-            {isLoading? (
+            {isLoading_flow_details || isLoading? (
                 <div className="flex flex-col h-full justify-center items-center gap-10">
                 <div className="gap-2 flex flex-col md:flex-row justify-center">
                     <p style={{ fontSize: "24px" }}>Cargando...</p>
@@ -21,7 +23,26 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams }:
             :
             (  
                 <>
-                {flow_analytics && !error? (
+                    <div className="mt-4 mx-4 mb-4 flex flex-col gap-4 justify-center items-center">
+                        <div className="flex justify-between flex-wrap gap-4 items-center">
+                            <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
+                                <Chip size="md" className="text-xl font-bold">
+                                    {flow_details?.name}
+                                </Chip>
+                                <Chip
+                                    size="lg"
+                                    variant="flat"
+                                    color={flow_details?.active ? "success" : "warning"}
+                                >
+                                    <span className="capitalize text-xs flex items-center">
+                                    {flow_details?.active ? "ACTIVO" : "INACTIVO"}
+                                    </span>
+                                </Chip>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {flow_analytics && !error? (
                     <>
                         <div className="mt-4 mx-4 mb-4 flex flex-col gap-4">
                             <CardSectionByFlow flowId={flowId}/>
