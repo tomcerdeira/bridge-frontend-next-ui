@@ -54,7 +54,7 @@ export default function CardSectionByFlow({ flowId } : CardSectionProps) {
                     </div>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                    <AnalyticsCard card_color="bg-primary" card_title="Promedio de pagos exitosos" card_content={flow_analytics.avgPaymentSucceeded} />
+                    <AnalyticsCard card_color="bg-primary" card_title="Promedio de pagos exitosos" card_content={flow_analytics.avgPaymentSucceeded+"%"} />
                     <Link href={`/flows/${flowId}?paymentSucceed=true`}>
                         <AnalyticsCard card_color="bg-success" card_title="Pagos exitosos" card_content={flow_analytics.paymentsSucceeded} icon={<SuccessIcon />} />
                     </Link>
