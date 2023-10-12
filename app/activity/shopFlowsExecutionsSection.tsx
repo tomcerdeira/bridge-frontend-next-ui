@@ -67,7 +67,7 @@ export default function ShopFlowExecutionsSection({ shopId, shopName, query } : 
                                                     </div>
                                                 </div>
                                                 <div className="flex gap-6 mr-2">
-                                                    <div>
+                                                    <div className="flex flex-col items-center">
                                                         <p>Flujo</p>
                                                         <Chip
                                                             size="sm"
@@ -79,7 +79,7 @@ export default function ShopFlowExecutionsSection({ shopId, shopName, query } : 
                                                             </span>
                                                         </Chip>
                                                     </div>
-                                                    <div>
+                                                    <div className="flex flex-col items-center">
                                                         <p>Pago</p>
                                                         <Chip
                                                             size="sm"

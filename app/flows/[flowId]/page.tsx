@@ -2,10 +2,11 @@
 
 import CardSectionByFlow from "@/components/analytics-card-section/cardSectionByFlow";
 import { CardInformationTable } from "@/components/cardInformationTable";
+import { EditIcon } from "@/components/icons/table/edit-icon";
 import { PaymentRequestInformationSection } from "@/components/paymentInformationSection";
 import { useGetFlowExecutionStatus } from "@/src/api/analytics";
 import { useGetFlowById } from "@/src/api/flows";
-import { Accordion, AccordionItem, Chip, Divider } from "@nextui-org/react";
+import { Accordion, AccordionItem, Chip, Divider, Link, Tooltip } from "@nextui-org/react";
 
 export default function IndividualFlowPage({ params: { flowId }, searchParams }: { params: { flowId: string } }) {
     const { flow_details, error: error_get_flow, isLoading: isLoading_flow_details } = useGetFlowById(flowId);
@@ -25,23 +26,43 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams }:
                 <>
                     <div className="mt-4 mx-4 mb-4 flex flex-col gap-4 justify-center items-center">
                         <div className="flex justify-between flex-wrap gap-4 items-center">
-                            <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
-                                <Chip size="md" className="text-xl font-bold">
-                                    {flow_details?.name}
-                                </Chip>
-                                <Chip
-                                    size="lg"
-                                    variant="flat"
-                                    color={flow_details?.active ? "success" : "warning"}
-                                >
-                                    <span className="capitalize text-xs flex items-center">
-                                    {flow_details?.active ? "ACTIVO" : "INACTIVO"}
-                                    </span>
-                                </Chip>
+                            <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
+                                <div className="flex flex-row items-center">
+                                    <p>Nombre del flujo:</p>
+                                    <Chip size="md" className="font-bold ml-4">
+                                        <span className="capitalize text-xs">
+                                            {flow_details?.name}
+                                        </span>
+                                    </Chip>
+                                </div>
+                                <div className="flex flex-row items-center">
+                                    <p>Estado:</p>
+                                    <Chip
+                                        size="lg"
+                                        variant="flat"
+                                        color={flow_details?.active ? "success" : "warning"}
+                                        className="ml-4"
+                                    >
+                                        <span className="capitalize text-xs flex items-center">
+                                            {flow_details?.active ? "ACTIVO" : "INACTIVO"}
+                                        </span>
+                                    </Chip>
+                                </div>
+                                <div className="flex flex-row items-center">
+                                    <p className="mr-4">Editar:</p>
+                                    <Tooltip content="Editar">
+                                        <Link
+                                            href={`/builder/edit/${flowId}`}
+                                            size="lg"
+                                        >
+                                            <EditIcon size={20} fill="#979797" />
+                                        </Link>
+                                    </Tooltip>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
+                    <Divider/>
                     {flow_analytics && !error? (
                     <>
                         <div className="mt-4 mx-4 mb-4 flex flex-col gap-4">
@@ -61,13 +82,11 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams }:
                                                 aria-label={fa.id}
                                                 title={
                                                     <div className="flex mr-4 justify-between items-center">
-                                                        {/* TODO: make it be in the start of the div and with its contents vertically alligned */}
                                                         <div>
                                                             <p>{"ID: " + fa.id}</p>
                                                         </div>
-                                                        {/* TODO: make it be at the end of the div */}
                                                         <div className="flex gap-6 mr-2">
-                                                            <div>
+                                                            <div className="flex flex-col items-center">
                                                                 <p>Flujo</p>
                                                                 <Chip
                                                                     size="sm"
@@ -79,7 +98,7 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams }:
                                                                     </span>
                                                                 </Chip>
                                                             </div>
-                                                            <div>
+                                                            <div className="flex flex-col items-center">
                                                                 <p>Pago</p>
                                                                 <Chip
                                                                     size="sm"
