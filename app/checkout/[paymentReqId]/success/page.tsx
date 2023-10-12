@@ -131,7 +131,7 @@ export default function ChackoutError() {
                                         El ID de tu pago es: PONER ID
                                     </div>
                                     <div className="text-sm mt-6">
-                                        Redirigiendote al sitio del comerciante en {countDown} s
+                                        Redirigiendote al sitio del comerciante en <span className="text-green-500">{countDown} s</span>
                                     </div>
                                 </div>
                             </Card>
