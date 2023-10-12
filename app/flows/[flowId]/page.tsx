@@ -7,10 +7,30 @@ import { PaymentRequestInformationSection } from "@/components/paymentInformatio
 import { useGetFlowExecutionStatus } from "@/src/api/analytics";
 import { useGetFlowById } from "@/src/api/flows";
 import { Accordion, AccordionItem, Chip, Divider, Link, Tooltip } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 
-export default function IndividualFlowPage({ params: { flowId }, searchParams }: { params: { flowId: string } }) {
+export default function IndividualFlowPage({ params: { flowId }, searchParams: initialSearchParams }: { params: { flowId: string } }) {
+    const [searchParams, setSearchParams] = useState(initialSearchParams);
+    
     const { flow_details, error: error_get_flow, isLoading: isLoading_flow_details } = useGetFlowById(flowId);
     const { flow_analytics, error, isLoading } = useGetFlowExecutionStatus(flowId, searchParams);
+
+    const removeParamFromSearchParams = (paramKeyToRemove) => {
+      const updatedSearchParams = { ...searchParams };
+      delete updatedSearchParams[paramKeyToRemove];
+      setSearchParams(updatedSearchParams);
+    };
+  
+    useEffect(() => {
+      const queryParts = [];
+      for (const key in searchParams) {
+        if (searchParams[key]) {
+          queryParts.push(`${key}=${searchParams[key]}`);
+        }
+      }
+      const queryString = queryParts.join("&");
+      history.replaceState(null, "", `?${queryString}`);
+    }, [searchParams]);
 
     return (
 		<>
@@ -70,12 +90,32 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams }:
                         </div>
         
                         <div className="mt-4 mb-4 ml-4 mr-4 flex-row gap-4 items-center">
-                            <div className="flex items-center gap-3 flex-wrap md:flex-nowrap mb-2">
-                                <h3 className="text-xl font-bold">Lista de ejecuciones</h3>
+                            <div className="flex items-center gap-3 flex-wrap md:flex-nowrap mb-4 justify-between">
+                                <div>
+                                    <h3 className="text-xl font-bold">Lista de ejecuciones</h3>
+                                </div>
+                                <div className="flex gap-2">
+                                    {searchParams && (
+                                        <>
+                                            {Object.keys(searchParams).map((paramKey) => (
+                                            <Chip
+                                                key={paramKey}
+                                                onClose={() => removeParamFromSearchParams(paramKey)}
+                                                variant="bordered"
+                                            >
+                                                {paramKey + " = " + searchParams[paramKey]}
+                                            </Chip>
+                                            ))}
+                                        </>
+                                    )
+                                    }
+                                </div>
                             </div>
                             <div>
                                 <Accordion variant="splitted" selectionMode="multiple" defaultExpandedKeys={[searchParams && searchParams.paymentReqId ? searchParams.paymentReqId : ""]}>
                                 {flow_analytics.map((fa) => {
+                                    console.log(fa.paymentSummary.paymentReq.id);
+                                    
                                     return <AccordionItem 
                                                 className="mt-2"
                                                 key={fa.paymentSummary.paymentReq.id} 
