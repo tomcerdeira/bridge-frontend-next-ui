@@ -4,10 +4,19 @@ import toast from "@/components/toast";
 import { useFlowBuilder } from "@/src/api/flow-builder";
 import { useAuth } from "@/src/hooks/useAuth";
 import { Button, Divider, Input, Switch } from "@nextui-org/react";
+import { useRouter } from 'next/navigation';
 import { useCallback, useState } from "react";
 import "reactflow/dist/style.css";
 import * as bridge from "./index";
 import * as util from "./utils/util";
+
+interface FormErrors {
+  flowName: string[];
+}
+
+const initialErrors: FormErrors = {
+  flowName: [],
+};
 
 export default function FlowBuilderPage({
   editNodes,
@@ -22,20 +31,33 @@ export default function FlowBuilderPage({
   flowId?: string;
   active?: boolean;
 }) {
+  const router = useRouter();
   const { shop, user } = useAuth();
   const { buildFlow, error, isLoading } = useFlowBuilder(
     shop ? shop.id.toString() : "0",
     flowId
   );
+
+  const [errors, setErrors] = useState(initialErrors);
+  const clearError = (fieldName: keyof FormErrors) => {
+    setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: [] }));
+  };
+
   const [isRequestLoading, setRequestLoading] = useState(false);
   const [isActive, setIsActive] = useState(active || true);
-  const [flowName, setFlowName] = useState(editName || "Sin titulo");
+  const [flowName, setFlowName] = useState(editName || "");
   const [nodes, setNodes, onNodesChange] = bridge.useNodesState(
     editNodes || bridge.initialNodes
   );
   const [edges, setEdges, onEdgesChange] = bridge.useEdgesState(
     editEdges || []
   );
+
+  const handleFlowNameChange = (e: any) => {
+    setFlowName(e.target.value);
+    clearError("flowName");
+  };
+
   const defaultViewport: bridge.Viewport = { x: 0, y: 0, zoom: 0.9 };
   const onConnect = useCallback(
     (params: bridge.Edge | bridge.Connection) =>
@@ -66,11 +88,23 @@ export default function FlowBuilderPage({
   };
 
   const onSaveClick = async () => {
+
+    const newErrors: FormErrors = {
+      flowName: [],
+    };
+
     const rootNode = nodes.find((node) => node.id === "bridge_0");
+
     if (typeof rootNode === "undefined") return;
+
+    if (!flowName){
+      newErrors.flowName.push("Se requiere un título para el flujo.");
+    }
+
     const connectedNodes = edges
       .filter((edge) => edge.source === rootNode.id)
       .map((edge) => nodes.find((node) => node.id === edge.target));
+
     const json = util.buildJson(
       connectedNodes,
       flowName,
@@ -78,29 +112,41 @@ export default function FlowBuilderPage({
       nodes,
       isActive
     );
-    try {
-      setRequestLoading(true);
-      let flow = await buildFlow(json);
-      toast({ type: "success", message: "Flujo guardado satisfactoriamente!" });
-    } catch (err) {
-      toast({
-        type: "error",
-        message: "Ha ocurrido un error al intentar crear el flujo",
-      });
-    } finally {
-      setRequestLoading(false);
+
+    setErrors(newErrors);
+    const hasErrors = Object.values(newErrors).some(
+      (errorArray) => errorArray.length > 0
+    );
+
+    if (!hasErrors) {
+      try {
+        setRequestLoading(true);
+        let flow = await buildFlow(json);
+        toast({ type: "success", message: "Flujo guardado satisfactoriamente!" });
+        router.push('/flows')
+      } catch (err) {
+        toast({
+          type: "error",
+          message: "Ha ocurrido un error al intentar crear el flujo",
+        });
+      } finally {
+        setRequestLoading(false);
+      }
     }
+
   };
 
   return (
     <div className="flex flex-col grow">
       <div className="flex justify-between gap-6 items-center">
         <Input
+          isRequired
           label="Nombre del flujo"
           placeholder="Sin título"
           value={flowName}
-          onChange={(e: any) => setFlowName(e.target.value)}
+          onInput={handleFlowNameChange}
           className="ml-4 mt-4"
+          errorMessage={errors.flowName.join(" ")}
         />
         <Switch
           isSelected={isActive}

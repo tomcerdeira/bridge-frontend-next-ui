@@ -59,7 +59,7 @@ export default function ChackoutError() {
                                         <p className="font-bold text-2xl">Ocurrió un error procesando tu pago...</p>
                                     </div>
                                 </div>
-                                <div className="justify-center mb-4 mt-8">
+                                <div className="justify-center mb-4 mt-10">
                                     <div className="font-semibold">
                                         El ID de ejecución es: PONER ID
                                     </div>
