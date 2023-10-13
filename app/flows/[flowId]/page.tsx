@@ -178,10 +178,28 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams: i
                                 <CardSectionByFlow flowId={flowId}/>
                             </div>
                                 <div className="mt-4 mb-4 ml-4 mr-4 flex-row gap-4 items-center">
-                                    <div className="flex items-center gap-3 flex-wrap md:flex-nowrap mb-2">
-                                        <h3 className="text-xl font-bold">Lista de ejecuciones</h3>
+                                    <div className="flex items-center gap-3 flex-wrap md:flex-nowrap mb-4 justify-between">
+                                        <div className="flex items-center gap-3 flex-wrap md:flex-nowrap mb-2">
+                                            <h3 className="text-xl font-bold">Lista de ejecuciones</h3>
+                                        </div>
+                                        <div className="flex gap-2">
+                                        {searchParams && (
+                                            <>
+                                                {Object.keys(searchParams).map((paramKey) => (
+                                                <Chip
+                                                    key={paramKey}
+                                                    onClose={() => removeParamFromSearchParams(paramKey)}
+                                                    variant="bordered"
+                                                >
+                                                    {paramKey + " = " + searchParams[paramKey]}
+                                                </Chip>
+                                                ))}
+                                            </>
+                                        )
+                                        }
+                                        </div>
                                     </div>
-                                    <div className="gap-2 flex flex-col md:flex-row justify-center">
+                                <div className="gap-2 flex flex-col md:flex-row justify-center">
                                         <p className="mt-16" style={{ fontSize: "18px" }}>...No existen aún 🔍</p>
                                     </div>
                                 </div>
