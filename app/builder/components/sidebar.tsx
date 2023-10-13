@@ -72,30 +72,49 @@ const Sidebar = ({ onSidebarClick }: any) => {
     tasks.push(extendedCategory);
   });
 
+  const taskCategories = tasks.reduce((acc: any, task: any) => {
+    if (!acc[task.category]) {
+      acc[task.category] = [];
+    }
+    acc[task.category].push(task);
+    return acc;
+  }, {});
+
   return (
     <div className="text-white flex flex-col">
-      <div className="flex flex-col p-5 rounded-lg items-center">
-        {tasks.map((task: any, taskIndex: any) => (
-          <Tooltip
-            content={task.name}
-            placement="left"
-            className="capitalize font-fira"
-            key={taskIndex}
-          >
-            <div
-              className="cursor-pointer border-dashed border-2 mb-2 border-gray-800 hover:bg-neutral-800 rounded-xl p-4"
-              onClick={() =>
-                onSidebarClick({
-                  ...task,
-                  node_type: task.category.toLowerCase(),
-                })
-              }
-              key={taskIndex}
-            >
-              {<Icon name={task.name} />}
+      <div className="flex flex-col p-5 items-center ">
+        {Object.keys(taskCategories).map(
+          (category: any, categoryIndex: any) => (
+            <div className="flex flex-col mt-2" key={categoryIndex}>
+              <p className="capitalize font-fira text-sm text-center mb-1">
+                {category.toLowerCase()}
+              </p>
+              <div className="flex flex-col items-center">
+                {taskCategories[category].map((task: any, taskIndex: any) => (
+                  <Tooltip
+                    content={task.name}
+                    placement="left"
+                    className="capitalize font-fira"
+                    key={taskIndex}
+                  >
+                    <div
+                      className="cursor-pointer border-dashed border-2 mb-2 border-gray-800 hover:bg-neutral-800 rounded-xl p-4"
+                      onClick={() =>
+                        onSidebarClick({
+                          ...task,
+                          node_type: task.category.toLowerCase(),
+                        })
+                      }
+                      key={taskIndex}
+                    >
+                      {<Icon name={task.name} />}
+                    </div>
+                  </Tooltip>
+                ))}
+              </div>
             </div>
-          </Tooltip>
-        ))}
+          )
+        )}
       </div>
     </div>
   );
