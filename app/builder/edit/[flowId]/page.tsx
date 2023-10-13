@@ -167,8 +167,13 @@ const buildNodesAndEdges = (rootRule: any, getTaskNodeType: any) => {
       }
     }
 
-    nextRules.forEach((rule: any) => {
-      setRuleNodesAndEdges(rule, lastXPos + 50, yPos + 85, nextTaskNodeId);
+    nextRules.forEach((rule: any, index: number) => {
+      setRuleNodesAndEdges(
+        rule,
+        lastXPos + 50,
+        yPos * (1 + index),
+        nextTaskNodeId
+      );
     });
   };
 

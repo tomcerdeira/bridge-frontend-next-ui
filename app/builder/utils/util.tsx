@@ -86,6 +86,10 @@ const buildConditions: any = (rule: any, node: any, nodes: any, edges: any) => {
 };
 
 const getNextConnectedNode = (node: any, edges: any, nodes: any) => {
+  return getNextConnectedNodes(node, edges, nodes)[0];
+};
+
+const getNextConnectedNodes = (node: any, edges: any, nodes: any) => {
   if (typeof node === "undefined") {
     return node;
   }
@@ -93,7 +97,7 @@ const getNextConnectedNode = (node: any, edges: any, nodes: any) => {
     .filter(
       (edge: any) => edge.source === node.id && edge.sourceHandle !== "fallback"
     )
-    .map((edge: any) => nodes.find((node: any) => node.id === edge.target))[0];
+    .map((edge: any) => nodes.find((node: any) => node.id === edge.target));
 };
 
 interface Rule {
@@ -153,11 +157,13 @@ const buildNextRule = (node: any, edges: any, nodes: any) => {
     category: taskNode.node_type,
     fallback: fallback,
   };
-  const nextRuleNode = getNextConnectedNode(taskNode, edges, nodes);
-  if (typeof nextRuleNode === "undefined") {
+  const nextRuleNodes = getNextConnectedNodes(taskNode, edges, nodes);
+  if (typeof nextRuleNodes === "undefined" || nextRuleNodes.length === 0) {
     return rule;
   }
-  rule["nextRules"].push(buildNextRule(nextRuleNode, edges, nodes));
+  nextRuleNodes.forEach((nextRuleNode: any) => {
+    rule["nextRules"].push(buildNextRule(nextRuleNode, edges, nodes));
+  });
   return rule;
 };
 
