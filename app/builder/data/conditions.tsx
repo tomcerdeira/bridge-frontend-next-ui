@@ -18,6 +18,6 @@ export const conditions = [
   {
     field: "METHOD",
     operators: ["IS", "IS_NOT"],
-    values: ["CREDIT CARD", "DEBIT CARD"],
+    values: ["CREDIT_CARD", "DEBIT_CARD"],
   },
 ];
