@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 const REDIRECT_TIMEOUT_IN_SECONDS: number = 30;
 
-export default function ChackoutError() {
+export default function ChackoutSuccess() {
     const pathname = usePathname();
     const { paymentInfo } = useGetPayment(pathname.split('/')[2]);
 
@@ -48,7 +48,6 @@ export default function ChackoutError() {
                                 <div className="flex justify-center flex-col">
                                     <div className="flex justify-center">
                                         <Image
-                                            shadow="sm"
                                             radius="lg"
                                             width="100%"
                                             alt="check-icon"
