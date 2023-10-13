@@ -9,6 +9,7 @@ import { useCallback, useState } from "react";
 import "reactflow/dist/style.css";
 import * as bridge from "./index";
 import * as util from "./utils/util";
+import eventBus from "./utils/eventBus";
 
 interface FormErrors {
   flowName: string[];
@@ -44,8 +45,8 @@ export default function FlowBuilderPage({
   };
 
   const [isRequestLoading, setRequestLoading] = useState(false);
-  const [isActive, setIsActive] = useState(active || true);
-  const [flowName, setFlowName] = useState(editName || "");
+  const [isActive, setIsActive] = useState(active || false);
+  const [flowName, setFlowName] = useState(editName);
   const [nodes, setNodes, onNodesChange] = bridge.useNodesState(
     editNodes || bridge.initialNodes
   );
@@ -60,8 +61,16 @@ export default function FlowBuilderPage({
 
   const defaultViewport: bridge.Viewport = { x: 0, y: 0, zoom: 0.9 };
   const onConnect = useCallback(
-    (params: bridge.Edge | bridge.Connection) =>
-      setEdges((els) => bridge.addEdge({ ...params, animated: true }, els)),
+    (params: bridge.Edge | bridge.Connection) => {
+      if (params.sourceHandle === "fallback") {
+        eventBus.dispatch("fallback", { id: params.target });
+        setEdges((els) =>
+          bridge.addEdge({ ...params, animated: true, type: "fallback" }, els)
+        );
+      } else {
+        setEdges((els) => bridge.addEdge({ ...params, animated: true }, els));
+      }
+    },
     [setEdges]
   );
 
@@ -150,7 +159,7 @@ export default function FlowBuilderPage({
         />
         <Switch
           isSelected={isActive}
-          onValueChange={setIsActive}
+          onValueChange={(e: any) => setIsActive(e)}
           className="mt-4"
         >
           Activo
@@ -175,6 +184,7 @@ export default function FlowBuilderPage({
           onConnect={onConnect}
           defaultViewport={defaultViewport}
           nodeTypes={bridge.nodeTypes}
+          edgeTypes={bridge.edgeTypes}
         >
           <bridge.Background gap={24} />
         </bridge.ReactFlow>

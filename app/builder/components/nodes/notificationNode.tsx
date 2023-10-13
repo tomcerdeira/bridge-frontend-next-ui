@@ -24,10 +24,12 @@ const NotificationNode = ({ id, data }: NodeProps) => {
   };
   return (
     <BaseCardNode
+      id={id}
       data={data}
       hasSource={false}
       hasTarget={true}
       parameters={parameters}
+      hasFallback={true}
       setParameters={onParameterChange}
       isNotification={true}
     />

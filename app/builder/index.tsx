@@ -20,6 +20,7 @@ export { addEdge, useNodesState, useEdgesState } from "reactflow";
 export { default as Sidebar } from "./components/sidebar";
 export { initialNodes } from "./data/initialState";
 import * as node from "./components/nodes";
+import FallbackEdge from "./components/edges/fallbackEdge";
 
 export const nodeTypes = {
   condition: node.ConditonNode,
@@ -28,4 +29,8 @@ export const nodeTypes = {
   processor: node.ProcessorNode,
   logical: node.LogicalNode,
   notification: node.NotificationNode,
+};
+
+export const edgeTypes = {
+  fallback: FallbackEdge,
 };

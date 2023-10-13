@@ -25,10 +25,12 @@ const ProcessorNode = ({ id, data }: NodeProps) => {
   return (
     <BaseCardNode
       data={data}
+      id={id}
       parameters={parameters}
       setParameters={onParameterChange}
       hasSource={true}
       hasTarget={true}
+      hasFallback={true}
       isNotification={false}
     />
   );
