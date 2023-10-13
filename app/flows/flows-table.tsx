@@ -2,6 +2,7 @@ import { FlowIcon } from "@/components/icons/sidebar/flow-icon";
 import { ReportsIcon } from "@/components/icons/sidebar/reports-icon";
 import { DeleteIcon } from "@/components/icons/table/delete-icon";
 import { EditIcon } from "@/components/icons/table/edit-icon";
+import toast from "@/components/toast";
 import { useDeleteFlow } from "@/src/api/flows";
 import { FlowDetails } from "@/src/api/types";
 import {
@@ -32,13 +33,21 @@ export const FlowsTable = ({
   flows: FlowDetails[];
   onFlowUpdate: () => void;
 }) => {
-  const { doDeleteFlow } = useDeleteFlow();
+  const { doDeleteFlow, error } = useDeleteFlow();
   const handleSubmit = async (flowId: string) => {
     const isSure = confirm("¿Estas seguro que deseas borrar este flujo?");
-    if (isSure) {
+    if (!isSure) {
+      return;
+    }
+
+    try{
       await doDeleteFlow({ flowId });
       onFlowUpdate();
+      toast({ type: "success", message: "Flujo eliminado correctamente!" });
+    }catch(e){
+      toast({ type: "error", message: "Ocurrió un error borrando el flujo, intentelo nuevamente mas tarde..." });
     }
+
   };
 
   return (
