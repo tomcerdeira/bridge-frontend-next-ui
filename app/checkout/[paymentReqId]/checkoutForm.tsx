@@ -21,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
+import { usePathname, useRouter } from 'next/navigation';
 import { useMemo, useState } from "react";
 
 type Props = {
@@ -48,6 +49,8 @@ export default function CheckoutForm({
   paymentInfo,
   paymentReqId,
 }: Props) {
+  const { push } = useRouter();
+  const pathname = usePathname();
   const { runPayment } = useRunPayment(paymentReqId);
   const [errors, setErrors] = useState(initialErrors);
   const clearError = (fieldName: keyof FormErrors) => {
@@ -134,10 +137,10 @@ export default function CheckoutForm({
       newErrors.expirationDate.push(
         "La fecha de vencimiento debe ser posterior a la fecha actual."
       );
+    }else{
+      clearError("expirationDate");
     }
-
     setErrors(newErrors);
-    clearError("expirationDate");
   };
   const [loadingRequest, setLoadingRequest] = useState(false);
   const handleSubmit = async (e: any) => {
@@ -169,6 +172,8 @@ export default function CheckoutForm({
       newErrors.cvv.push("El CVV no es válido.");
     }
     setErrors(newErrors);
+    
+    // TODO: revisar, y si el flujo no tiene mercado pago como procesador??
     const splitDate = expirationDate.split("-");
     let mpToken = null;
     if (paymentInfo?.requiredData?.mercadoPagoToken) {
@@ -212,8 +217,11 @@ export default function CheckoutForm({
         let payment = await runPayment(payload);
         console.log(payment);
         // TODO: redirect to success page
+        push(`${pathname}/success`)
       } catch (err) {
         console.error("Payment error:", err);
+        push(`${pathname}/error`)
+        return;
       } finally {
         setLoadingRequest(false);
       }
@@ -340,7 +348,7 @@ export default function CheckoutForm({
               />
               <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-4 gap-4">
                 <Input
-                  type="date"
+                  type="month"
                   label="Fecha de expiración"
                   placeholder={new Date().toString()}
                   labelPlacement="outside"

@@ -1,8 +1,10 @@
 'use client'
 
 import { useAuth } from "@/src/hooks/useAuth";
+import { Chip } from "@nextui-org/react";
 import dynamic from "next/dynamic";
-import ShopFlowExecutionsSection from "./shopFlowsExecutionsSection";
+import { useEffect, useState } from "react";
+import ShopFlowExecutionsList from "./shopFlowsExecutionsList";
 
 const Chart = dynamic(
     () => import("@/components/charts/steam").then((mod) => mod.Steam),
@@ -11,8 +13,26 @@ const Chart = dynamic(
     }
   );
   
-export default function ActivityPage() {
+export default function ActivityPage({searchParams: initialSearchParams}: {searchParams: { [key: string]: string | string[] | undefined } }) {
 	const { shop } = useAuth();
+    const [searchParams, setSearchParams] = useState(initialSearchParams);
+
+    const removeParamFromSearchParams = (paramKeyToRemove) => {
+      const updatedSearchParams = { ...searchParams };
+      delete updatedSearchParams[paramKeyToRemove];
+      setSearchParams(updatedSearchParams);
+    };
+  
+    useEffect(() => {
+      const queryParts = [];
+      for (const key in searchParams) {
+        if (searchParams[key]) {
+          queryParts.push(`${key}=${searchParams[key]}`);
+        }
+      }
+      const queryString = queryParts.join("&");
+      history.replaceState(null, "", `?${queryString}`);
+    }, [searchParams]);
 
 	return (
 		<>
@@ -35,7 +55,28 @@ export default function ActivityPage() {
                     </div>
 
                     <div className="mt-4 mb-4 flex-row gap-4 items-center">
-                        <ShopFlowExecutionsSection shopId={shop!.id.toString()} shopName={shop!.name} />
+                        <div className="flex items-center gap-3 flex-wrap md:flex-nowrap mb-4 justify-between">
+                            <div>
+                                <h3 className="text-xl font-bold">Flujos ejecutados en {shop.name}</h3>
+                            </div>
+                            <div className="flex gap-2">
+                                {searchParams && (
+                                    <>
+                                        {Object.keys(searchParams).map((paramKey) => (
+                                        <Chip
+                                            key={paramKey}
+                                            onClose={() => removeParamFromSearchParams(paramKey)}
+                                            variant="bordered"
+                                        >
+                                            {paramKey + " = " + searchParams[paramKey]}
+                                        </Chip>
+                                        ))}
+                                    </>
+                                )
+                                }
+                            </div>
+                        </div>
+                        <ShopFlowExecutionsList shopId={shop!.id.toString()} query={searchParams} />
                     </div>
                 </div>
             </>

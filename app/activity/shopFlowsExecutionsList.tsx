@@ -6,8 +6,8 @@ import { useGetFlowExecutionStatusByShop } from "@/src/api/analytics";
 import { Accordion, AccordionItem, Button, Chip, Divider, Link } from "@nextui-org/react";
 
 
-export default function ShopFlowExecutionsSection({ shopId, shopName } : { shopId: string, shopName: string }) {
-    const { flow_analytics, error, isLoading } = useGetFlowExecutionStatusByShop(shopId);
+export default function ShopFlowExecutionsList({ shopId, query } : { shopId: string, query: { [key: string]: string | string[] | undefined } }) {
+    const { flow_analytics, error, isLoading } = useGetFlowExecutionStatusByShop(shopId, query);
     
 	return (
 		<>
@@ -21,9 +21,6 @@ export default function ShopFlowExecutionsSection({ shopId, shopName } : { shopI
         :
         (
             <>
-                <div className="flex items-center gap-3 flex-wrap md:flex-nowrap mb-2">
-                    <h3 className="text-xl font-bold">Flujos ejecutados en {shopName}</h3>
-                </div>
                 <div>
                     {error? (
                         <div className="gap-2 flex flex-col md:flex-row justify-center">
@@ -67,7 +64,7 @@ export default function ShopFlowExecutionsSection({ shopId, shopName } : { shopI
                                                     </div>
                                                 </div>
                                                 <div className="flex gap-6 mr-2">
-                                                    <div>
+                                                    <div className="flex flex-col items-center">
                                                         <p>Flujo</p>
                                                         <Chip
                                                             size="sm"
@@ -79,7 +76,7 @@ export default function ShopFlowExecutionsSection({ shopId, shopName } : { shopI
                                                             </span>
                                                         </Chip>
                                                     </div>
-                                                    <div>
+                                                    <div className="flex flex-col items-center">
                                                         <p>Pago</p>
                                                         <Chip
                                                             size="sm"

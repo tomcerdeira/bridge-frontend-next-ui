@@ -1,6 +1,10 @@
-import { fetcher } from "../lib/fetcher/clientFetcher";
+import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
+import { fetcher } from "../lib/fetcher/clientFetcher";
+import { IPaymentRequiredDataResponse } from "./types";
+
 export const RUN_PAYMENT_PATH = `/payment/public/payments/run/`;
+export const RETRIEVE_PAYMENT_REQ_PATH = (paymentReqId: string) => `/payment/public/payments/${paymentReqId}`;
 
 export function useRunPayment(paymentReqId: string) {
   async function runPayment(url, { arg }) {
@@ -25,4 +29,9 @@ export function useRunPayment(paymentReqId: string) {
     data,
     error,
   };
+}
+
+export function useGetPayment(paymentReqId: string) {
+  const { data, error, isLoading, mutate } = useSWR<IPaymentRequiredDataResponse>(RETRIEVE_PAYMENT_REQ_PATH(paymentReqId), fetcher);
+  return { paymentInfo: data, error, isLoading, getFlows: mutate }
 }
