@@ -50,7 +50,7 @@ export default function ChackoutError() {
                                         <Image
                                             radius="lg"
                                             width="100%"
-                                            alt="check-icon"
+                                            alt="cross-icon"
                                             className="w-full object-contain h-[140px] w-[90px] overflow-hidden"
                                             src="/cross-icon.png"
                                         />
