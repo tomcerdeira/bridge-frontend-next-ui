@@ -13,8 +13,13 @@ const buildNodesAndEdges = (rootRule: any, getTaskNodeType: any) => {
   const edges: bridge.Edge[] = [];
   nodes.push(initialNodes[0]);
 
-  const setRuleNodesAndEdges = (rule: any, xPos: number, yPos: number) => {
-    if (!rule) return;
+  const setRuleNodesAndEdges = (
+    rule: any,
+    xPos: number,
+    yPos: number,
+    lastTaskId: string
+  ) => {
+    if (!rule || lastTaskId === "") return;
     const conditions = rule.conditions;
     const conditionOperators = rule.conditionOperators;
     const task = rule.task;
@@ -25,9 +30,7 @@ const buildNodesAndEdges = (rootRule: any, getTaskNodeType: any) => {
       edgeId++;
       return edgeId.toString();
     };
-
-    const hasConditionOperators = () =>
-      conditionOperators && conditionOperators.length > 0;
+    conditionOperators && conditionOperators.length > 0;
 
     const hasConditions = () => conditions && conditions.length > 0;
 
@@ -96,11 +99,15 @@ const buildNodesAndEdges = (rootRule: any, getTaskNodeType: any) => {
       }
     }
 
+    let nextTaskNodeId = "";
+
     if (task) {
+      const taskNodePosition = getNextTaskPos();
+
       const taskNode: bridge.Node = {
         id: utils.getId(),
         type: getTaskNodeType(task.type),
-        position: getNextTaskPos(),
+        position: taskNodePosition,
         data: {
           name: task.name,
           type: task.type,
@@ -110,23 +117,63 @@ const buildNodesAndEdges = (rootRule: any, getTaskNodeType: any) => {
           icon: utils.getIconComponent(task.name),
         },
       };
+      nextTaskNodeId = taskNode.id;
       nodes.push(taskNode);
-      edges.push({
-        id: getEdgeId(),
-        source:
-          nodes[hasConditionOperators() ? nodes.length - 3 : nodes.length - 2]
-            .id,
-        target: taskNode.id,
-        animated: true,
-      });
+      if (!hasConditions()) {
+        edges.push({
+          id: getEdgeId(),
+          source: lastTaskId,
+          target: taskNode.id,
+          animated: true,
+        });
+      } else {
+        edges.push({
+          id: getEdgeId(),
+          source: nodes[nodes.length - 2].id,
+          target: taskNode.id,
+          animated: true,
+        });
+      }
+
+      const fallback = task.fallback;
+      if (fallback) {
+        const fallbackNodePosition = getNextTaskPos();
+
+        const fallbackNode: bridge.Node = {
+          id: utils.getId(),
+          type: getTaskNodeType(fallback.type),
+          position: {
+            x: fallbackNodePosition.x,
+            y: fallbackNodePosition.y + 200,
+          },
+          data: {
+            name: fallback.name,
+            type: fallback.type,
+            description: fallback.description,
+            isAsync: fallback.isAsync,
+            parameter: fallback.taskParams.parameters,
+            icon: utils.getIconComponent(fallback.name),
+          },
+        };
+        nodes.push(fallbackNode);
+        edges.push({
+          id: getEdgeId(),
+          sourceHandle: "fallback",
+          source: taskNode.id,
+          target: fallbackNode.id,
+          animated: true,
+          type: "fallback",
+        });
+      }
     }
+
     nextRules.forEach((rule: any) => {
-      setRuleNodesAndEdges(rule, lastXPos + 50, yPos + 85);
+      setRuleNodesAndEdges(rule, lastXPos + 50, yPos + 85, nextTaskNodeId);
     });
   };
 
   rootRule.nextRules.forEach((rule: any, index: number) => {
-    setRuleNodesAndEdges(rule, 100, 250 * (index + 1));
+    setRuleNodesAndEdges(rule, 100, 250 * (index + 1), initialNodes[0].id);
   });
 
   return { nodes, edges };
