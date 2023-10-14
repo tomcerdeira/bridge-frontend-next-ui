@@ -80,14 +80,11 @@ export type ShopResponse = IEntityBase & {
   name: string;
 };
 
-export type FlowDetails = {
+export type FlowSummary = {
   id: string;
   name: string;
-  shopId: number;
   active: boolean;
-  // TODO: cambiar a Date
   updatedAt: string;
-  // TODO: cambiar a Date
   createdAt: string;
 };
 
@@ -122,18 +119,6 @@ export type ICurrency =
   | 'USD'
   | 'EUR'
   | 'GBP'
-
-export type PaymentRequest = {
-  amount: string
-  currency: ICurrency
-  products: IItem[]
-  executed: boolean
-  id: string
-  // TODO ??
-  // requiredData ??
-  // associatedFlowId ??
-  // shopId ??
-}
 
 export type IPaymentMethod =
   | 'CREDIT_CARD'
@@ -188,23 +173,77 @@ export type Task = {
   description: string
   isAsync: boolean
   taskParams: Parameters
-  fallback?: any //TODO
+  fallback?: Task
 }
+
+export type IOperator = 
+| 'NONE'
+| 'EQUALS'
+| 'GREATER_THAN'
+| 'GREATER_OR_EQUALS_THAN'
+| 'LESS_THAN'
+| 'LESS_OR_EQUALS_THAN'
+| 'IS'
+| 'IS_NOT'
+| 'CONTAINS'
+| 'DOES_NOT_CONTAIN'
+
+export type IFieldType = 
+| 'AMOUNT'
+| 'CURRENCY'
+| 'METHOD'
+
+export type ICondition = {
+  operator: IOperator
+  value: any
+  field: IFieldType
+}
+
+export type IConditionOperators = 
+| 'AND'
+| 'OR'
 
 export type Rule = {
   name: string
-  conditions: any //TODO
-  conditionOperators: any //TODO
+  conditions: ICondition[]
+  conditionOperators: IConditionOperators
   task?: Task
 }
 
+export type TaskDescription = {
+  type: ITypeTask
+  name: string
+  description: string
+}
+
+export type ICanonicalError = 
+// User params errors
+| "INVALID_USER_PARAMETERS"
+| "INVALID_CARD_NUMBER"
+| "INVALID_CVV"
+// External errors
+| "PARAMS_PARSE_ERROR"
+| "ALREADY_MAKE_REQUEST_EARLY"
+| "PROVIDER_RETURNED_500"
+| "PROVIDER_TIMEOUT"
+| "INVALID_CREDENTIALS"
+| "UNKNOWN_ERROR"
+| "NO_ERROR"
+
+export type TaskError = {
+  task: TaskDescription
+  statusCode: number
+  canonicalError: ICanonicalError
+  taskMessages: string[]
+}
+
 export type FlowExecutionResponse = {
-  flowId: string
+  flowSummary: FlowSummary
   paymentSummary: PaymentSummary
   flowSucceed: boolean
   paymentSucceed: boolean
-  executedRules: Rule
-  tasksErrors: any //TODO
+  executedRules: Rule[]
+  tasksErrors: TaskError[]
   id: string
 }
 

@@ -39,27 +39,27 @@ export default function ShopFlowExecutionsList({ shopId, query } : { shopId: str
                                             <div className="flex mr-4 justify-between items-center">
                                                 <div className="flex flex-row gap-4 items-center">
                                                     <div className="text-center">
+                                                        <p>Flujo</p>
+                                                        <Button
+                                                            href={'/flows/' + fa.flowSummary.id}
+                                                            as={Link}
+                                                            color="default"
+                                                            showAnchorIcon
+                                                            variant="flat"
+                                                            >
+                                                            {fa.flowSummary.name }
+                                                        </Button>
+                                                    </div>
+                                                    <div className="text-center">
                                                         <p>PaymentReqId</p>
                                                         <Button
-                                                            href={'/flows/' + fa.flowId + '?paymentReqId=' + fa.paymentSummary.paymentReq.id}
+                                                            href={'/flows/' + fa.flowSummary.id + '?paymentReqId=' + fa.paymentSummary.paymentReq.id}
                                                             as={Link}
                                                             color="default"
                                                             showAnchorIcon
                                                             variant="flat"
                                                             >
                                                             {fa.paymentSummary.paymentReq.id}
-                                                        </Button>
-                                                    </div>
-                                                    <div className="text-center">
-                                                        <p>FlowId</p>
-                                                        <Button
-                                                            href={'/flows/' + fa.flowId}
-                                                            as={Link}
-                                                            color="default"
-                                                            showAnchorIcon
-                                                            variant="flat"
-                                                            >
-                                                            {fa.flowId }
                                                         </Button>
                                                     </div>
                                                 </div>
