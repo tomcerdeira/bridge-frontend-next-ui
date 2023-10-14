@@ -3,7 +3,7 @@ import { IPaymentRequiredDataResponse } from "@/src/api/types";
 import CheckoutForm from "./checkoutForm";
 
 export default async function CheckoutPage({
-  params: { paymentReqId },
+  params: { paymentReqId }
 }: {
   params: { paymentReqId: string };
 }) {

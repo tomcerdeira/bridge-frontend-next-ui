@@ -19,6 +19,7 @@ export type IPaymentRequiredDataResponse = {
   currency: string;
   shopId: number;
   products: IItem[];
+  executed: boolean
   requiredData?: IPaymentRequestRequiredData;
 };
 
@@ -245,6 +246,14 @@ export type FlowExecutionResponse = {
   executedRules: Rule[]
   tasksErrors: TaskError[]
   id: string
+}
+
+export type IPaymentStatusResponse = {
+  flowExecId: string
+  paymentSucceed: boolean
+  tasksErrors: TaskError[]
+  paymentReqExecuted: boolean
+  redirectURL?: string
 }
 
 
