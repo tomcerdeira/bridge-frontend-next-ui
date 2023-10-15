@@ -1,10 +1,9 @@
 "use client";
-
 import toast from "@/components/toast";
 import { useFlowBuilder } from "@/src/api/flow-builder";
 import { useAuth } from "@/src/hooks/useAuth";
 import { Button, Divider, Input, Switch } from "@nextui-org/react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import "reactflow/dist/style.css";
 import * as bridge from "./index";
@@ -97,7 +96,6 @@ export default function FlowBuilderPage({
   };
 
   const onSaveClick = async () => {
-
     const newErrors: FormErrors = {
       flowName: [],
     };
@@ -106,7 +104,7 @@ export default function FlowBuilderPage({
 
     if (typeof rootNode === "undefined") return;
 
-    if (!flowName){
+    if (!flowName) {
       newErrors.flowName.push("Se requiere un título para el flujo.");
     }
 
@@ -121,7 +119,6 @@ export default function FlowBuilderPage({
       nodes,
       isActive
     );
-
     setErrors(newErrors);
     const hasErrors = Object.values(newErrors).some(
       (errorArray) => errorArray.length > 0
@@ -131,8 +128,11 @@ export default function FlowBuilderPage({
       try {
         setRequestLoading(true);
         let flow = await buildFlow(json);
-        toast({ type: "success", message: "Flujo guardado satisfactoriamente!" });
-        router.push('/flows')
+        toast({
+          type: "success",
+          message: "Flujo guardado satisfactoriamente!",
+        });
+        router.push("/flows");
       } catch (err) {
         toast({
           type: "error",
@@ -142,7 +142,6 @@ export default function FlowBuilderPage({
         setRequestLoading(false);
       }
     }
-
   };
 
   return (
