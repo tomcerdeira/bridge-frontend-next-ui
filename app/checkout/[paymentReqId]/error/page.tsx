@@ -71,8 +71,9 @@ export default function ChackoutError() {
                         </div>
                     </div>
                     <div className="justify-center mb-4 mt-10">
-                        <div className="font-semibold">
-                            El ID de ejecución es: PONER ID
+                        <div>
+                            <p>El ID de ejecución es: </p>
+                            <p className="italic font-bold mt-4">{paymentStatus?.flowExecId}</p>
                         </div>
                         <div className="text-sm mt-6">
                             Redirigiendote al sitio del comerciante en <span className="text-green-500">{countDown} s</span>
