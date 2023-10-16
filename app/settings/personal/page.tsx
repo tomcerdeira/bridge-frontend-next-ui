@@ -148,7 +148,6 @@ export default function PersonalSettingsPage() {
                         </CardBody>
                     </Card>
                 </div>
-                {/* TODO: ver como hacer para que ponga el sidebar opaco tmbn */}
                 <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
                     <ModalContent>
                     {(onClose) => (
