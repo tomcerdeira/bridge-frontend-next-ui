@@ -29,7 +29,7 @@ export default function ChackoutError() {
               } else {
                  
                 if(paymentStatus?.redirectURL){
-                    router.replace(paymentStatus!.redirectURL); 
+                    router.push(paymentStatus!.redirectURL); 
                 }else{
                     router.push("/"); 
                 } 

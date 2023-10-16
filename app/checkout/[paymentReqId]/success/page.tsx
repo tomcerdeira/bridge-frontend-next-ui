@@ -15,6 +15,7 @@ export default function ChackoutSuccess() {
 
     const [countDown, setCountDown] = useState(REDIRECT_TIMEOUT_IN_SECONDS);
     const router = useRouter();
+
     useEffect(() => {
 
         if (paymentStatus && !paymentStatus.paymentReqExecuted) {
@@ -30,7 +31,7 @@ export default function ChackoutSuccess() {
               } else {
 
                 if(paymentStatus?.redirectURL){
-                    router.replace(paymentStatus!.redirectURL); 
+                    router.push(paymentStatus!.redirectURL); 
                 }else{
                     router.push("/"); 
                 }  
