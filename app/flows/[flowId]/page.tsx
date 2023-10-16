@@ -2,12 +2,14 @@
 
 import CardSectionByFlow from "@/components/analytics-card-section/cardSectionByFlow";
 import { CardInformationTable } from "@/components/cardInformationTable";
+import { CodeIcon } from "@/components/icons/code-icon";
 import { EditIcon } from "@/components/icons/table/edit-icon";
 import { PaymentRequestInformationSection } from "@/components/paymentInformationSection";
 import { useGetFlowExecutionStatus } from "@/src/api/analytics";
 import { useGetFlowById } from "@/src/api/flows";
-import { Accordion, AccordionItem, Chip, Divider, Link, Tooltip } from "@nextui-org/react";
+import { Accordion, AccordionItem, Chip, Divider, Link, Tooltip, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import CodeSnippetModal from "../code-snippets-modal";
 
 export default function IndividualFlowPage({ params: { flowId }, searchParams: initialSearchParams }: { params: { flowId: string } }) {
     const [searchParams, setSearchParams] = useState(initialSearchParams);
@@ -32,6 +34,13 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams: i
       history.replaceState(null, "", `?${queryString}`);
     }, [searchParams]);
 
+    const {isOpen, onOpen, onClose} = useDisclosure();
+    const [clickedFlowId, setClickedFlowId] = useState('');
+    const handleGetSnippet = async (flowId: string) => {
+      setClickedFlowId(flowId);
+      onOpen();
+    }
+
     return (
 		<>
             {isLoading_flow_details || isLoading? (
@@ -44,6 +53,7 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams: i
             :
             (  
                 <>
+                    <CodeSnippetModal isOpen={isOpen} onClose={onClose} clickedFlowId={clickedFlowId} />
                     <div className="mt-4 mx-4 mb-4 flex flex-col gap-4 justify-center items-center">
                         <div className="flex justify-between flex-wrap gap-4 items-center">
                             <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
@@ -77,6 +87,14 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams: i
                                         >
                                             <EditIcon size={20} fill="#979797" />
                                         </Link>
+                                    </Tooltip>
+                                </div>
+                                <div className="flex flex-row items-center">
+                                    <p className="mr-4">Integración:</p>
+                                    <Tooltip content="Integración">
+                                        <button onClick={() => handleGetSnippet(flowId)}>
+                                            <CodeIcon size={20} fill="#979797" />
+                                        </button>
                                     </Tooltip>
                                 </div>
                             </div>
