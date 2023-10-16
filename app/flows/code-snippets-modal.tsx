@@ -22,11 +22,27 @@ const CodeSnippetModal = ({ isOpen, onClose, clickedFlowId }) => {
               <Tabs aria-label="Options" color="primary" className="flex justify-center mt-4">
                 <Tab key="curl" title="CURL">
                     <Snippet symbol="" className="w-full">
-                        <pre>
-                            { 
-                            `curl -X POST '${process.env.NEXT_PUBLIC_BASE_URL}/payment/private/payments/${clickedFlowId}' \n -H 'authorization: Bearer <TU_TOKEN_DE_ACCESO>' \n -H 'Content-Type: application/json' \n -d '{\n  "amount": 100,\n  "currency": "ARS",\n  "redirectURL": <TU_URL_DE_REDIRECCION>,\n  "products": [\n     {\n       "name": "Socks",\n       "unitPrice": 100,\n       "description": "Red socks",\n       "imgUrl": "https://media.mysockfactory.ch/1354-thickbox_default/maos-red-plain-socks.jpg",\n       "quantity": 1\n     }\n   ]\n }' `
-                            }
-                        </pre>
+                    <pre>
+    { 
+      `curl -X POST '${process.env.NEXT_PUBLIC_BASE_URL}/payment/private/payments/${clickedFlowId}' \\
+       -H 'Authorization: Bearer <TU_TOKEN_DE_ACCESO>' \\
+       -H 'Content-Type: application/json' \\
+       -d '{
+         "amount": 100,
+         "currency": "ARS",
+         "redirectURL": "<TU_LINK_DE_REDIRECCION>",
+         "products": [
+           {
+             "name": "Socks",
+             "unitPrice": 100,
+             "description": "Red socks",
+             "imgUrl": "https://media.mysockfactory.ch/1354-thickbox_default/maos-red-plain-socks.jpg",
+             "quantity": 1
+           }
+         ]
+       }'`
+    }
+  </pre>
                     </Snippet>
                 </Tab>
                 <Tab key="node" title="Node.js">
