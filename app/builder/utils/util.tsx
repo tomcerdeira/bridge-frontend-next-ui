@@ -146,6 +146,7 @@ const buildNextRule = (node: any, edges: any, nodes: any) => {
       isAsync: fallbackTask.data.isAsync,
       taskParams: { parameters: fallbackTask.data.parameter },
       category: fallbackTask.node_type,
+      node_id: fallbackTask.id,
     };
   }
   rule["task"] = {
@@ -156,6 +157,7 @@ const buildNextRule = (node: any, edges: any, nodes: any) => {
     taskParams: { parameters: taskNode.data.parameter },
     category: taskNode.node_type,
     fallback: fallback,
+    node_id: taskNode.id,
   };
   const nextRuleNodes = getNextConnectedNodes(taskNode, edges, nodes);
   if (typeof nextRuleNodes === "undefined" || nextRuleNodes.length === 0) {
