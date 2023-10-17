@@ -75,8 +75,9 @@ export default function FlowBuilderPage({
 
   const onSidebarClick = (data: any) => {
     const position = { x: 250, y: 250 };
+    const node_id = util.getId();
     const newNode = {
-      id: util.getId(),
+      id: node_id,
       type: data.node_type,
       position,
       data: {
@@ -86,8 +87,9 @@ export default function FlowBuilderPage({
         isAsync: data.isAsync,
         description: data.description,
         type: data.type,
+        node_id: node_id,
         ...(data.node_type === "condition" && {
-          condition: data.condition,
+          condition: { ...data.condition, node_id: node_id },
         }),
       },
     };
@@ -119,6 +121,9 @@ export default function FlowBuilderPage({
       nodes,
       isActive
     );
+
+    console.log(json);
+
     setErrors(newErrors);
     const hasErrors = Object.values(newErrors).some(
       (errorArray) => errorArray.length > 0
