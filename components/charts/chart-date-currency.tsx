@@ -1,7 +1,7 @@
 import { TemporalAmounts } from "@/src/api/types";
 import Chart, { Props } from "react-apexcharts";
 
-export const Steam = ({temporalAmounts} : {temporalAmounts: TemporalAmounts[]}) => {
+export const SteamDateCurrency = ({temporalAmounts} : {temporalAmounts: TemporalAmounts[]}) => {
 
   let series = [
     {

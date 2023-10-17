@@ -1,10 +1,11 @@
 import useSWR from "swr";
 import { fetcher } from "../lib/fetcher/clientFetcher";
-import { AnalyticsResponse, FlowExecutionResponse } from "./types";
+import { AnalyticsResponse, FlowExecutionResponse, ProcessorAnalyticsResponse } from "./types";
 
 
 export const GET_ANALYTICS_BY_SHOP = (shop_id: string) => `/app/private/analytics/shops/${shop_id}`
 export const GET_ANALYTICS_BY_FLOW = (flow_id: string) =>`/app/private/analytics/flows/${flow_id}`
+export const GET_ANALYTICS_BY_SHOP_AND_BY_PROCESSOR = (shop_id: string) =>`/app/private/analytics/shops/${shop_id}/processors`
 export const GET_FLOW_EXECUTION_STATUS_BY_SHOP = (shop_id: string) => `/payment/private/flows-exec-status/shops/${shop_id}`
 export const GET_FLOW_EXECUTION_STATUS_BY_FLOW = (flow_id: string) => `/payment/private/flows-exec-status/flows/${flow_id}`
 
@@ -22,6 +23,14 @@ export function useGetAnalyticsByFlowId(flow_id: string) {
         fetcher
     );
     return { flow_analytics: data, error, isLoading, getAnalyticsByFlowId: mutate };
+}
+
+export function useGetAnalyticsByShopIdAndByProcessor(shop_id: string) {
+    const { data, error, isLoading, mutate } = useSWR<ProcessorAnalyticsResponse[]>(
+        GET_ANALYTICS_BY_SHOP_AND_BY_PROCESSOR(shop_id),
+        fetcher
+    );
+    return { processors_analytics: data, error, isLoading, getAnalyticsByShopIdAndByProcessor: mutate };
 }
 
 function getQueryParamsAsString(searchQuery: { [key: string]: string | string[] | undefined }) {

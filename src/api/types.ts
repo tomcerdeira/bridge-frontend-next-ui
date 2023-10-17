@@ -122,6 +122,11 @@ export type AnalyticsResponse = {
   temporalAmounts: TemporalAmounts[]
 }
 
+export type ProcessorAnalyticsResponse = {
+  processor: string
+  analytics: AnalyticsResponse
+}
+
 export type ICardType =
   | 'VISA'
   | 'AMEX'
@@ -266,6 +271,8 @@ export type IPaymentStatusResponse = {
   paymentReqExecuted: boolean
   redirectURL?: string
 }
+
+
 
 
 //TODO: borrar y usar PaymentRequest

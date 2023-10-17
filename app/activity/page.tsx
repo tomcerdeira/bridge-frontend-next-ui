@@ -1,24 +1,31 @@
 'use client'
 
-import { useGetAnalyticsByShopId } from "@/src/api/analytics";
+import { useGetAnalyticsByShopId, useGetAnalyticsByShopIdAndByProcessor } from "@/src/api/analytics";
 import { useAuth } from "@/src/hooks/useAuth";
-import { Chip } from "@nextui-org/react";
+import { Chip, Tab, Tabs } from "@nextui-org/react";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import ShopFlowExecutionsList from "./shopFlowsExecutionsList";
 
-const Chart = dynamic(
-    () => import("@/components/charts/steam").then((mod) => mod.Steam),
+const DateCurrencyChart = dynamic(
+    () => import("@/components/charts/chart-date-currency").then((mod) => mod.SteamDateCurrency),
     {
       ssr: false,
     }
   );
+
+const ProcessorPaymentsChart = dynamic(
+() => import("@/components/charts/chart-processor-payments").then((mod) => mod.SteamProcessorPayment),
+{
+    ssr: false,
+}
+);
   
 export default function ActivityPage({searchParams: initialSearchParams}: {searchParams: { [key: string]: string | string[] | undefined } }) {
 	const { shop } = useAuth();
     const [searchParams, setSearchParams] = useState(initialSearchParams);
     const { shop_analytics, error, isLoading } = useGetAnalyticsByShopId(shop? shop.id.toString() : "0");
-    
+    const { processors_analytics, error: processorsError, isLoading: processorsLoading } = useGetAnalyticsByShopIdAndByProcessor(shop? shop.id.toString() : "0");
 
     const removeParamFromSearchParams = (paramKeyToRemove) => {
       const updatedSearchParams = { ...searchParams };
@@ -39,7 +46,7 @@ export default function ActivityPage({searchParams: initialSearchParams}: {searc
 
 	return (
 		<>
-        {!shop_analytics? (
+        {!shop || !shop_analytics || !processors_analytics? (
                 <div className="flex flex-col h-full justify-center items-center gap-10">
                 <div className="gap-2 flex flex-col md:flex-row justify-center">
                     <p style={{ fontSize: "24px" }}>Cargando...</p>
@@ -52,8 +59,19 @@ export default function ActivityPage({searchParams: initialSearchParams}: {searc
                 <div className="mt-4 mx-4 mb-4 ml-4 mr-4  flex flex-col gap-4">
                     <div className="h-full flex flex-col gap-2">
                         <h3 className="text-xl font-semibold">Estadísticas</h3>
-                        <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 ">
-                            <Chart temporalAmounts={shop_analytics.temporalAmounts} />
+                        <div className="flex w-full flex-col">
+                            <Tabs aria-label="Options" className="flex justify-center ">
+                                <Tab key="by_currency" title="Monedas">
+                                    <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 ">
+                                        <DateCurrencyChart temporalAmounts={shop_analytics.temporalAmounts} />
+                                    </div>
+                                </Tab>
+                                <Tab key="by_processor" title="Procesadores">
+                                    <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 ">
+                                        <ProcessorPaymentsChart processorAnalytics={processors_analytics} />
+                                    </div>
+                                </Tab>
+                            </Tabs>
                         </div>
                     </div>
 
