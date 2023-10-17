@@ -94,6 +94,22 @@ export type AmountProcessed = {
   currency: string;
 };
 
+export type ICurrency =
+  | 'ARS'
+  | 'USD'
+  | 'EUR'
+  | 'GBP'
+
+  export type Payment = {
+    value: number;
+    currency: ICurrency;
+  };
+
+export type TemporalAmounts = {
+  date: string;
+  payments: Payment[];
+};
+
 export type AnalyticsResponse = {
   avgPaymentSucceeded: string
   overAllPayments: string
@@ -103,6 +119,7 @@ export type AnalyticsResponse = {
   flowsFailed: string
   totalAmountsProcessed: AmountProcessed[]
   avgPaymentAmounts: AmountProcessed[]
+  temporalAmounts: TemporalAmounts[]
 }
 
 export type ICardType =
@@ -114,12 +131,6 @@ export type Card = {
   last4Numbers: string
   cardType: ICardType
 }
-
-export type ICurrency =
-  | 'ARS'
-  | 'USD'
-  | 'EUR'
-  | 'GBP'
 
 export type IPaymentMethod =
   | 'CREDIT_CARD'

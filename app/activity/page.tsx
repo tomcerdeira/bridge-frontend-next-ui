@@ -1,5 +1,6 @@
 'use client'
 
+import { useGetAnalyticsByShopId } from "@/src/api/analytics";
 import { useAuth } from "@/src/hooks/useAuth";
 import { Chip } from "@nextui-org/react";
 import dynamic from "next/dynamic";
@@ -16,6 +17,8 @@ const Chart = dynamic(
 export default function ActivityPage({searchParams: initialSearchParams}: {searchParams: { [key: string]: string | string[] | undefined } }) {
 	const { shop } = useAuth();
     const [searchParams, setSearchParams] = useState(initialSearchParams);
+    const { shop_analytics, error, isLoading } = useGetAnalyticsByShopId(shop? shop.id.toString() : "0");
+    
 
     const removeParamFromSearchParams = (paramKeyToRemove) => {
       const updatedSearchParams = { ...searchParams };
@@ -36,7 +39,7 @@ export default function ActivityPage({searchParams: initialSearchParams}: {searc
 
 	return (
 		<>
-        {!shop? (
+        {!shop_analytics? (
                 <div className="flex flex-col h-full justify-center items-center gap-10">
                 <div className="gap-2 flex flex-col md:flex-row justify-center">
                     <p style={{ fontSize: "24px" }}>Cargando...</p>
@@ -50,7 +53,7 @@ export default function ActivityPage({searchParams: initialSearchParams}: {searc
                     <div className="h-full flex flex-col gap-2">
                         <h3 className="text-xl font-semibold">Estadísticas</h3>
                         <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 ">
-                            <Chart />
+                            <Chart temporalAmounts={shop_analytics.temporalAmounts} />
                         </div>
                     </div>
 

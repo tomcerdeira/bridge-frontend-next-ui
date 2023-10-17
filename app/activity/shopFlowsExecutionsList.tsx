@@ -7,7 +7,7 @@ import { Accordion, AccordionItem, Button, Chip, Divider, Link } from "@nextui-o
 
 
 export default function ShopFlowExecutionsList({ shopId, query } : { shopId: string, query: { [key: string]: string | string[] | undefined } }) {
-    const { flow_analytics, error, isLoading } = useGetFlowExecutionStatusByShop(shopId, query);
+    const { flow_analytics, error, isLoading } = useGetFlowExecutionStatusByShop(shopId, query);    
     
 	return (
 		<>
