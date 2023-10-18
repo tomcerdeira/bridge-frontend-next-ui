@@ -49,6 +49,7 @@ const ConditionNode = ({ id, data }: NodeProps) => {
             data: {
               ...node.data,
               condition: {
+                ...node.data.condition,
                 field: currentField,
                 operator: currentCondition.operators[0],
                 value: currentCondition.values[0],
