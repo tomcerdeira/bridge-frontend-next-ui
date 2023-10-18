@@ -5,7 +5,7 @@ import { DeleteIcon } from "@/components/icons/table/delete-icon";
 import { EditIcon } from "@/components/icons/table/edit-icon";
 import toast from "@/components/toast";
 import { useDeleteFlow } from "@/src/api/flows";
-import { FlowDetails } from "@/src/api/types";
+import { FlowSummary } from "@/src/api/types";
 import {
   Avatar,
   Chip,
@@ -34,7 +34,7 @@ export const FlowsTable = ({
   flows,
   onFlowUpdate,
 }: {
-  flows: FlowDetails[];
+  flows: FlowSummary[];
   onFlowUpdate: () => void;
 }) => {
   const { doDeleteFlow, error } = useDeleteFlow();
@@ -87,7 +87,7 @@ export const FlowsTable = ({
                 </TableCell>
                 <TableCell>
                   <div>
-                    <span>{item.createdAt}</span>
+                    <span>{item.createdAt.toLocaleString().split('T')[0]}</span>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -103,7 +103,7 @@ export const FlowsTable = ({
                 </TableCell>
                 <TableCell>
                   <div>
-                    <span>{item.updatedAt}</span>
+                    <span>{item.updatedAt.toLocaleString().split('T')[0]}</span>
                   </div>
                 </TableCell>
                 <TableCell>

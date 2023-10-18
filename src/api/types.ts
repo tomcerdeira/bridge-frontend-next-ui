@@ -85,8 +85,8 @@ export type FlowSummary = {
   id: string;
   name: string;
   active: boolean;
-  updatedAt: string;
-  createdAt: string;
+  updatedAt: Date;
+  createdAt: Date;
 };
 
 export type AmountProcessed = {
