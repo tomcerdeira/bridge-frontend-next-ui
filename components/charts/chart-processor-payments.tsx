@@ -195,7 +195,7 @@ export const SteamProcessorPayment = ({processorAnalytics} : {processorAnalytics
     enabled: true,
     theme: "dark"
   },
-  colors: ["#18c964", "#f31260"]
+  colors: ["#00e396", "#ff4560"]
   };
 
   return (
