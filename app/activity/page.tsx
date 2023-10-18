@@ -12,13 +12,18 @@ const DateCurrencyChart = dynamic(
     {
       ssr: false,
     }
-  );
-
+);
 const ProcessorPaymentsChart = dynamic(
 () => import("@/components/charts/chart-processor-payments").then((mod) => mod.SteamProcessorPayment),
 {
     ssr: false,
 }
+);
+const ProcessorFlowsChart = dynamic(
+    () => import("@/components/charts/chart-processor-flows").then((mod) => mod.SteamProcessorFlows),
+    {
+        ssr: false,
+    }
 );
   
 export default function ActivityPage({searchParams: initialSearchParams}: {searchParams: { [key: string]: string | string[] | undefined } }) {
@@ -67,8 +72,9 @@ export default function ActivityPage({searchParams: initialSearchParams}: {searc
                                     </div>
                                 </Tab>
                                 <Tab key="by_processor" title="Procesadores">
-                                    <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 ">
+                                    <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 flex flex-row gap-4">
                                         <ProcessorPaymentsChart processorAnalytics={processors_analytics} />
+                                        <ProcessorFlowsChart processorAnalytics={processors_analytics} />
                                     </div>
                                 </Tab>
                             </Tabs>
