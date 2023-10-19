@@ -3,6 +3,7 @@ import * as MP from "@/app/services/mercadoPagoService";
 import toast from "@/components/toast";
 import { useGetPaymentStatus, useRunPayment } from "@/src/api/checkout";
 import {
+  IPaymentMethod,
   IPaymentRequiredDataResponse,
   IPaymentRunRequest
 } from "@/src/api/types";
@@ -42,24 +43,27 @@ const initialErrors: FormErrors = {
   typeOfCard: [],
 };
 
-export default function CheckoutForm({
-  paymentInfo,
-  paymentReqId,
-}: Props) {
+const CARDS = { //TODO revisar regex
+  visa: "^4",
+  amex: "^(34|37)",
+  mastercard: "^5[0-5]",
+  empty: "",
+};
+
+export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
+  
   const { push } = useRouter();
-  const { paymentStatus } = useGetPaymentStatus(
-    paymentReqId
-  );
   const pathname = usePathname();
-  const { runPayment, error: paymentError } = useRunPayment(paymentReqId);
   const [errors, setErrors] = useState(initialErrors);
   const clearError = (fieldName: keyof FormErrors) => {
     setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: [] }));
   };
 
+  const { paymentStatus } = useGetPaymentStatus(paymentReqId);
+  const { runPayment, error: paymentError } = useRunPayment(paymentReqId);
+
   useEffect(() => {
     if(paymentStatus?.paymentReqExecuted){
-        
       if(paymentStatus?.paymentSucceed){
         return redirect("/checkout/" + paymentReqId + "/success")
       }else{
@@ -68,15 +72,13 @@ export default function CheckoutForm({
     }
   }, [paymentReqId, paymentStatus])
 
-
-  const CARDS = { //TODO revisar regex
-    visa: "^4",
-    amex: "^(34|37)",
-    mastercard: "^5[0-5]",
-    empty: "",
-  };
-
+  
   const [cardNumber, setCardNumber] = useState("");
+  const [cvv, setCVV] = useState("");
+  const [cardHolderName, setCardHolderName] = useState("");
+  const [expirationDate, setExpirationDate] = useState("");
+  const [typeOfCard, setTypeOfCard] = useState<IPaymentMethod>("CREDIT_CARD");
+  const [loadingRequest, setLoadingRequest] = useState(false);
 
   const cardType = (cardNumber: string) => {
     const number = cardNumber;
@@ -116,8 +118,6 @@ export default function CheckoutForm({
     }
   };
 
-  const [cvv, setCVV] = useState("");
-
   const handleCVVChange = (e: any) => {
     const inputValue = e.target.value;
     const numericValue = inputValue.replace(/\D/g, ""); // Remove non-numeric characters
@@ -135,9 +135,6 @@ export default function CheckoutForm({
 
     clearError("cvv");
   };
-
-  const [cardHolderName, setCardHolderName] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
 
   const handleCardHolderNameChange = (e: any) => {
     setCardHolderName(e.target.value);
@@ -162,13 +159,12 @@ export default function CheckoutForm({
     setErrors(newErrors);
   };
 
-  const [typeOfCard, setTypeOfCard] = useState('');
+  const handleTypeOfCardChange = (e: any) => {
+    setTypeOfCard(e as IPaymentMethod);
+    clearError("typeOfCard");
+  };
 
-
-  const [loadingRequest, setLoadingRequest] = useState(false);
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
+  const validateForm = () => {
     const newErrors: FormErrors = {
       cardNumber: [],
       cvv: [],
@@ -176,64 +172,81 @@ export default function CheckoutForm({
       expirationDate: [],
       typeOfCard: [],
     };
-
-    if(!typeOfCard){
+  
+    if (!typeOfCard) {
       newErrors.typeOfCard.push("Se requiere definir el tipo de tarjeta.");
     }
-
+  
     if (!cardNumber) {
       newErrors.cardNumber.push("Se requiere el número de tarjeta.");
     } else if (cardNumber.length < 19) {
       newErrors.cardNumber.push("El número de tarjeta no es válido.");
     }
+  
     if (!cardHolderName) {
-      newErrors.cardHolderName.push(
-        "Se requiere el nombre del titular de la tarjeta."
-      );
+      newErrors.cardHolderName.push("Se requiere el nombre del titular de la tarjeta.");
     }
+  
     if (!expirationDate) {
       newErrors.expirationDate.push("Se requiere la fecha de vencimiento.");
     }
+  
     if (!cvv) {
       newErrors.cvv.push("Se requiere el CVV.");
-    } else if (cvv.length < 3 && useCardType.toUpperCase() !== 'AMEX') { 
-      // TODO: ver por que AMEX tiene 4
-      newErrors.cvv.push("El CVV no es válido.");
-    }else if(useCardType.toUpperCase() === 'AMEX' && cvv.length < 4){
+    } else if (
+      (cvv.length < 3 && useCardType.toUpperCase() !== "AMEX") ||
+      (useCardType.toUpperCase() === "AMEX" && cvv.length < 4)
+    ) {
       newErrors.cvv.push("El CVV no es válido.");
     }
-
+  
     setErrors(newErrors);
-    
+  
+    return newErrors;
+  };
+
+  const getMpToken = async () => {
     const splitDate = expirationDate.split("-");
     let mpToken = null;
+  
     if (paymentInfo?.requiredData?.mercadoPagoToken) {
-      try{
-        const mercadoPagoService: MP.MercadoPagoService =
-        new MP.MercadoPagoService(paymentInfo.requiredData.mercadoPagoToken);
-      mpToken = await mercadoPagoService.MercadoPagoCardToken(
-        cardNumber.replace(/\s/g, ""),
-        cardHolderName,
-        cvv,
-        splitDate[1],
-        splitDate[0]
-      );
-      }catch(err){
-        console.log(err);
-        toast({ type: "error", message: "Ocurrió un error validando sus credenciales, compruebe que las mismas sean correctas..." });
-        return;
+      try {
+        const mercadoPagoService: MP.MercadoPagoService = new MP.MercadoPagoService(
+          paymentInfo.requiredData.mercadoPagoToken
+        );
+        mpToken = await mercadoPagoService.MercadoPagoCardToken(
+          cardNumber.replace(/\s/g, ""),
+          cardHolderName,
+          cvv,
+          splitDate[1],
+          splitDate[0]
+        );
+      } catch (err) {
+        toast({
+          type: "error",
+          message:
+            "Ocurrió un error validando sus credenciales, compruebe que las mismas sean correctas...",
+        });
       }
     }
+  
+    return mpToken;
+  };
 
-    const hasErrors = Object.values(newErrors).some(
-      (errorArray) => errorArray.length > 0
-    );
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const newErrors = validateForm();
+    const hasErrors = Object.values(newErrors).some((errorArray) => errorArray.length > 0);
+    
+    const splitDate = expirationDate.split("-");
 
     if (!hasErrors) {
-      console.log("acaaaaaaaaa");
       
       try {
         setLoadingRequest(true);
+        const mpToken = await getMpToken();
+        if(!mpToken) return;
+
         const formattedDate = `${splitDate[1]}/${splitDate[0].slice(-2)}`;
         let payload: IPaymentRunRequest = {
           card: {
@@ -244,20 +257,13 @@ export default function CheckoutForm({
             cardMPToken: mpToken?.id,
             cardType: useCardType.toUpperCase(),
           },
-          paymentMethod: "CREDIT_CARD", //SACAR ESTO QUE ESTA HARDCODEADO
+          paymentMethod: typeOfCard,
         };
-        let payment = await runPayment(payload);
+        let payment = await runPayment(payload);        
         // push(`${pathname}/success`);     
       } catch (err: any) {
 
         console.error("Payment error:", err);
-
-        // payment.errors.map((error: any) => {
-        //   //TODO: borrar
-        //   console.log(error.canonicalError);
-          
-
-        // });
 
         switch (err.canonicalError) {
           case "INVALID_USER_PARAMETERS":
@@ -274,7 +280,6 @@ export default function CheckoutForm({
             return;
         }
         
-
       } finally {
         setLoadingRequest(false);
       }
@@ -363,12 +368,13 @@ export default function CheckoutForm({
                   </div>
                   <RadioGroup
                       orientation="horizontal"
-                      className="items-center"
+                      className="items-center mt-10"
                       errorMessage={errors.typeOfCard.join(" ")}
-                      onValueChange={setTypeOfCard}
+                      onValueChange={handleTypeOfCardChange}
+                      defaultValue="CREDIT_CARD"
                     >
-                      <Radio value="buenos-aires">Crédito</Radio>
-                      <Radio value="sydney">Débito</Radio>
+                      <Radio value="CREDIT_CARD">Crédito</Radio>
+                      <Radio value="DEBIT_CARD">Débito</Radio>
                     </RadioGroup>
                   <Button
                     className="mt-6 w-full"
