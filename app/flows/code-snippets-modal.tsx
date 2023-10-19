@@ -1,13 +1,13 @@
 import {
-    Button,
-    Modal,
-    ModalBody,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    Snippet,
-    Tab,
-    Tabs,
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Snippet,
+  Tab,
+  Tabs,
 } from '@nextui-org/react';
 
 const CodeSnippetModal = ({ isOpen, onClose, clickedFlowId }) => {
@@ -33,8 +33,6 @@ const CodeSnippetModal = ({ isOpen, onClose, clickedFlowId }) => {
          "customer": {
               "fullName": "John Smith",
               "email": "john@example.com",
-              "address": "123 Main St",
-              "city": "Anytown",
               "documentId": "44333222"
          },
          "notificationURL": "<TU_LINK_DE_WEBHOOK>",
@@ -56,7 +54,7 @@ const CodeSnippetModal = ({ isOpen, onClose, clickedFlowId }) => {
                 <Tab key="node" title="Node.js">
                     <Snippet symbol="" className="w-full">
                         <pre>
-                            {`const fetch = require('node-fetch');\nconst apiUrl = \`${process.env.NEXT_PUBLIC_BASE_URL}/payment/private/payments/${clickedFlowId}\`;\nconst accessToken = <TU_TOKEN_DE_ACCESO>;\n\nconst requestData = {\n  amount: 100,\n  currency: 'ARS',\n  redirectURL: <TU_URL_DE_REDIRECCION>,\n  customer: {\n   fullName: "John Smith",\n   email: "john@example.com",\n   address: "123 Main St",\n   city: "Anytown",\n   documentId: "44333222"\n },\n notificationURL: "<TU_LINK_DE_WEBHOOK>", \n  products: [\n   {\n     name: 'Socks',\n     unitPrice: 100,\n     description: 'Red socks',\n     imgUrl: 'https://media.mysockfactory.ch/1354-thickbox_default/maos-red-plain-socks.jpg',\n     quantity: 1,\n  },\n]};\n\nfetch(apiUrl, {\n method: 'POST',\n headers:{\n    'Content-Type': 'application/json',\n    'Authorization':\n    'Bearer \${accessToken}\'\n },\n  body: JSON.stringify(requestData)\n})\n.then((response) => response.json())\n.then((data) => { console.log(data); /* TODO */ })\n.catch((error) => { console.error('Error:', error); /* TODO */ });
+                            {`const fetch = require('node-fetch');\nconst apiUrl = \`${process.env.NEXT_PUBLIC_BASE_URL}/payment/private/payments/${clickedFlowId}\`;\nconst accessToken = <TU_TOKEN_DE_ACCESO>;\n\nconst requestData = {\n  amount: 100,\n  currency: 'ARS',\n  redirectURL: <TU_URL_DE_REDIRECCION>,\n  customer: {\n   fullName: "John Smith",\n   email: "john@example.com",\n   documentId: "44333222"\n },\n notificationURL: "<TU_LINK_DE_WEBHOOK>", \n  products: [\n   {\n     name: 'Socks',\n     unitPrice: 100,\n     description: 'Red socks',\n     imgUrl: 'https://media.mysockfactory.ch/1354-thickbox_default/maos-red-plain-socks.jpg',\n     quantity: 1,\n  },\n]};\n\nfetch(apiUrl, {\n method: 'POST',\n headers:{\n    'Content-Type': 'application/json',\n    'Authorization':\n    'Bearer \${accessToken}\'\n },\n  body: JSON.stringify(requestData)\n})\n.then((response) => response.json())\n.then((data) => { console.log(data); /* TODO */ })\n.catch((error) => { console.error('Error:', error); /* TODO */ });
 
                             `}
                         </pre>
