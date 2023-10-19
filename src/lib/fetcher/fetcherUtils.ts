@@ -5,6 +5,7 @@ export type ErrorResponse = {
       internal_status: string
       message: string
       status_code: number
+      payload?: any
     }
   }
 
@@ -67,7 +68,7 @@ export async function baseFetcher<T>(
     const data: T | ErrorResponse = text ? JSON.parse(text) : undefined
   
     if (!response.ok) {
-      handleRequestFailed(response, path, data as ErrorResponse)    
+      handleRequestFailed(response, path, data as ErrorResponse)   
     } else if(response.ok && response.status === 204){
         return { status: 204 } as T;
     }

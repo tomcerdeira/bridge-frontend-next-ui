@@ -60,7 +60,7 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
   };
 
   const { paymentStatus } = useGetPaymentStatus(paymentReqId);
-  const { runPayment, error: paymentError } = useRunPayment(paymentReqId);
+  const { doRunPayment, error: paymentError } = useRunPayment(paymentReqId);
 
   useEffect(() => {
     if(paymentStatus?.paymentReqExecuted){
@@ -259,27 +259,31 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
           },
           paymentMethod: typeOfCard,
         };
-        let payment = await runPayment(payload);        
-        // push(`${pathname}/success`);     
+
+        try{
+          let payment = await doRunPayment(payload);
+          if(payment){
+            push(`${pathname}/success`);
+          }
+        }catch(err: any){
+          switch (err.message) {
+            case "INVALID_USER_PARAMETERS":
+              toast({ type: "error", message: "Ocurrió un error validando sus credenciales, compruebe que las mismas sean correctas..." });
+              return;
+            case "INVALID_CARD_NUMBER":
+              newErrors.cardNumber.push("Número de tarjeta incorrecto.");
+              return;
+            case "INVALID_CVV":
+              newErrors.cvv.push("CVV incorrecto.");
+              return;
+            default:
+              push(`${pathname}/error`)
+              return;
+          }
+        }  
       } catch (err: any) {
-
         console.error("Payment error:", err);
-
-        switch (err.canonicalError) {
-          case "INVALID_USER_PARAMETERS":
-            toast({ type: "error", message: "Ocurrió un error validando sus credenciales, compruebe que las mismas sean correctas..." });
-            return;
-          case "INVALID_CARD_NUMBER":
-            newErrors.cvv.push("Introduzca un número de tarjeta correcto.");
-            return;
-          case "INVALID_CVV":
-            newErrors.cvv.push("Introduzca un CVV correcto.");
-            return;
-          default:
-            push(`${pathname}/error`)
-            return;
-        }
-        
+        push(`${pathname}/error`)
       } finally {
         setLoadingRequest(false);
       }
