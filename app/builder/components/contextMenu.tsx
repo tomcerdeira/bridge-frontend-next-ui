@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { useReactFlow } from "reactflow";
 import { FaTrash } from "react-icons/fa";
-import { Button } from "@nextui-org/react";
 export default function ContextMenu({
   id,
   top,
@@ -13,6 +12,7 @@ export default function ContextMenu({
   const { setNodes, setEdges } = useReactFlow();
 
   const deleteNode = useCallback(() => {
+    if (id === "bridge_0") return;
     setNodes((nodes) => nodes.filter((node) => node.id !== id));
     setEdges((edges) => edges.filter((edge) => edge.source !== id));
   }, [id, setNodes, setEdges]);
