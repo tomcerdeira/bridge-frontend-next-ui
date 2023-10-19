@@ -178,8 +178,16 @@ const ConditionNode = ({ id, data }: NodeProps) => {
             )}
         </CardBody>
       </Card>
-      <Handle type="source" position={Position.Right} className="!bg-white" />
-      <Handle type="target" position={Position.Left} className="!bg-white" />
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="!bg-white !w-2 !h-2"
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="!bg-white !w-2 !h-2"
+      />
     </>
   );
 };

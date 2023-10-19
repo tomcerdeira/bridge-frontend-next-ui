@@ -189,6 +189,7 @@ export default function FlowBuilderPage({
           defaultViewport={defaultViewport}
           nodeTypes={bridge.nodeTypes}
           edgeTypes={bridge.edgeTypes}
+          connectionRadius={30}
         >
           <bridge.Background gap={24} />
         </bridge.ReactFlow>

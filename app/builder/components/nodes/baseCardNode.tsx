@@ -26,17 +26,25 @@ const BaseCardNode = (props: BaseCardNodeProps) => {
     <>
       <TaskCard {...props} />
       {!isFallbackNode && props.hasSource && (
-        <Handle type="source" position={Position.Right} className="!bg-white" />
+        <Handle
+          type="source"
+          position={Position.Right}
+          className="!bg-white !w-2 !h-2"
+        />
       )}
       {props.hasTarget && (
-        <Handle type="target" position={Position.Left} className="!bg-white" />
+        <Handle
+          type="target"
+          position={Position.Left}
+          className="!bg-white !w-2 !h-2"
+        />
       )}
       {!isFallbackNode && props.hasFallback && (
         <Handle
           type="source"
           id="fallback"
           position={Position.Bottom}
-          className="!bg-white"
+          className="!bg-white !w-2 !h-2"
         />
       )}
     </>
