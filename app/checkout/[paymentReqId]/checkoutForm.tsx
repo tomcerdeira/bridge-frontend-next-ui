@@ -98,8 +98,7 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
   }, [cardNumber]);
 
   const formatCardNumber = (input: string) => {
-    // Format input as a credit card number (#### #### #### ####)
-    const formattedInput = input.replace(/\D/g, ""); // Remove non-numeric characters
+    const formattedInput = input.replace(/\D/g, "");
     const chunks = [];
 
     for (let i = 0; i < formattedInput.length; i += 4) {
@@ -120,19 +119,16 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
 
   const handleCVVChange = (e: any) => {
     const inputValue = e.target.value;
-    const numericValue = inputValue.replace(/\D/g, ""); // Remove non-numeric characters
-
-    // if (numericValue.length <= 3) {
-    //   setCVV(numericValue);
-    // }
-
-    if (numericValue.length <= 3 && useCardType.toUpperCase() !== 'AMEX') { 
-      setCVV(numericValue);
-    }else if(useCardType.toUpperCase() === 'AMEX' && cvv.length < 4){
-      setCVV(numericValue);
+    const numericValue = inputValue.replace(/\D/g, "");
+    if(useCardType.toUpperCase() !== 'AMEX'){
+      if (numericValue.length <= 3) {
+        setCVV(numericValue);
+      }
+    }else{
+      if (numericValue.length <= 4) {
+        setCVV(numericValue);
+      }
     }
-    
-
     clearError("cvv");
   };
 
@@ -144,15 +140,11 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
   const handleExpirationDateChange = (e: any) => {
     const value = e.target.value;
     setExpirationDate(value);
-
     const currentDate = new Date();
     const selectedDate = new Date(value);
     const newErrors: FormErrors = { ...errors, expirationDate: [] };
-
     if (selectedDate <= currentDate) {
-      newErrors.expirationDate.push(
-        "La fecha de vencimiento debe ser posterior a la fecha actual."
-      );
+      newErrors.expirationDate.push("La fecha de vencimiento debe ser posterior a la fecha actual.");
     }else{
       clearError("expirationDate");
     }
@@ -361,7 +353,7 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
                     <Input
                       type="password"
                       label="CVV"
-                      placeholder="123"
+                      placeholder={useCardType.toUpperCase() === 'AMEX' ? "1234" : "123"}
                       maxLength={useCardType.toUpperCase() === 'AMEX' ? 4 : 3}
                       labelPlacement="outside"
                       value={cvv}
