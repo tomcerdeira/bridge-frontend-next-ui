@@ -76,14 +76,13 @@ export default function ChackoutSuccess() {
                         <div className="flex justify-center">
                             <p>Listado de productos comprados</p>
                         </div>
-                        <div className="overflow-y-scroll max-h-[500px]">
+                        <div className="overflow-y-scroll max-h-[300px]">
                         {paymentInfo?.products.map((item, index) => (
                             <Card
                             key={index}
                             className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px] mb-4"
                             shadow="sm"
                             >
-                            {/* TODO: fix responsivenes when one on top of the other */}
                             <CardBody>
                                 <div className="flex flex-row gap-6 md:gap-4 items-center justify-left">
                                 <div className="col-span-6 md:col-span-4">
