@@ -24,7 +24,6 @@ export type IPaymentRequiredDataResponse = {
 };
 
 export type IPaymentRunRequest = {
-  customer: ICustomer;
   card: ICard;
   paymentMethod: string;
 };

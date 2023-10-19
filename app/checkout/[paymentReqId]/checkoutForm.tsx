@@ -1,9 +1,10 @@
 "use client";
 import * as MP from "@/app/services/mercadoPagoService";
-import { useRunPayment } from "@/src/api/checkout";
+import toast from "@/components/toast";
+import { useGetPaymentStatus, useRunPayment } from "@/src/api/checkout";
 import {
   IPaymentRequiredDataResponse,
-  IPaymentRunRequest,
+  IPaymentRunRequest
 } from "@/src/api/types";
 import {
   Badge,
@@ -14,6 +15,8 @@ import {
   Divider,
   Image,
   Input,
+  Radio,
+  RadioGroup,
   Table,
   TableBody,
   TableCell,
@@ -21,8 +24,8 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import { usePathname, useRouter } from 'next/navigation';
-import { useMemo, useState } from "react";
+import { redirect, usePathname, useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from "react";
 
 type Props = {
   paymentReqId: string;
@@ -35,6 +38,7 @@ interface FormErrors {
   cvv: string[];
   cardHolderName: string[];
   expirationDate: string[];
+  typeOfCard: string[];
 }
 
 const initialErrors: FormErrors = {
@@ -42,6 +46,7 @@ const initialErrors: FormErrors = {
   cvv: [],
   cardHolderName: [],
   expirationDate: [],
+  typeOfCard: [],
 };
 
 export default function CheckoutForm({
@@ -50,12 +55,27 @@ export default function CheckoutForm({
   paymentReqId,
 }: Props) {
   const { push } = useRouter();
+  const { paymentStatus } = useGetPaymentStatus(
+    paymentReqId
+  );
   const pathname = usePathname();
-  const { runPayment } = useRunPayment(paymentReqId);
+  const { runPayment, error: paymentError } = useRunPayment(paymentReqId);
   const [errors, setErrors] = useState(initialErrors);
   const clearError = (fieldName: keyof FormErrors) => {
     setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: [] }));
   };
+
+  useEffect(() => {
+    if(paymentStatus?.paymentReqExecuted){
+        
+      if(paymentStatus?.paymentSucceed){
+        return redirect("/checkout/" + paymentReqId + "/success")
+      }else{
+        return redirect("/checkout/" + paymentReqId + "/error")
+      }
+    }
+  }, [paymentReqId, paymentStatus])
+
 
   const CARDS = { //TODO revisar regex
     visa: "^4",
@@ -110,9 +130,16 @@ export default function CheckoutForm({
     const inputValue = e.target.value;
     const numericValue = inputValue.replace(/\D/g, ""); // Remove non-numeric characters
 
-    if (numericValue.length <= 3) {
+    // if (numericValue.length <= 3) {
+    //   setCVV(numericValue);
+    // }
+
+    if (numericValue.length <= 3 && useCardType.toUpperCase() !== 'AMEX') { 
+      setCVV(numericValue);
+    }else if(useCardType.toUpperCase() === 'AMEX' && cvv.length < 4){
       setCVV(numericValue);
     }
+    
 
     clearError("cvv");
   };
@@ -142,6 +169,10 @@ export default function CheckoutForm({
     }
     setErrors(newErrors);
   };
+
+  const [typeOfCard, setTypeOfCard] = useState('');
+
+
   const [loadingRequest, setLoadingRequest] = useState(false);
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -151,7 +182,12 @@ export default function CheckoutForm({
       cvv: [],
       cardHolderName: [],
       expirationDate: [],
+      typeOfCard: [],
     };
+
+    if(!typeOfCard){
+      newErrors.typeOfCard.push("Se requiere definir el tipo de tarjeta.");
+    }
 
     if (!cardNumber) {
       newErrors.cardNumber.push("Se requiere el número de tarjeta.");
@@ -168,16 +204,20 @@ export default function CheckoutForm({
     }
     if (!cvv) {
       newErrors.cvv.push("Se requiere el CVV.");
-    } else if (cvv.length < 3) {
+    } else if (cvv.length < 3 && useCardType.toUpperCase() !== 'AMEX') { 
+      // TODO: ver por que AMEX tiene 4
+      newErrors.cvv.push("El CVV no es válido.");
+    }else if(useCardType.toUpperCase() === 'AMEX' && cvv.length < 4){
       newErrors.cvv.push("El CVV no es válido.");
     }
+
     setErrors(newErrors);
     
-    // TODO: revisar, y si el flujo no tiene mercado pago como procesador??
     const splitDate = expirationDate.split("-");
     let mpToken = null;
     if (paymentInfo?.requiredData?.mercadoPagoToken) {
-      const mercadoPagoService: MP.MercadoPagoService =
+      try{
+        const mercadoPagoService: MP.MercadoPagoService =
         new MP.MercadoPagoService(paymentInfo.requiredData.mercadoPagoToken);
       mpToken = await mercadoPagoService.MercadoPagoCardToken(
         cardNumber.replace(/\s/g, ""),
@@ -186,6 +226,11 @@ export default function CheckoutForm({
         splitDate[1],
         splitDate[0]
       );
+      }catch(err){
+        console.log(err);
+        toast({ type: "error", message: "Ocurrió un error validando sus credenciales, compruebe que las mismas sean correctas..." });
+        return;
+      }
     }
 
     const hasErrors = Object.values(newErrors).some(
@@ -193,6 +238,8 @@ export default function CheckoutForm({
     );
 
     if (!hasErrors) {
+      console.log("acaaaaaaaaa");
+      
       try {
         setLoadingRequest(true);
         const formattedDate = `${splitDate[1]}/${splitDate[0].slice(-2)}`;
@@ -205,23 +252,37 @@ export default function CheckoutForm({
             cardMPToken: mpToken?.id,
             cardType: useCardType.toUpperCase(),
           },
-          customer: {
-            address: "TODO",
-            email: "TODO@TODO.com",
-            city: "TODO",
-            documentId: "TODO",
-            fullName: cardHolderName,
-          },
-          paymentMethod: "CREDIT_CARD",
+          paymentMethod: "CREDIT_CARD", //SACAR ESTO QUE ESTA HARDCODEADO
         };
         let payment = await runPayment(payload);
-        console.log(payment);
-        // TODO: redirect to success page
-        push(`${pathname}/success`)
-      } catch (err) {
+        // push(`${pathname}/success`);     
+      } catch (err: any) {
+
         console.error("Payment error:", err);
-        push(`${pathname}/error`)
-        return;
+
+        // payment.errors.map((error: any) => {
+        //   //TODO: borrar
+        //   console.log(error.canonicalError);
+          
+
+        // });
+
+        switch (err.canonicalError) {
+          case "INVALID_USER_PARAMETERS":
+            toast({ type: "error", message: "Ocurrió un error validando sus credenciales, compruebe que las mismas sean correctas..." });
+            return;
+          case "INVALID_CARD_NUMBER":
+            newErrors.cvv.push("Introduzca un número de tarjeta correcto.");
+            return;
+          case "INVALID_CVV":
+            newErrors.cvv.push("Introduzca un CVV correcto.");
+            return;
+          default:
+            push(`${pathname}/error`)
+            return;
+        }
+        
+
       } finally {
         setLoadingRequest(false);
       }
@@ -229,159 +290,180 @@ export default function CheckoutForm({
   };
 
   return (
-    <div className="gap-6 flex flex-col md:flex-row justify-center">
-      <div className="w-full md:w-[70%] flex-shrink-0 overflow-hidden">
-        <Card className="max-w-[400px]">
-          <CardHeader className="flex gap-3 justify-center">
-            <div className="flex flex-col">
-              <p className="text-md">Lista de productos</p>
-            </div>
-          </CardHeader>
-          <Divider />
-          <CardBody className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-            <div className="overflow-y-scroll max-h-[500px]">
-              {paymentInfo?.products.map((item, index) => (
-                <Card
-                  key={index}
-                  className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px] mb-4"
-                  shadow="sm"
-                >
-                  {/* TODO: fix responsivenes when one on top of the other */}
-                  <CardBody>
-                    <div className="flex flex-row gap-6 md:gap-4 items-center justify-left">
-                      <div className="col-span-6 md:col-span-4">
-                        <Badge
-                          content={`x${item.quantity}`}
-                          size="lg"
-                          color="danger"
-                          shape="rectangle"
-                          disableOutline
-                        >
-                          <Image
-                            shadow="sm"
-                            radius="lg"
-                            width="100%"
-                            alt={item.name}
-                            className="w-full object-contain h-[140px] w-[90px] overflow-hidden"
-                            src={item.imgUrl}
-                          />
-                        </Badge>
-                      </div>
-
-                      <div className="col-span-6 md:col-span-8">
-                        <div className="flex justify-between items-start">
-                          <div className="flex flex-col gap-0">
-                            <h1 className="font-semibold text-foreground/90">
-                              {item.name}
-                            </h1>
-                            <p className="text-small text-foreground/80">
-                              ${item.unitPrice}
-                            </p>
-                            <h3 className="text-small font-medium mt-2">
-                              {item.description}
-                            </h3>
+    <>
+      {!paymentStatus? (
+        <div className="flex flex-col h-full justify-center items-center gap-10">
+          <div className="gap-2 flex flex-col md:flex-row justify-center">
+            <p style={{ fontSize: "24px" }}>Cargando...</p>
+          </div>
+        </div>
+      ) 
+      : 
+      (
+        <div className="gap-6 flex flex-col md:flex-row justify-center">
+          <div className="w-full md:w-[70%] flex-shrink-0 overflow-hidden">
+            <Card className="max-w-[400px]">
+              <CardHeader className="flex gap-3 justify-center">
+                <div className="flex flex-col">
+                  <p className="text-md">Lista de productos</p>
+                </div>
+              </CardHeader>
+              <Divider />
+              <CardBody className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
+                <div className="overflow-y-scroll max-h-[500px]">
+                  {paymentInfo?.products.map((item, index) => (
+                    <Card
+                      key={index}
+                      className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px] mb-4"
+                      shadow="sm"
+                    >
+                      {/* TODO: fix responsivenes when one on top of the other */}
+                      <CardBody>
+                        <div className="flex flex-row gap-6 md:gap-4 items-center justify-left">
+                          <div className="col-span-6 md:col-span-4">
+                            <Badge
+                              content={`x${item.quantity}`}
+                              size="lg"
+                              color="danger"
+                              shape="rectangle"
+                              disableOutline
+                            >
+                              <Image
+                                shadow="sm"
+                                radius="lg"
+                                width="100%"
+                                alt={item.name}
+                                className="w-full object-contain h-[140px] w-[90px] overflow-hidden"
+                                src={item.imgUrl}
+                              />
+                            </Badge>
+                          </div>
+    
+                          <div className="col-span-6 md:col-span-8">
+                            <div className="flex justify-between items-start">
+                              <div className="flex flex-col gap-0">
+                                <h1 className="font-semibold text-foreground/90">
+                                  {item.name}
+                                </h1>
+                                <p className="text-small text-foreground/80">
+                                  ${item.unitPrice}
+                                </p>
+                                <h3 className="text-small font-medium mt-2">
+                                  {item.description}
+                                </h3>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </CardBody>
-                </Card>
-              ))}
-            </div>
-            <Table aria-label="Example static collection table">
-              <TableHeader>
-                <TableColumn>MONEDA</TableColumn>
-                <TableColumn>TOTAL</TableColumn>
-              </TableHeader>
-              <TableBody>
-                <TableRow key="1">
-                  <TableCell>{paymentInfo?.currency}</TableCell>
-                  <TableCell>${paymentInfo?.amount}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardBody>
-        </Card>
-      </div>
-
-      <div className="w-full md:w-80 shrink-0">
-        <Card className="max-w-[400px]">
-          <CardHeader className="flex gap-3 justify-center">
-            <div className="flex flex-col">
-              <p className="text-md">Información del pago</p>
-            </div>
-          </CardHeader>
-          <Divider />
-          <CardBody className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-            <div>
-              <Input
-                className="mb-4"
-                type="text" // Use "text" instead of "number"
-                label="Número de la tarjeta"
-                placeholder="#### #### #### ####"
-                labelPlacement="outside"
-                value={cardNumber ?? ""}
-                onChange={handleCardNumberChange}
-                maxLength={19}
-                isRequired
-                errorMessage={errors.cardNumber.join(" ")}
-                endContent={
-                  <Image
-                    src={`/card-type-logos/${useCardType}.png`}
-                    alt={useCardType}
-                    width={35}
-                    height={15}
+                      </CardBody>
+                    </Card>
+                  ))}
+                </div>
+                <Table aria-label="Example static collection table">
+                  <TableHeader>
+                    <TableColumn>MONEDA</TableColumn>
+                    <TableColumn>TOTAL</TableColumn>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow key="1">
+                      <TableCell>{paymentInfo?.currency}</TableCell>
+                      <TableCell>${paymentInfo?.amount}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </CardBody>
+            </Card>
+          </div>
+    
+          <div className="w-full md:w-80 shrink-0">
+            <Card className="max-w-[500px]">
+              <CardHeader className="flex gap-3 justify-center">
+                <div className="flex flex-col">
+                  <p className="text-md">Información del pago</p>
+                </div>
+              </CardHeader>
+              <Divider />
+              <CardBody className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
+                <div>
+                  <Input
+                    className="mb-4"
+                    type="text" // Use "text" instead of "number"
+                    label="Número de la tarjeta"
+                    placeholder="#### #### #### ####"
+                    labelPlacement="outside"
+                    value={cardNumber ?? ""}
+                    onChange={handleCardNumberChange}
+                    maxLength={19}
+                    isRequired
+                    errorMessage={errors.cardNumber.join(" ")}
+                    endContent={
+                      <Image
+                        src={`/card-type-logos/${useCardType}.png`}
+                        alt={useCardType}
+                        width={35}
+                        height={15}
+                      />
+                    }
                   />
-                }
-              />
-              <Input
-                className="mb-4"
-                type="text"
-                label="Nombre que figura en la tarjeta"
-                placeholder="Tú nombre"
-                labelPlacement="outside"
-                maxLength={20}
-                value={cardHolderName}
-                onInput={handleCardHolderNameChange}
-                isRequired
-                errorMessage={errors.cardHolderName.join(" ")}
-              />
-              <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-4 gap-4">
-                <Input
-                  type="month"
-                  label="Fecha de expiración"
-                  placeholder={new Date().toString()}
-                  labelPlacement="outside"
-                  value={expirationDate}
-                  onInput={handleExpirationDateChange}
-                  isRequired
-                  errorMessage={errors.expirationDate.join(" ")}
-                />
-                <Input
-                  type="text"
-                  label="CVV"
-                  placeholder="123"
-                  maxLength={3}
-                  labelPlacement="outside"
-                  value={cvv}
-                  onInput={handleCVVChange}
-                  isRequired
-                  errorMessage={errors.cvv.join(" ")}
-                />
-              </div>
-              <Button
-                className="mt-6 w-full"
-                onClick={handleSubmit}
-                isLoading={loadingRequest}
-                color="success"
-                variant="shadow"
-              >
-                Pagar
-              </Button>
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-    </div>
+                  <Input
+                    className="mb-4"
+                    type="text"
+                    label="Nombre que figura en la tarjeta"
+                    placeholder="Tú nombre"
+                    labelPlacement="outside"
+                    maxLength={20}
+                    value={cardHolderName}
+                    onInput={handleCardHolderNameChange}
+                    isRequired
+                    errorMessage={errors.cardHolderName.join(" ")}
+                  />
+                  <div className="flex mb-8 w-full flex-wrap md:flex-nowrap mb-6 md:mb-4 gap-4">
+                    <Input
+                      type="month"
+                      label="Fecha de expiración"
+                      placeholder={new Date().toString()}
+                      labelPlacement="outside"
+                      value={expirationDate}
+                      onInput={handleExpirationDateChange}
+                      isRequired
+                      errorMessage={errors.expirationDate.join(" ")}
+                    />
+                    <Input
+                      type="password"
+                      label="CVV"
+                      placeholder="123"
+                      maxLength={useCardType.toUpperCase() === 'AMEX' ? 4 : 3}
+                      labelPlacement="outside"
+                      value={cvv}
+                      onInput={handleCVVChange}
+                      isRequired
+                      errorMessage={errors.cvv.join(" ")}
+                    />
+                  </div>
+                  <RadioGroup
+                      orientation="horizontal"
+                      className="items-center"
+                      errorMessage={errors.typeOfCard.join(" ")}
+                      onValueChange={setTypeOfCard}
+                    >
+                      <Radio value="buenos-aires">Crédito</Radio>
+                      <Radio value="sydney">Débito</Radio>
+                    </RadioGroup>
+                  <Button
+                    className="mt-6 w-full"
+                    onClick={handleSubmit}
+                    isLoading={loadingRequest}
+                    color="success"
+                    variant="shadow"
+                  >
+                    Pagar
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
