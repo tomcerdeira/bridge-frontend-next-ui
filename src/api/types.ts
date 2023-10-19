@@ -1,8 +1,6 @@
 export type ICustomer = {
   fullName: string;
   email: string;
-  address: string;
-  city: string;
   documentId?: string;
 };
 
@@ -259,7 +257,7 @@ export type FlowExecutionResponse = {
   flowSucceed: boolean
   paymentSucceed: boolean
   executedRules: Rule[]
-  tasksErrors: TaskError[]
+  taskErrors: TaskError[]
   id: string
 }
 
@@ -288,8 +286,6 @@ export const MockResponse_IPaymentRequest: IPaymentRequest = {
   customer: {
     fullName: "John Smith",
     email: "john@example.com",
-    address: "123 Main St",
-    city: "Anytown",
   },
   shopId: 0,
   associatedFlowId: 'ObjectId("64de37518d54aa9678f72b04")',
