@@ -4,11 +4,12 @@ import { useFlowBuilder } from "@/src/api/flow-builder";
 import { useAuth } from "@/src/hooks/useAuth";
 import { Button, Divider, Input, Switch } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 import "reactflow/dist/style.css";
 import * as bridge from "./index";
 import * as util from "./utils/util";
 import eventBus from "./utils/eventBus";
+import ContextMenu from "./components/contextMenu";
 
 interface FormErrors {
   flowName: string[];
@@ -37,12 +38,13 @@ export default function FlowBuilderPage({
     shop ? shop.id.toString() : "0",
     flowId
   );
-
+  const ref = useRef(null);
   const [errors, setErrors] = useState(initialErrors);
   const clearError = (fieldName: keyof FormErrors) => {
     setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: [] }));
   };
 
+  const [menu, setMenu] = useState(null);
   const [isRequestLoading, setRequestLoading] = useState(false);
   const [isActive, setIsActive] = useState(active || false);
   const [flowName, setFlowName] = useState(editName);
@@ -59,6 +61,7 @@ export default function FlowBuilderPage({
   };
 
   const defaultViewport: bridge.Viewport = { x: 0, y: 0, zoom: 0.9 };
+
   const onConnect = useCallback(
     (params: bridge.Edge | bridge.Connection) => {
       if (params.sourceHandle === "fallback") {
@@ -149,6 +152,25 @@ export default function FlowBuilderPage({
     }
   };
 
+  const onNodeContextMenu = useCallback(
+    (event: any, node: any) => {
+      event.preventDefault();
+
+      const pane = ref.current.getBoundingClientRect();
+      setMenu({
+        id: node.id,
+        top: event.clientY < pane.height - 200 && event.clientY - pane.top,
+        left: event.clientX < pane.width - 200 && event.clientX - pane.left,
+        right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
+        bottom:
+          event.clientY >= pane.height - 200 && pane.height - event.clientY,
+      });
+    },
+    [setMenu]
+  );
+
+  const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
+
   return (
     <div className="flex flex-col grow">
       <div className="flex justify-between gap-6 items-center">
@@ -181,6 +203,7 @@ export default function FlowBuilderPage({
       <Divider className="mt-4"></Divider>
       <div className="flex grow flex-row items-center align-middle">
         <bridge.ReactFlow
+          ref={ref}
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
@@ -189,9 +212,12 @@ export default function FlowBuilderPage({
           defaultViewport={defaultViewport}
           nodeTypes={bridge.nodeTypes}
           edgeTypes={bridge.edgeTypes}
+          onPaneClick={onPaneClick}
+          onNodeContextMenu={onNodeContextMenu}
           connectionRadius={30}
         >
           <bridge.Background gap={24} />
+          {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
         </bridge.ReactFlow>
         <bridge.Sidebar onSidebarClick={onSidebarClick} />
       </div>
