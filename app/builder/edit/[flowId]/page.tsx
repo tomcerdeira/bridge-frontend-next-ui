@@ -178,7 +178,7 @@ const buildNodesAndEdges = (rootRule: any, getTaskNodeType: any) => {
   };
 
   rootRule.nextRules.forEach((rule: any, index: number) => {
-    setRuleNodesAndEdges(rule, 100, 250 * (index + 1), initialNodes[0].id);
+    setRuleNodesAndEdges(rule, 100, 400 * (index + 1), initialNodes[0].id);
   });
 
   return { nodes, edges };
