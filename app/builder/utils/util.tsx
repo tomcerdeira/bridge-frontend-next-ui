@@ -11,10 +11,12 @@ import {
   SiMaildotru,
   SiMercadopago,
   TbAmpersand,
+  MdOutlineEmail,
 } from "../index";
 
 import { FiservIcon } from "@/components/icons/fiserv-icon";
 import { RiFileUnknowFill } from "react-icons/ri";
+import { EmailClientIcon } from "@/components/icons/email-client-icon";
 
 export const onDragStart = (event: any, nodeType: any) => {
   event.dataTransfer.setData("application/reactflow", JSON.stringify(nodeType));
@@ -55,6 +57,10 @@ export const getIconComponent = (icon: String) => {
       return LiaGripLinesVerticalSolid;
     case "braces":
       return RiBracesFill;
+    case "emailshop":
+      return EmailClientIcon;
+    case "emailclient":
+      return MdOutlineEmail;
     default:
       return RiFileUnknowFill;
   }

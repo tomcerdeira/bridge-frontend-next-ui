@@ -11,6 +11,7 @@ export type {
   ReactFlowInstance,
   Node,
 } from "reactflow";
+export { MdOutlineEmail } from "react-icons/md";
 export { FaCcStripe, FaFlagCheckered, FaTelegram } from "react-icons/fa";
 export { SiMercadopago, SiBinance, SiMaildotru } from "react-icons/si";
 export { TbAmpersand } from "react-icons/tb";
