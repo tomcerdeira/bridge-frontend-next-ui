@@ -1,18 +1,20 @@
+import { TransBankIcon } from "@/components/icons/tbk-icon";
 import {
-  RiSlackFill,
-  RiWhatsappLine,
-  RiPaypalFill,
-  RiBracesFill,
   FaCcStripe,
   FaTelegram,
-  SiMercadopago,
-  TbAmpersand,
   LiaGripLinesVerticalSolid,
+  RiBracesFill,
+  RiPaypalFill,
+  RiSlackFill,
+  RiWhatsappLine,
   SiBinance,
   SiMaildotru,
+  SiMercadopago,
+  TbAmpersand,
 } from "../index";
 
-import { RiFileUnknowFill, RiQuestionMark } from "react-icons/ri";
+import { FiservIcon } from "@/components/icons/fiserv-icon";
+import { RiFileUnknowFill } from "react-icons/ri";
 
 export const onDragStart = (event: any, nodeType: any) => {
   event.dataTransfer.setData("application/reactflow", JSON.stringify(nodeType));
@@ -32,7 +34,9 @@ export const getIconComponent = (icon: String) => {
     case "mercadopago":
       return SiMercadopago;
     case "transbank":
-      return RiQuestionMark; //TODO agregar correspondiente
+      return TransBankIcon;
+    case "fiserv":
+      return FiservIcon;
     case "paypal":
       return RiPaypalFill;
     case "condition":
