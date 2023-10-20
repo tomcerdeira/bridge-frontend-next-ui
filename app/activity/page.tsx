@@ -26,7 +26,6 @@ const ProcessorFlowsChart = dynamic(
     }
 );
   
-//TODO: ver por que a veces aparece solo 1 grafico
 export default function ActivityPage({searchParams: initialSearchParams}: {searchParams: { [key: string]: string | string[] | undefined } }) {
 	const { shop } = useAuth();
     const [searchParams, setSearchParams] = useState(initialSearchParams);
@@ -47,7 +46,7 @@ export default function ActivityPage({searchParams: initialSearchParams}: {searc
         }
       }
       const queryString = queryParts.join("&");
-      history.replaceState(null, "", `?${queryString}`);
+      history.replaceState(null, "", `?${queryString}`);      
     }, [searchParams]);
 
 	return (
@@ -62,11 +61,11 @@ export default function ActivityPage({searchParams: initialSearchParams}: {searc
         :
         (
             <>
-                <div className="mt-4 mx-4 mb-4 ml-4 mr-4  flex flex-col gap-4">
+                <div className="mt-4 mx-4 mb-4 ml-4 mr-4 flex flex-col gap-4">
                     <div className="h-full flex flex-col gap-2">
                         <h3 className="text-xl font-semibold">Estadísticas</h3>
                         <div className="flex w-full flex-col">
-                            <Tabs aria-label="Options" className="flex justify-center ">
+                            <Tabs aria-label="Options" className="flex justify-center "  defaultSelectedKey={searchParams.hasOwnProperty("flowSucceed") ? "by_processor" : "by_currency"}>
                                 <Tab key="by_currency" title="Monedas">
                                     <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 ">
                                         <DateCurrencyChart temporalAmounts={shop_analytics.temporalAmounts} />
