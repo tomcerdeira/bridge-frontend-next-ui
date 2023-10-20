@@ -26,6 +26,7 @@ const ProcessorFlowsChart = dynamic(
     }
 );
   
+//TODO: ver por que a veces aparece solo 1 grafico
 export default function ActivityPage({searchParams: initialSearchParams}: {searchParams: { [key: string]: string | string[] | undefined } }) {
 	const { shop } = useAuth();
     const [searchParams, setSearchParams] = useState(initialSearchParams);
@@ -51,7 +52,7 @@ export default function ActivityPage({searchParams: initialSearchParams}: {searc
 
 	return (
 		<>
-        {!shop || !shop_analytics || !processors_analytics? (
+        {!shop || !shop_analytics || !processors_analytics ? (
                 <div className="flex flex-col h-full justify-center items-center gap-10">
                 <div className="gap-2 flex flex-col md:flex-row justify-center">
                     <p style={{ fontSize: "24px" }}>Cargando...</p>
@@ -73,8 +74,12 @@ export default function ActivityPage({searchParams: initialSearchParams}: {searc
                                 </Tab>
                                 <Tab key="by_processor" title="Procesadores">
                                     <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 flex flex-row gap-4">
-                                        <ProcessorPaymentsChart processorAnalytics={processors_analytics} />
-                                        <ProcessorFlowsChart processorAnalytics={processors_analytics} />
+                                        <div className="w-full">
+                                            <ProcessorPaymentsChart processorAnalytics={processors_analytics} />
+                                        </div>
+                                        <div className="w-full">
+                                            <ProcessorFlowsChart processorAnalytics={processors_analytics} />
+                                        </div>
                                     </div>
                                 </Tab>
                             </Tabs>
