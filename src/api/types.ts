@@ -252,6 +252,7 @@ export type TaskError = {
 }
 
 export type FlowExecutionResponse = {
+  createdAt: Date
   flowSummary: FlowSummary
   paymentSummary: PaymentSummary
   flowSucceed: boolean
