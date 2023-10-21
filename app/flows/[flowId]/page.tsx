@@ -1,15 +1,14 @@
 'use client'
 
 import CardSectionByFlow from "@/components/analytics-card-section/cardSectionByFlow";
-import { CardInformationTable } from "@/components/cardInformationTable";
 import { CodeIcon } from "@/components/icons/code-icon";
 import { EditIcon } from "@/components/icons/table/edit-icon";
-import { PaymentRequestInformationSection } from "@/components/paymentInformationSection";
 import { useGetFlowExecutionStatus } from "@/src/api/analytics";
 import { useGetFlowById } from "@/src/api/flows";
-import { Accordion, AccordionItem, Chip, Divider, Link, Tooltip, useDisclosure } from "@nextui-org/react";
+import { Chip, Divider, Link, Tooltip, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import CodeSnippetModal from "../code-snippets-modal";
+import FlowExecutionsList from "./flowExecutionsList";
 
 export default function IndividualFlowPage({ params: { flowId }, searchParams: initialSearchParams }: { params: { flowId: string } }) {
     const [searchParams, setSearchParams] = useState(initialSearchParams);
@@ -130,60 +129,7 @@ export default function IndividualFlowPage({ params: { flowId }, searchParams: i
                                 </div>
                             </div>
                             <div>
-                                <Accordion variant="splitted" selectionMode="multiple" defaultExpandedKeys={[searchParams && searchParams.paymentReqId ? searchParams.paymentReqId : ""]}>
-                                {flow_analytics.map((fa) => {
-                                    console.log(fa.paymentSummary.paymentReq.id);
-                                    
-                                    return <AccordionItem 
-                                                className="mt-2"
-                                                key={fa.paymentSummary.paymentReq.id} 
-                                                aria-label={fa.id}
-                                                title={
-                                                    <div className="flex mr-4 justify-between items-center">
-                                                        <div>
-                                                            <p>{"ID: " + fa.id}</p>
-                                                        </div>
-                                                        <div className="flex gap-6 mr-2">
-                                                            <div className="flex flex-col items-center">
-                                                                <p>Flujo</p>
-                                                                <Chip
-                                                                    size="sm"
-                                                                    variant="flat"
-                                                                    color={fa.flowSucceed ? "success" : "danger"}
-                                                                >
-                                                                    <span className="capitalize text-xs">
-                                                                    {fa.flowSucceed ? "OK" : "ERROR"}
-                                                                    </span>
-                                                                </Chip>
-                                                            </div>
-                                                            <div className="flex flex-col items-center">
-                                                                <p>Pago</p>
-                                                                <Chip
-                                                                    size="sm"
-                                                                    variant="flat"
-                                                                    color={fa.paymentSucceed ? "success" : "danger"}
-                                                                >
-                                                                    <span className="capitalize text-xs">
-                                                                    {fa.paymentSucceed ? "OK" : "ERROR"}
-                                                                    </span>
-                                                                </Chip>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                }
-                                            >
-                                                <Divider/>
-                                                <div className="mt-4 flex flex-col justify-center items-center">
-                                                    <p>Resumen del pago</p>
-                                                    <PaymentRequestInformationSection paymentRequest={fa.paymentSummary.paymentReq} paymentMethod={fa.paymentSummary.paymentMethod} />
-                                                    <p>Datos de la tarjeta</p>
-                                                    <CardInformationTable card={fa.paymentSummary.card}/>
-                                                    {/* Mostramos info del customer ?? */}
-                                                </div>
-                                                {/* Add more nested attributes as needed */}
-                                        </AccordionItem>
-                                })}
-                                </Accordion>
+                                <FlowExecutionsList flow_analytics={flow_analytics} query={searchParams}/>
                             </div>
                         </div>
                     </>

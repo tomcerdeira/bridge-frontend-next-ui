@@ -1,10 +1,11 @@
 'use client'
 
+import { CardInformationTable } from "@/components/cardInformationTable";
 import { SearchIcon } from "@/components/icons";
 import { ChevronDownIcon } from "@/components/icons/chevron-down-icon";
-import { useGetFlowExecutionStatusByShop } from "@/src/api/analytics";
+import { PaymentRequestInformationSection } from "@/components/paymentInformationSection";
 import { FlowExecutionResponse } from "@/src/api/types";
-import { Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Link, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
+import { Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Link, Modal, ModalBody, ModalContent, ModalHeader, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
 import React from "react";
 
 const columns = [
@@ -12,14 +13,11 @@ const columns = [
     {name: "ID de la ejecución", uid: "flow-exec-id"},
     {name: "Fecha", uid: "date"},
     {name: "Hora", uid: "hour"},
-    {name: "Flujo", uid: "flow"},
     {name: "Estado del flujo", uid: "flow-status"},
     {name: "Estado del pago", uid: "pay-status"},
   ];
 
-export default function ShopFlowExecutionsList({ shopId, query } : { shopId: string, query: { [key: string]: string | string[] | undefined } }) {
-    const { flow_analytics, error, isLoading } = useGetFlowExecutionStatusByShop(shopId, query);
-    
+export default function FlowExecutionsList({ flow_analytics, query } : { flow_analytics: FlowExecutionResponse[], query: { [key: string]: string | string[] | undefined } }) {    
     const renderCell = React.useCallback((flow_analytic: FlowExecutionResponse, columnKey: React.Key) => {
 
         switch (columnKey) {
@@ -258,10 +256,13 @@ export default function ShopFlowExecutionsList({ shopId, query } : { shopId: str
           </div>
         );
       }, [filterValue, onSearchChange, selectedKeysFlowStatus, selectedKeysPaymentStatus, flow_analytics?.length, onRowsPerPageChange, onClear]);
+
+      const {isOpen, onOpen, onClose} = useDisclosure();
+      const [selectedItem, setSelectedItem] = React.useState<FlowExecutionResponse>();
     
 	return (
 		<>
-        {isLoading || !flow_analytics? (
+        {!flow_analytics? (
                 <div className="flex flex-col h-full justify-center items-center gap-10">
                 <div className="gap-2 flex flex-col md:flex-row justify-center">
                     <p style={{ fontSize: "24px" }}>Cargando...</p>
@@ -272,56 +273,73 @@ export default function ShopFlowExecutionsList({ shopId, query } : { shopId: str
         (
             <>
                 <div>
-                    {/* TODO: creo que se podria sacar y hacer el manejo directo con el <TableBody emptyContent={"No hay filas para mostrar."}>{[]}</TableBody> */}
-                    {error? (
-                        <div className="gap-2 flex flex-col md:flex-row justify-center">
-                            <p className="mt-16" style={{ fontSize: "18px" }}>...No existen aún 🔍</p>
-                        </div>
-                    )
-                    :
-                    (
-
+                    <>
+                        <Modal backdrop="blur" size="3xl" isOpen={isOpen} onClose={onClose}>
+                            <ModalContent>
+                            {(onClose) => (
+                                <>
+                                <ModalHeader className="flex flex-col gap-1">Informacion del pago</ModalHeader>
+                                <ModalBody className="mb-4">
+                                    <div className="mt-4 flex flex-col justify-center items-center">
+                                        <p>Resumen del pago</p>
+                                        <PaymentRequestInformationSection paymentRequest={selectedItem!.paymentSummary.paymentReq} paymentMethod={selectedItem!.paymentSummary.paymentMethod} />
+                                        <p>Datos de la tarjeta</p>
+                                        <CardInformationTable card={selectedItem!.paymentSummary.card}/>
+                                        {/* Mostramos info del customer ?? */}
+                                    </div>
+                                </ModalBody>
+                                </>
+                            )}
+                            </ModalContent>
+                        </Modal>
                         <Table
                             aria-label="Example table with custom cells"
                             topContent={topContent}
                             bottomContent={
                                 <div className="flex w-full justify-center">
-                                  <Pagination
+                                <Pagination
                                     isCompact
                                     showControls
                                     showShadow
                                     page={page}
                                     total={pages}
                                     onChange={(page) => setPage(page)}
-                                  />
+                                />
                                 </div>
-                              }
-                              classNames={{
+                            }
+                            classNames={{
                                 wrapper: "min-h-[222px]",
-                              }}
+                            }}
                         >
-                        <TableHeader columns={columns}>
-                          {(column) => (
-                            <TableColumn key={column.uid} align="center">
-                              {column.name}
-                            </TableColumn>
-                          )}
-                        </TableHeader>
-                        {items.length > 0? (
-                            <TableBody items={items}>
-                                {(item) => (
-                                <TableRow key={item.id}>
-                                    {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                                </TableRow>
-                                )}
-                            </TableBody>
-                        )
-                        :
-                        (<TableBody emptyContent={"No hay filas para mostrar."}>{[]}</TableBody>)
-                        }
-                      </Table>
-                    )
-                }
+                            <TableHeader columns={columns}>
+                            {(column) => (
+                                <TableColumn key={column.uid} align="center">
+                                {column.name}
+                                </TableColumn>
+                            )}
+                            </TableHeader>
+                            {items.length > 0? (
+                                <TableBody items={items}>
+                                    {(item) => (
+                                    <TableRow
+                                        key={item.id}
+                                        className="cursor-pointer hover:transform hover:scale-105 transition-transform"
+                                        onClick={() => {
+                                                setSelectedItem(item);
+                                                onOpen();
+                                            }
+                                        }
+                                    >
+                                        {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                                    </TableRow>
+                                    )}
+                                </TableBody>
+                            )
+                            :
+                            (<TableBody emptyContent={"No hay filas para mostrar."}>{[]}</TableBody>)
+                            }
+                        </Table>
+                    </>
                 </div>
             </>
         )
