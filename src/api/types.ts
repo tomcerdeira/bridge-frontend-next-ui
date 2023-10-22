@@ -131,12 +131,24 @@ export type ICardType =
 export type Card = {
   nameOnCard: string
   last4Numbers: string
-  cardType: ICardType
+  cardBrand: ICardType
 }
 
 export type IPaymentMethod =
   | 'CREDIT_CARD'
   | 'DEBIT_CARD'
+
+export type PaymentRequest = {
+  amount: string
+  associatedFlowId: string
+  customer: ICustomer
+  currency: ICurrency
+  products: IItem[]
+  executed: boolean
+  id: string
+  notificationURL: string
+  redirectURL: string
+}
 
 export type PaymentSummary = {
   card: Card
@@ -258,7 +270,7 @@ export type FlowExecutionResponse = {
   flowSucceed: boolean
   paymentSucceed: boolean
   executedRules: Rule[]
-  taskErrors: TaskError[]
+  tasksErrors: TaskError[]
   id: string
 }
 

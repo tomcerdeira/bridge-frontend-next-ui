@@ -1,11 +1,11 @@
 import { Card } from "@/src/api/types";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableColumn,
-    TableHeader,
-    TableRow
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow
 } from "@nextui-org/react";
 
 export const columns = [
@@ -47,7 +47,7 @@ export const CardInformationTable = ({
               </TableCell>
               <TableCell>
                 <div className="flex content-center items-center">
-                  <p className="ml-4">{card.cardType}</p>
+                  <p className="ml-4">{card.cardBrand}</p>
                 </div>
               </TableCell>
             </TableRow>

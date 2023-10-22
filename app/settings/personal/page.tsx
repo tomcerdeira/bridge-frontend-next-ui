@@ -117,7 +117,7 @@ export default function PersonalSettingsPage() {
                 <div>
                     <Card className="rounded-xl shadow-md w-full">
                         <CardHeader className="pb-4 pt-4 px-4 flex items-center">
-                            <h4 className="font-bold text-large mr-1">Informacion del usuario</h4>
+                            <h4 className="font-bold text-large mr-1">Información del usuario</h4>
                         </CardHeader>
                         <CardBody className="py-4">
                             <div className="grid grid-cols-2 gap-2">
