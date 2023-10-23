@@ -140,7 +140,7 @@ export default function FlowBuilderPage({
         });
         router.push("/flows");
       } catch (err) {
-        console.log(err.payload);
+        eventBus.dispatch("taskError", err.payload);
         toast({
           type: "error",
           message: "Ha ocurrido un error al intentar crear el flujo",

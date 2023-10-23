@@ -1,11 +1,14 @@
-import { memo, useState, useMemo } from "react";
+import { memo, useState, useMemo, useEffect } from "react";
 import { Position, Handle, NodeProps, useReactFlow } from "reactflow";
 import { conditions } from "../../data/conditions";
 import { Card, CardBody, Selection } from "@nextui-org/react";
 import { Input } from "@nextui-org/input";
 import ConditionDropdown from "../conditionDropdown";
+import eventBus from "../../utils/eventBus";
 
 const ConditionNode = ({ id, data }: NodeProps) => {
+  const [isAmountInvalid, setIsAmountInvalid] = useState<boolean>(false);
+
   const [fieldKeys, setFieldKeys] = useState<Selection>(
     new Set([data.condition.field])
   );
@@ -143,11 +146,25 @@ const ConditionNode = ({ id, data }: NodeProps) => {
     (condition) => condition.field === selectedField
   );
 
+  useEffect(() => {
+    eventBus.on("taskError", (payload: any) => {
+      setIsAmountInvalid(false);
+      for (let i = 0; i < payload.length; i++) {
+        if (payload[i].node_id !== data.node_id) continue;
+        setIsAmountInvalid(true);
+      }
+    });
+  }, []);
+
   return (
     <>
-      <Card className="rounded-2xl bg-content1">
+      <Card
+        className={`rounded-2xl bg-content1 ${
+          isAmountInvalid ? `border-2 border-solid border-red-500` : ``
+        }`}
+      >
         <CardBody className="flex flex-row gap-2">
-          <span className="font-fira uppercase self-center pr-1">if</span>
+          {/* <span className="font-fira uppercase self-center pr-1">if</span> */}
           <ConditionDropdown
             currentCondition={currentCondition}
             fieldKeys={fieldKeys}
@@ -166,6 +183,8 @@ const ConditionNode = ({ id, data }: NodeProps) => {
                 type="number"
                 placeholder="0.00"
                 variant="underlined"
+                isInvalid={isAmountInvalid}
+                errorMessage={isAmountInvalid ? "Invalid input" : ""}
                 value={amountValue}
                 onValueChange={onValueAmountChange}
                 className="w-24"

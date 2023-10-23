@@ -9,7 +9,7 @@ export type ErrorResponse = {
   };
 };
 
-class FullError extends Error {
+export class FullError extends Error {
   status: number;
   payload?: any;
 
