@@ -5,7 +5,7 @@ import { useGetPaymentStatus, useRunPayment } from "@/src/api/checkout";
 import {
   IPaymentMethod,
   IPaymentRequiredDataResponse,
-  IPaymentRunRequest
+  IPaymentRunRequest,
 } from "@/src/api/types";
 import {
   Button,
@@ -16,9 +16,9 @@ import {
   Image,
   Input,
   Radio,
-  RadioGroup
+  RadioGroup,
 } from "@nextui-org/react";
-import { redirect, usePathname, useRouter } from 'next/navigation';
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import PaymentInformationCard from "./payment-info";
 
@@ -43,7 +43,8 @@ const initialErrors: FormErrors = {
   typeOfCard: [],
 };
 
-const CARDS = { //TODO revisar regex
+const CARDS = {
+  //TODO revisar regex
   visa: "^4",
   amex: "^(34|37)",
   mastercard: "^5[0-5]",
@@ -51,7 +52,6 @@ const CARDS = { //TODO revisar regex
 };
 
 export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
-  
   const { push } = useRouter();
   const pathname = usePathname();
   const [errors, setErrors] = useState(initialErrors);
@@ -63,16 +63,15 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
   const { doRunPayment, error: paymentError } = useRunPayment(paymentReqId);
 
   useEffect(() => {
-    if(paymentStatus?.paymentReqExecuted){
-      if(paymentStatus?.paymentSucceed){
-        return redirect("/checkout/" + paymentReqId + "/success")
-      }else{
-        return redirect("/checkout/" + paymentReqId + "/error")
+    if (paymentStatus?.paymentReqExecuted) {
+      if (paymentStatus?.paymentSucceed) {
+        return redirect("/checkout/" + paymentReqId + "/success");
+      } else {
+        return redirect("/checkout/" + paymentReqId + "/error");
       }
     }
-  }, [paymentReqId, paymentStatus])
+  }, [paymentReqId, paymentStatus]);
 
-  
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCVV] = useState("");
   const [cardHolderName, setCardHolderName] = useState("");
@@ -120,11 +119,11 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
   const handleCVVChange = (e: any) => {
     const inputValue = e.target.value;
     const numericValue = inputValue.replace(/\D/g, "");
-    if(useCardType.toUpperCase() !== 'AMEX'){
+    if (useCardType.toUpperCase() !== "AMEX") {
       if (numericValue.length <= 3) {
         setCVV(numericValue);
       }
-    }else{
+    } else {
       if (numericValue.length <= 4) {
         setCVV(numericValue);
       }
@@ -144,8 +143,10 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
     const selectedDate = new Date(value);
     const newErrors: FormErrors = { ...errors, expirationDate: [] };
     if (selectedDate <= currentDate) {
-      newErrors.expirationDate.push("La fecha de vencimiento debe ser posterior a la fecha actual.");
-    }else{
+      newErrors.expirationDate.push(
+        "La fecha de vencimiento debe ser posterior a la fecha actual."
+      );
+    } else {
       clearError("expirationDate");
     }
     setErrors(newErrors);
@@ -164,25 +165,27 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
       expirationDate: [],
       typeOfCard: [],
     };
-  
+
     if (!typeOfCard) {
       newErrors.typeOfCard.push("Se requiere definir el tipo de tarjeta.");
     }
-  
+
     if (!cardNumber) {
       newErrors.cardNumber.push("Se requiere el número de tarjeta.");
     } else if (cardNumber.length < 19) {
       newErrors.cardNumber.push("El número de tarjeta no es válido.");
     }
-  
+
     if (!cardHolderName) {
-      newErrors.cardHolderName.push("Se requiere el nombre del titular de la tarjeta.");
+      newErrors.cardHolderName.push(
+        "Se requiere el nombre del titular de la tarjeta."
+      );
     }
-  
+
     if (!expirationDate) {
       newErrors.expirationDate.push("Se requiere la fecha de vencimiento.");
     }
-  
+
     if (!cvv) {
       newErrors.cvv.push("Se requiere el CVV.");
     } else if (
@@ -191,21 +194,20 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
     ) {
       newErrors.cvv.push("El CVV no es válido.");
     }
-  
+
     setErrors(newErrors);
-  
+
     return newErrors;
   };
 
   const getMpToken = async () => {
     const splitDate = expirationDate.split("-");
     let mpToken = null;
-  
+
     if (paymentInfo?.requiredData?.mercadoPagoToken) {
       try {
-        const mercadoPagoService: MP.MercadoPagoService = new MP.MercadoPagoService(
-          paymentInfo.requiredData.mercadoPagoToken
-        );
+        const mercadoPagoService: MP.MercadoPagoService =
+          new MP.MercadoPagoService(paymentInfo.requiredData.mercadoPagoToken);
         mpToken = await mercadoPagoService.MercadoPagoCardToken(
           cardNumber.replace(/\s/g, ""),
           cardHolderName,
@@ -221,23 +223,24 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
         });
       }
     }
-  
+
     return mpToken;
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const newErrors = validateForm();
-    const hasErrors = Object.values(newErrors).some((errorArray) => errorArray.length > 0);
-    
+    const hasErrors = Object.values(newErrors).some(
+      (errorArray) => errorArray.length > 0
+    );
+
     const splitDate = expirationDate.split("-");
 
     if (!hasErrors) {
-      
       try {
         setLoadingRequest(true);
         const mpToken = await getMpToken();
-        if(!mpToken) return;
+        if (!mpToken) return;
 
         const formattedDate = `${splitDate[1]}/${splitDate[0].slice(-2)}`;
         let payload: IPaymentRunRequest = {
@@ -252,15 +255,19 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
           paymentMethod: typeOfCard,
         };
 
-        try{
+        try {
           let payment = await doRunPayment(payload);
-          if(payment){
+          if (payment) {
             push(`${pathname}/success`);
           }
-        }catch(err: any){
+        } catch (err: any) {
           switch (err.message) {
             case "INVALID_USER_PARAMETERS":
-              toast({ type: "error", message: "Ocurrió un error validando sus credenciales, compruebe que las mismas sean correctas..." });
+              toast({
+                type: "error",
+                message:
+                  "Ocurrió un error validando sus credenciales, compruebe que las mismas sean correctas...",
+              });
               return;
             case "INVALID_CARD_NUMBER":
               newErrors.cardNumber.push("Número de tarjeta incorrecto.");
@@ -269,13 +276,13 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
               newErrors.cvv.push("CVV incorrecto.");
               return;
             default:
-              push(`${pathname}/error`)
+              push(`${pathname}/error`);
               return;
           }
-        }  
+        }
       } catch (err: any) {
         console.error("Payment error:", err);
-        push(`${pathname}/error`)
+        push(`${pathname}/error`);
       } finally {
         setLoadingRequest(false);
       }
@@ -284,19 +291,16 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
 
   return (
     <>
-      {!paymentStatus? (
+      {!paymentStatus ? (
         <div className="flex flex-col h-full justify-center items-center gap-10">
           <div className="gap-2 flex flex-col md:flex-row justify-center">
             <p style={{ fontSize: "24px" }}>Cargando...</p>
           </div>
         </div>
-      ) 
-      : 
-      (
+      ) : (
         <div className="gap-6 flex flex-col md:flex-row justify-center">
-
           <PaymentInformationCard paymentInfo={paymentInfo} />
-    
+
           <div className="w-full md:w-80 shrink-0">
             <Card className="max-w-[500px]">
               <CardHeader className="flex gap-3 justify-center">
@@ -353,8 +357,10 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
                     <Input
                       type="password"
                       label="CVV"
-                      placeholder={useCardType.toUpperCase() === 'AMEX' ? "1234" : "123"}
-                      maxLength={useCardType.toUpperCase() === 'AMEX' ? 4 : 3}
+                      placeholder={
+                        useCardType.toUpperCase() === "AMEX" ? "1234" : "123"
+                      }
+                      maxLength={useCardType.toUpperCase() === "AMEX" ? 4 : 3}
                       labelPlacement="outside"
                       value={cvv}
                       onInput={handleCVVChange}
@@ -363,15 +369,15 @@ export default function CheckoutForm({ paymentInfo, paymentReqId }: Props) {
                     />
                   </div>
                   <RadioGroup
-                      orientation="horizontal"
-                      className="items-center mt-10"
-                      errorMessage={errors.typeOfCard.join(" ")}
-                      onValueChange={handleTypeOfCardChange}
-                      defaultValue="CREDIT_CARD"
-                    >
-                      <Radio value="CREDIT_CARD">Crédito</Radio>
-                      <Radio value="DEBIT_CARD">Débito</Radio>
-                    </RadioGroup>
+                    orientation="horizontal"
+                    className="items-center mt-10"
+                    errorMessage={errors.typeOfCard.join(" ")}
+                    onValueChange={handleTypeOfCardChange}
+                    defaultValue="CREDIT_CARD"
+                  >
+                    <Radio value="CREDIT_CARD">Crédito</Radio>
+                    <Radio value="DEBIT_CARD">Débito</Radio>
+                  </RadioGroup>
                   <Button
                     className="mt-6 w-full"
                     onClick={handleSubmit}

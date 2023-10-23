@@ -125,8 +125,6 @@ export default function FlowBuilderPage({
       isActive
     );
 
-    console.log(json);
-
     setErrors(newErrors);
     const hasErrors = Object.values(newErrors).some(
       (errorArray) => errorArray.length > 0
@@ -142,6 +140,7 @@ export default function FlowBuilderPage({
         });
         router.push("/flows");
       } catch (err) {
+        console.log(err.payload);
         toast({
           type: "error",
           message: "Ha ocurrido un error al intentar crear el flujo",
