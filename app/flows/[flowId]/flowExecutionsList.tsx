@@ -358,7 +358,7 @@ export default function FlowExecutionsList({ flow_analytics, query } : { flow_an
                                                                             <TableCell>{item.statusCode}</TableCell>
                                                                             <TableCell>{item.canonicalError}</TableCell>
                                                                             {/* TODO: rev */}
-                                                                            <TableCell>{item.taskMessages && item.taskMessages.length > 0 ? item.taskMessages.join(' | ') : "N/A"}</TableCell>
+                                                                            <TableCell>{item.taskMessage && item.taskMessage.length > 0 ? item.taskMessage.join(' | ') : "N/A"}</TableCell>
                                                                         </TableRow>
                                                                     ))}
                                                                 </TableBody>

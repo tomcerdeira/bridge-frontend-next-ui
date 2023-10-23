@@ -260,7 +260,7 @@ export type TaskError = {
   task: TaskDescription
   statusCode: number
   canonicalError: ICanonicalError
-  taskMessages: string[]
+  taskMessage: string[]
 }
 
 export type FlowExecutionResponse = {
