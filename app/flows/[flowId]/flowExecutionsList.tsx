@@ -3,9 +3,8 @@
 import { CardInformationTable } from "@/components/cardInformationTable";
 import { SearchIcon } from "@/components/icons";
 import { ChevronDownIcon } from "@/components/icons/chevron-down-icon";
-import { PaymentRequestInformationSection } from "@/components/paymentInformationSection";
 import { FlowExecutionResponse } from "@/src/api/types";
-import { Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Link, Modal, ModalBody, ModalContent, ModalHeader, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
+import { Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Input, Modal, ModalBody, ModalContent, ModalHeader, Pagination, Tab, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tabs, useDisclosure } from "@nextui-org/react";
 import React from "react";
 
 const columns = [
@@ -27,29 +26,11 @@ export default function FlowExecutionsList({ flow_analytics, query } : { flow_an
                         {flow_analytic.id}
                     </div>
                 );
-            case "flow":
-                return (
-                    <Button
-                        href={'/flows/' + flow_analytic.flowSummary.id}
-                        as={Link}
-                        color="default"
-                        showAnchorIcon
-                        variant="flat"
-                        >
-                        {flow_analytic.flowSummary.name }
-                    </Button>
-                );
             case "payment-req-id":
                 return (
-                    <Button
-                        href={'/flows/' + flow_analytic.flowSummary.id + '?paymentReqId=' + flow_analytic.paymentSummary.paymentReq.id}
-                        as={Link}
-                        color="default"
-                        showAnchorIcon
-                        variant="flat"
-                        >
+                    <div>
                         {flow_analytic.paymentSummary.paymentReq.id}
-                    </Button>
+                    </div>
                 );
             case "date":
                 return (
@@ -132,9 +113,17 @@ export default function FlowExecutionsList({ flow_analytics, query } : { flow_an
                 }
             });
         }
+
+        if(query){
+            if(query.paymentReqId){
+                filteredFlows = filteredFlows.filter((analytic) => {
+                    return analytic.paymentSummary.paymentReq.id === query.paymentReqId;
+                });
+            }
+        }
     
         return filteredFlows;
-      }, [flow_analytics, hasSearchFilter, flowStatusFilter, paymentStatusFilter, filterValue]);
+      }, [flow_analytics, hasSearchFilter, flowStatusFilter, paymentStatusFilter, query, filterValue]);
 
       const [page, setPage] = React.useState(1);
       const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -274,20 +263,112 @@ export default function FlowExecutionsList({ flow_analytics, query } : { flow_an
             <>
                 <div>
                     <>
-                        <Modal backdrop="blur" size="3xl" isOpen={isOpen} onClose={onClose}>
+                        <Modal className="h-[450px]" backdrop="blur" size="3xl" isOpen={isOpen} onClose={onClose}>
                             <ModalContent>
                             {(onClose) => (
                                 <>
-                                <ModalHeader className="flex flex-col gap-1">Informacion del pago</ModalHeader>
-                                <ModalBody className="mb-4">
-                                    <div className="mt-4 flex flex-col justify-center items-center">
-                                        <p>Resumen del pago</p>
-                                        <PaymentRequestInformationSection paymentRequest={selectedItem!.paymentSummary.paymentReq} paymentMethod={selectedItem!.paymentSummary.paymentMethod} />
-                                        <p>Datos de la tarjeta</p>
-                                        <CardInformationTable card={selectedItem!.paymentSummary.card}/>
-                                        {/* Mostramos info del customer ?? */}
-                                    </div>
-                                </ModalBody>
+                                    <ModalHeader className="flex flex-col gap-1">Información del pago</ModalHeader>
+                                    {/* TODO: ver si podemos hacer que la tabla sea scrollable */}
+                                    <ModalBody className="mb-4 overflow-scroll">
+                                        <div className="mt-4 flex flex-col justify-center items-center">
+                                            <Tabs aria-label="Options">
+                                                <Tab key="products" title="Productos comprados">
+                                                    <div className="mt-4">
+                                                        <Table aria-label="products-table" isHeaderSticky>
+                                                            <TableHeader>
+                                                                <TableColumn>Imagen</TableColumn>
+                                                                <TableColumn>Nombre del producto</TableColumn>
+                                                                <TableColumn>Cantidad</TableColumn>
+                                                                <TableColumn>Precio por unidad</TableColumn>
+                                                            </TableHeader>
+                                                            <TableBody>
+                                                                {selectedItem!.paymentSummary.paymentReq.products.map((item, index) => (
+                                                                    <TableRow key="1">
+                                                                    <TableCell>
+                                                                        <Image
+                                                                        shadow="sm"
+                                                                        radius="lg"
+                                                                        width="100%"
+                                                                        alt={item.name}
+                                                                        className="w-full object-contain h-[70px] w-[45px] overflow-hidden"
+                                                                        src={item.imgUrl}
+                                                                        />
+                                                                    </TableCell>
+                                                                    <TableCell>{item.name}</TableCell>
+                                                                    <TableCell>{item.quantity}</TableCell>
+                                                                    <TableCell>${item.unitPrice}</TableCell>
+                                                                    </TableRow>
+                                                                    
+                                                                ))}
+                                                            </TableBody>
+                                                        </Table>
+                                                    </div>
+                                                </Tab>
+                                                <Tab key="card-information" title="Información del pago">
+                                                    <div className="mt-4">
+                                                        <Table aria-label="Example static collection table">
+                                                        <TableHeader className="text-center">
+                                                            <TableColumn>Moneda</TableColumn>
+                                                            <TableColumn>Forma de pago</TableColumn>
+                                                            <TableColumn>Total</TableColumn>
+                                                        </TableHeader>
+                                                        <TableBody>
+                                                            <TableRow key="1">
+                                                            <TableCell>{selectedItem!.paymentSummary.paymentReq.currency}</TableCell>
+                                                            <TableCell>{selectedItem!.paymentSummary.paymentMethod}</TableCell>
+                                                            <TableCell>${selectedItem!.paymentSummary.paymentReq.amount}</TableCell>
+                                                            </TableRow>
+                                                        </TableBody>
+                                                        </Table>
+                                                    </div>
+                                                    <CardInformationTable card={selectedItem!.paymentSummary.card}/>
+                                                </Tab>
+                                                <Tab key="customer" title="Comprador">
+                                                    <div className="mt-4">
+                                                        <Table aria-label="Example static collection table">
+                                                            <TableHeader>
+                                                                <TableColumn>Documento</TableColumn>
+                                                                <TableColumn>Nombre completo</TableColumn>
+                                                                <TableColumn>Email</TableColumn>
+                                                            </TableHeader>
+                                                            <TableBody>
+                                                                <TableRow key="1">
+                                                                    <TableCell>{selectedItem?.paymentSummary?.paymentReq?.customer?.documentId || "N/A"}</TableCell>
+                                                                    <TableCell>{selectedItem?.paymentSummary?.paymentReq?.customer?.fullName || "N/A"}</TableCell>
+                                                                    <TableCell>{selectedItem?.paymentSummary?.paymentReq?.customer?.email || "N/A"}</TableCell>
+                                                                </TableRow>
+                                                            </TableBody>
+                                                        </Table>
+                                                    </div>
+                                                </Tab>
+                                                {selectedItem!.tasksErrors.length > 0 && (
+                                                    <Tab key="errors" title={<p className="text-red-500">Errores</p>}>
+                                                        <div className="mt-4">
+                                                            <Table aria-label="products-table" isHeaderSticky>
+                                                                <TableHeader>
+                                                                    <TableColumn>Nombre de la tarea</TableColumn>
+                                                                    <TableColumn>Codigo de estado</TableColumn>
+                                                                    <TableColumn>Error canónico</TableColumn>
+                                                                    <TableColumn>Mensaje de la tarea</TableColumn>
+                                                                </TableHeader>
+                                                                <TableBody>
+                                                                    {selectedItem!.tasksErrors.map((item, index) => (
+                                                                        <TableRow key={index}>
+                                                                            <TableCell>{item.task.name}</TableCell>
+                                                                            <TableCell>{item.statusCode}</TableCell>
+                                                                            <TableCell>{item.canonicalError}</TableCell>
+                                                                            {/* TODO: rev */}
+                                                                            <TableCell>{item.taskMessages && item.taskMessages.length > 0 ? item.taskMessages.join(' | ') : "N/A"}</TableCell>
+                                                                        </TableRow>
+                                                                    ))}
+                                                                </TableBody>
+                                                            </Table>
+                                                        </div>
+                                                    </Tab>
+                                                )}
+                                            </Tabs>
+                                        </div>
+                                    </ModalBody>
                                 </>
                             )}
                             </ModalContent>
