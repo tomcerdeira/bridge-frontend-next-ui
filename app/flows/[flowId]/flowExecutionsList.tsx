@@ -404,7 +404,7 @@ export default function FlowExecutionsList({ flow_analytics, query } : { flow_an
                                     {(item) => (
                                     <TableRow
                                         key={item.id}
-                                        className="cursor-pointer hover:transform hover:scale-105 transition-transform"
+                                        className="cursor-pointer hover:bg-white hover:bg-opacity-10 transition-background"
                                         onClick={() => {
                                                 setSelectedItem(item);
                                                 onOpen();
